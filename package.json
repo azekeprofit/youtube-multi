@@ -1,0 +1,22 @@
+{
+  "name": "youtube-multi",
+  "module": "lib/wrapper.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest",
+    "bun-plugin-solid": "^1.0.0",
+    "esbuild": "^0.20.2",
+    "esbuild-plugin-solid": "^0.5.0",
+    "typescript": "^5.4.3",
+    "typescript-plugin-css-modules": "^5.1.0"
+  },
+  "scripts": {
+    "build": "bun build lib/wrapper.js --outdir public"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "solid-js": "^1.8.16"
+  }
+}
