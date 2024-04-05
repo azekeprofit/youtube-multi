@@ -13,8 +13,8 @@
     {
       "js": ["wrapper.js"],
       "matches": [
-        "https://youtube.com/watch*",
-        "https://www.youtube.com/watch*",
+        "https://youtube.com/*",
+        "https://www.youtube.com/*",
         "https://www.youtu.be/*"
       ]
     }

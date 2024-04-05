@@ -1,5 +1,5 @@
-import { Show, createSignal } from "solid-js";
-import { getVideoPlayer, loadCaptions, type ytCaptionTrack } from "../classes/youtube";
+import { createSignal } from "solid-js";
+import { loadCaptions } from "../classes/youtube";
 import { YtLangCheckbox } from "./ytLangCheckbox";
 
 export const styleStud = "hflkjdhgjhdfkjdshgkljdfghkdjhgkdjrhgigre";
