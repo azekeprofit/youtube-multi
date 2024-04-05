@@ -15,7 +15,7 @@ export function YtControlPanel() {
 
     return <>
         <style>{styleStud}</style>
-        <Show when={showPanel()}>{captions().map(caption => <YtLangCheckbox caption={caption} />)}</Show>
+        {captions().map(caption => <YtLangCheckbox caption={caption} />)}
     </>
 }
 
