@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist, type PersistStorage, type StorageValue } from "zustand/middleware";
 import { getVideoId, getCaptions, type ytCaptionTrack } from "./youtube";
 import { loadYoutubeCaptions } from "./subtitle";
 
@@ -6,25 +7,59 @@ export const ccButtonSelector = ".ytp-subtitles-button.ytp-button";
 const aButton = document.querySelector<HTMLElement>(`a${ccButtonSelector}`);
 type status = boolean | undefined;
 
-export const useStore = create(() => ({
-  button: new Map<string, status>(),
-  tracks: new Map<string, TextTrack>(),
-  showCap: new Map<string, status>(),
-}));
-
-export function setButton(newStatus: status) {
-  useStore.setState((prev) => ({
-    button: new Map(prev.button).set(getVideoId(), newStatus),
-  }));
-  aButton.setAttribute("aria-pressed", newStatus ? "true" : "false");
+interface youtubeMultiStore {
+    button: Map<string, status>;
+    showCap: Map<string, status>;
+    tracks: Map<string, TextTrack>;
 }
 
-export function setShowCap(captionUrl: string, show: status) {
+const storage: PersistStorage<youtubeMultiStore> = {
+    getItem: (name) => {
+        const str = localStorage.getItem(name);
+        if (!str) return null;
+        const { state } = JSON.parse(str);
+        return {
+          state: {
+            ...state,
+            showCap: new Map(state.showCap),
+          },
+        }
+      },
+      setItem: (name, newValue: StorageValue<youtubeMultiStore>) => {
+        // functions cannot be JSON encoded
+        const str = JSON.stringify({
+          state: {
+            ...newValue.state,
+            showCap: Array.from(newValue.state.showCap.entries()),
+          },
+        })
+        localStorage.setItem(name, str)
+      },
+    removeItem: (name) => localStorage.removeItem(name),
+  }
+
+
+export const useStore = create(
+  persist(
+    () => ({
+      showCap: new Map<string, status>(),
+      tracks: new Map<string, TextTrack>(),
+    }),
+    {
+      name: "youtube multi storage",
+      partialize: ({ showCap }) => ({ showCap }),
+      storage,
+    }
+  )
+);
+
+
+export function setShowCap(langCode: string, show: status) {
   useStore.setState((prev) => ({
-    showCap: new Map(prev.showCap).set(captionUrl, show),
+    showCap: new Map(prev.showCap).set(`${getVideoId()}.${langCode}`, show),
   }));
 
-  const track = useStore.getState().tracks.get(captionUrl);
+  const track = useStore.getState().tracks.get(langCode);
   if (track) track.mode = show ? "showing" : "hidden";
 }
 
