@@ -1,5 +1,9 @@
 import { create } from "zustand";
-import { persist, type PersistStorage, type StorageValue } from "zustand/middleware";
+import {
+  persist,
+  type PersistStorage,
+  type StorageValue,
+} from "zustand/middleware";
 import { getVideoId, getCaptions, type ytCaptionTrack } from "./youtube";
 import { loadYoutubeCaptions } from "./subtitle";
 
@@ -7,37 +11,34 @@ export const ccButtonSelector = ".ytp-subtitles-button.ytp-button";
 const aButton = document.querySelector<HTMLElement>(`a${ccButtonSelector}`);
 type status = boolean | undefined;
 
-interface youtubeMultiStore {
-    button: Map<string, status>;
-    showCap: Map<string, status>;
-    tracks: Map<string, TextTrack>;
+interface youtubeMultiStorage {
+  showCap: Map<string, status>;
 }
 
-const storage: PersistStorage<youtubeMultiStore> = {
-    getItem: (name) => {
-        const str = localStorage.getItem(name);
-        if (!str) return null;
-        const { state } = JSON.parse(str);
-        return {
-          state: {
-            ...state,
-            showCap: new Map(state.showCap),
-          },
-        }
-      },
-      setItem: (name, newValue: StorageValue<youtubeMultiStore>) => {
-        // functions cannot be JSON encoded
-        const str = JSON.stringify({
-          state: {
-            ...newValue.state,
-            showCap: Array.from(newValue.state.showCap.entries()),
-          },
-        })
-        localStorage.setItem(name, str)
-      },
-    removeItem: (name) => localStorage.removeItem(name),
-  }
+interface youtubeMultiStore extends youtubeMultiStorage {
+  button: Map<string, status>;
+  tracks: Map<string, TextTrack>;
+}
 
+const storage: PersistStorage<youtubeMultiStorage> = {
+  getItem: (name) => {
+    const str = sessionStorage.getItem(name);
+    if (!str) return null;
+    const showCap = JSON.parse(str);
+    return {
+      state: {
+        showCap: new Map<string, status>(showCap),
+      },
+    };
+  },
+  setItem: (name, newValue: StorageValue<youtubeMultiStore>) => {
+    const str = JSON.stringify({
+      state: { showCap: Array.from(newValue.state.showCap.entries()) },
+    });
+    sessionStorage.setItem(name, str);
+  },
+  removeItem: (name) => sessionStorage.removeItem(name),
+};
 
 export const useStore = create(
   persist(
@@ -52,7 +53,6 @@ export const useStore = create(
     }
   )
 );
-
 
 export function setShowCap(langCode: string, show: status) {
   useStore.setState((prev) => ({
