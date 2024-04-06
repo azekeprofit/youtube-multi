@@ -16,7 +16,7 @@ export function createTrack(code:string, lines:line[]) {
     for(let rStart=rounded(start);rStart<rounded(end);rStart=rounded(rStart+.1))
     track.addCue(new VTTCue(rStart, rStart+.1, lines[index].html));
   });
-  track.mode='showing';
+  
   return track;
 }
 

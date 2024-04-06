@@ -4,21 +4,14 @@
   "type": "module",
   "devDependencies": {
     "@types/bun": "^1.0.12",
-    "bun-lightningcss": "^0.2.0",
-    "bun-plugin-solid": "^1.0.0",
-    "esbuild": "^0.20.2",
-    "esbuild-plugin-solid": "^0.5.0",
     "typescript": "^5.4.3",
     "typescript-plugin-css-modules": "^5.1.0"
   },
   "scripts": {
-    "build": "bun build lib/wrapper.js --outdir public"
+    "build": "bun build lib/wrapper.ts --outdir public"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
-  "dependencies": {
-    "@solidjs/router": "^0.13.1",
-    "solid-js": "^1.8.16"
-  }
+  "dependencies": { "preact": "^10.20.1", "zustand": "^4.5.2" }
 }

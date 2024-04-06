@@ -1,21 +1,15 @@
-import { createResource } from "solid-js";
-import { loadYoutubeCaptions } from "../classes/subtitle";
+import { setShowCap, useStore } from "../classes/store";
 import type { ytCaptionTrack } from "../classes/youtube";
 import styles from './app.module.css';
 
-async function createTrack({ languageCode, baseUrl }: ytCaptionTrack) {
-    const response = await fetch(baseUrl);
-    const text = await response.text();
-    return loadYoutubeCaptions(languageCode, text);
-}
-
 export function YtLangCheckbox({ caption }: { caption: ytCaptionTrack }) {
-    const { languageCode, kind } = caption;
+    const { languageCode, kind, baseUrl } = caption;
+    const showCap = useStore(s => s.showCap.get(baseUrl));
     if (kind === 'asr') return null;
-    const [track] = createResource(caption, createTrack);
+
     return <label class={styles.red}>
-        <input type="checkbox" checked={track()?.mode === 'showing'}
-            onchange={(e) => track().mode = e.currentTarget.checked ? 'showing' : 'hidden'} />
+        <input type="checkbox" checked={showCap}
+            onInput={(e) => setShowCap(baseUrl, e.currentTarget.checked)} />
         {languageCode}
     </label>
 }

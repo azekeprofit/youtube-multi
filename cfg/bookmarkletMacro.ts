@@ -1,36 +1,24 @@
-import { build } from "esbuild";
-import { write } from "bun";
-import { solidPlugin } from "esbuild-plugin-solid";
-// Babel-based solidPlugin doesn't work (goes into infinite loop) inside Bun-macro
-// so i had to use solid-js/h for JSX syntax which is not ideal
-// tsconfig.json:
-// "jsx": "react-jsx",
-// "jsxImportSource": "solid-js/h",
-// when/if bun macro starts working properly, reset tsconfig.json back to original settings:
-// "jsx": "preserve",
-// "jsxImportSource": "solid-js",
-// eventually i'd like to ditch esbuild and use Bun's own bundler -- but it has problems with solid JSX too :(
+import { build, write } from "bun";
 
 export async function bookmarklet(src: string) {
   let style = "";
   let script = "";
 
   const result = await build({
-    entryPoints: [src],
-    bundle: true,
+    entrypoints: [src],
     outdir: "dist",
-    tsconfig: "tsconfig.bun.json",
     minify: true,
-    write: false,
     define: {
       "process.env.NODE_ENV": '"production"',
+      "import.meta.env": 'true',
+      "import.meta.env.MODE": '"production"',
     },
-    plugins: [], // solidPlugin()
+    plugins: [],
   });
 
-  for (let out of result.outputFiles) {
-    if (out.path.endsWith(".css")) style = out.text;
-    if (out.path.endsWith(".js")) script = out.text;
+  for (let out of result.outputs) {
+    if (out.path.endsWith(".css")) style = await out.text();
+    if (out.path.endsWith(".js")) script = await out.text();
   }
 
   await write("public/style.css", style);

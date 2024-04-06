@@ -1,1 +1,4 @@
-.o{color:red}.e{color:#00f}.r{color:green;font-weight:bolder}
+.odd { color:red}
+.even {color:blue}
+
+.red { color: green; font-weight: bolder;}

@@ -1,6 +1,6 @@
 import { bookmarklet } from "../cfg/bookmarkletMacro" with { type: 'macro'};
 
-const bookmarkletAddress = `javascript:${bookmarklet('lib/bookmarklet.ts')}`;
+const bookmarkletAddress = `javascript:${bookmarklet('lib/bookmarklet.tsx')}`;
 const ccButtonSelector=".ytp-subtitles-button.ytp-button";
 setInterval(() => {
   const multiLangButtons = document.querySelectorAll<HTMLElement>(`button${ccButtonSelector}`);
