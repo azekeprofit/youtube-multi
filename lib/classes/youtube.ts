@@ -48,5 +48,9 @@ export function getVideoId() {
 
 export function getCaptions() {
   const response = getVideoPlayer().getPlayerResponse();
-  return response.captions.playerCaptionsTracklistRenderer.captionTracks;
+  const allTracks =
+    response.captions.playerCaptionsTracklistRenderer.captionTracks;
+  return allTracks.length == 1
+    ? allTracks
+    : allTracks.filter((t) => t.kind != "asr");
 }

@@ -1,5 +1,5 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "Youtube Multi captions",
   "description": "Show several language captions on Youtube at the same time",
   "version": "0.95",
@@ -21,11 +21,7 @@
       "all_frames": true
     }
   ],
-  "optional_permissions": [
-    "declarativeContent",
-    "webNavigation"
-  ],
   "permissions": [
-    "https://*.youtube.com/*"
+    "storage"
   ]
 }
