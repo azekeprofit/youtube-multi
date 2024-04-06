@@ -1,7 +1,6 @@
 import { build } from "esbuild";
+import { write } from "bun";
 import { solidPlugin } from "esbuild-plugin-solid";
-import { styleStud } from "../lib/components/ytControlPanel";
-
 // Babel-based solidPlugin doesn't work (goes into infinite loop) inside Bun-macro
 // so i had to use solid-js/h for JSX syntax which is not ideal
 // tsconfig.json:
@@ -34,7 +33,7 @@ export async function bookmarklet(src: string) {
     if (out.path.endsWith(".js")) script = out.text;
   }
 
-  script = script.replace(styleStud, style);
+  await write("public/style.css", style);
 
   return script;
 }

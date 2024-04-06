@@ -1,5 +1,5 @@
 {
-  "manifest_version": 3,
+  "manifest_version": 2,
   "name": "Youtube Multi captions",
   "description": "Show several language captions on Youtube at the same time",
   "version": "0.95",
@@ -12,11 +12,20 @@
   "content_scripts": [
     {
       "js": ["wrapper.js"],
+      "css": ["style.css"],
+      "run_at": "document_start",
       "matches": [
-        "https://youtube.com/*",
-        "https://www.youtube.com/*",
-        "https://www.youtu.be/*"
-      ]
+          "https://*.youtube.com/*",
+          "https://www.youtube-nocookie.com/embed/*"
+      ],
+      "all_frames": true
     }
+  ],
+  "optional_permissions": [
+    "declarativeContent",
+    "webNavigation"
+  ],
+  "permissions": [
+    "https://*.youtube.com/*"
   ]
 }

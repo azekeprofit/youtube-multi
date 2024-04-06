@@ -1,4 +1,4 @@
-import { Show, Suspense, createResource } from "solid-js";
+import { createResource } from "solid-js";
 import { loadYoutubeCaptions } from "../classes/subtitle";
 import type { ytCaptionTrack } from "../classes/youtube";
 import styles from './app.module.css';

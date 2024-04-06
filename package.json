@@ -3,7 +3,8 @@
   "module": "lib/wrapper.ts",
   "type": "module",
   "devDependencies": {
-    "@types/bun": "latest",
+    "@types/bun": "^1.0.12",
+    "bun-lightningcss": "^0.2.0",
     "bun-plugin-solid": "^1.0.0",
     "esbuild": "^0.20.2",
     "esbuild-plugin-solid": "^0.5.0",
@@ -17,6 +18,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "@solidjs/router": "^0.13.1",
     "solid-js": "^1.8.16"
   }
 }
