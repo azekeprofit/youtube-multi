@@ -1,12 +1,12 @@
-import { createTrack, type line } from "./subtitle";
+import { type line } from "./subtitle";
 
 export function loadSrtCaptions(srtFilesObj: File) {
   var fileReader = new FileReader();
-  fileReader.onload = (e) => load(srtFilesObj.name, e.target.result as string);
+  fileReader.onload = (e) => load(e.target.result as string); // srtFilesObj.name
   fileReader.readAsText(srtFilesObj, "UTF-8");
 }
 
-function load(code:string, srtLines: string) {
+function load(srtLines: string) {
   let lines: line[] = [];
   const lineRegex =
     /(\d+)\r?\n(\d\d):(\d\d):(\d\d)\,(\d\d\d) --> (\d\d):(\d\d):(\d\d)\,(\d\d\d)\r?\n/;
@@ -24,5 +24,5 @@ function load(code:string, srtLines: string) {
     lines.push({ start: popTime(), end: popTime(), html: popStr() });
   }
 
-  createTrack(code, lines);
+  return lines;
 }

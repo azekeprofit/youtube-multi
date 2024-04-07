@@ -1,3 +1,5 @@
+import { useEffect, useMemo, useState } from "preact/hooks";
+
 export interface ytName {
   simpleText: string;
 }
@@ -36,24 +38,35 @@ interface ytPlayerResponse {
 
 interface ytPlayer extends HTMLDivElement {
   getPlayerResponse: () => ytPlayerResponse;
+  stateChangeListener: (e: number) => void;
 }
 
 export function getVideoPlayer() {
   return document.querySelector("#movie_player") as ytPlayer;
 }
 
-export type videoId=string;
-export function getVideoId():videoId {
+export type videoId = string;
+export function getVideoId(): videoId {
   return getVideoPlayer().getPlayerResponse().videoDetails.videoId;
 }
 
-export type captionId=string;
-export function getCaptionId({languageCode}:ytCaptionTrack):captionId{
+export type captionId = string;
+export function getCaptionId({ languageCode }: ytCaptionTrack): captionId {
   return `${getVideoId()}.${languageCode}`;
 }
 
-export function getCaptions() {
-  const response = getVideoPlayer().getPlayerResponse();
+export function useCaptions() {
+  const [vId, setVId] = useState(getVideoId());
+  const player = getVideoPlayer();
+
+  if (!player.stateChangeListener) {
+    player.stateChangeListener = (e: number) => {
+      if (e == -1) setVId(getVideoId());
+    };
+    player.addEventListener("onStateChange", player.stateChangeListener);
+  }
+
+  const response = player.getPlayerResponse();
   const allTracks =
     response.captions.playerCaptionsTracklistRenderer.captionTracks;
   return allTracks.length == 1
