@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "preact/hooks";
 import { setShowCap, useStore } from "../classes/store";
 import { getCaptionId, type captionId, type ytCaptionTrack } from "../classes/youtube";
-
 import { addLinesToTrack, loadYoutubeCaptions } from "../classes/subtitle";
+import './app.module.css'
 
 const trackCache = new Map<captionId, TextTrack>();
 
@@ -31,7 +31,7 @@ export function YtLangCheckbox({ caption }: { caption: ytCaptionTrack }) {
         }
     }, [baseUrl, player])
 
-    return <label class={`ytp-button`}>
+    return <label class={`auto-width ytp-button`}>
         <input type="checkbox" checked={showCap}
             onInput={(e) => setShowCap(captionId, e.currentTarget.checked)} />
         {`${languageCode}${kind == 'asr' ? ' (auto)' : ''}`}
