@@ -1,4 +1,5 @@
-.odd { color:red}
-.even {color:blue}
+button.ytp-subtitles-button.ytp-button { display: none;}
 
-.red { color: green; font-weight: bolder;}
+a.ytp-subtitles-button.ytp-button[aria-pressed="true"] svg {
+    fill-opacity: 1;
+}

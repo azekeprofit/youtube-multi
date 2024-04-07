@@ -35,14 +35,18 @@ interface ytPlayerResponse {
   captions: ytCaptions;
   videoDetails: ytVideoDetails;
 }
-
-interface ytPlayer extends HTMLDivElement {
+type stateChangeListener = (e: number) => void;
+interface ytPlayer {
   getPlayerResponse: () => ytPlayerResponse;
-  stateChangeListener: (e: number) => void;
+  stateChangeListener: stateChangeListener;
+  addEventListener: (
+    event: "onStateChange",
+    listener: stateChangeListener
+  ) => void;
 }
 
 export function getVideoPlayer() {
-  return document.querySelector("#movie_player") as ytPlayer;
+  return document.querySelector("#movie_player") as unknown as ytPlayer;
 }
 
 export type videoId = string;
@@ -67,8 +71,7 @@ export function useCaptions() {
   }
 
   const response = player.getPlayerResponse();
-  const allTracks =
-    response.captions.playerCaptionsTracklistRenderer.captionTracks;
+  const allTracks = response?.captions.playerCaptionsTracklistRenderer.captionTracks??[];
   return allTracks.length == 1
     ? allTracks
     : allTracks.filter((t) => t.kind != "asr");
