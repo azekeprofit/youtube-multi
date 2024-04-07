@@ -5,11 +5,7 @@ import {
   type StorageValue,
 } from "zustand/middleware";
 import { loadYoutubeCaptions } from "./subtitle";
-import {
-  getCaptionId,
-  type captionId,
-  type ytCaptionTrack
-} from "./youtube";
+import { getCaptionId, type captionId, type ytCaptionTrack } from "./youtube";
 
 export const ccButtonSelector = ".ytp-subtitles-button.ytp-button";
 const aButton = document.querySelector<HTMLElement>(`a${ccButtonSelector}`);
@@ -67,19 +63,24 @@ export function setShowCap(captionId: captionId, show: status) {
   if (track) track.mode = show ? "showing" : "hidden";
 }
 
-async function createTrack({ languageCode, baseUrl }: ytCaptionTrack) {
+async function createTrack(caption: ytCaptionTrack) {
+  const { languageCode, baseUrl } = caption;
   const response = await fetch(baseUrl);
   const text = await response.text();
-  return loadYoutubeCaptions(languageCode, text);
+  const track = loadYoutubeCaptions(languageCode, text);
+  track.mode = useStore.getState().showCap.get(getCaptionId(caption))
+    ? "showing"
+    : "hidden";
+  return track;
 }
 
 export function loadTrack(caption: ytCaptionTrack) {
   const captionId = getCaptionId(caption);
-  if (!useStore.getState().tracks.get(captionId))
-    return createTrack(caption).then((track) =>
-      useStore.setState((prev) => ({
-        tracks: new Map(prev.tracks).set(captionId, track),
-      }))
-    );
-  return Promise.resolve();
+  return useStore.getState().tracks.get(captionId)
+    ? Promise.resolve()
+    : createTrack(caption).then((track) =>
+        useStore.setState((prev) => ({
+          tracks: new Map(prev.tracks).set(captionId, track),
+        }))
+      );
 }
