@@ -1,13 +1,11 @@
+
 export interface line {
   start:number;
   end:number;
   html: string;
 }
 
-export function createTrack(code:string, lines:line[]) {
-  const videoTag=document.querySelector('video') as HTMLVideoElement;
-  let track=videoTag.addTextTrack("captions", code, code);
-
+export function addLinesToTrack(track:TextTrack, lines:line[]) {
   function rounded(rTime){
     return Math.round(rTime*10)/10;
   }
@@ -16,11 +14,9 @@ export function createTrack(code:string, lines:line[]) {
     for(let rStart=rounded(start);rStart<rounded(end);rStart=rounded(rStart+.1))
     track.addCue(new VTTCue(rStart, rStart+.1, lines[index].html));
   });
-  
-  return track;
 }
 
-export function loadYoutubeCaptions(languageCode: string, text: string) {
+export function loadYoutubeCaptions(text: string) {
   let lines: line[] = [];
   new DOMParser()
     .parseFromString(text.replace(/&amp;/g, "&"), "text/xml")
@@ -39,5 +35,5 @@ export function loadYoutubeCaptions(languageCode: string, text: string) {
         });
     });
 
-  return createTrack(languageCode, lines);
+  return lines;
 }
