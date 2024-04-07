@@ -42,8 +42,14 @@ export function getVideoPlayer() {
   return document.querySelector("#movie_player") as ytPlayer;
 }
 
-export function getVideoId() {
+export type videoId=string;
+export function getVideoId():videoId {
   return getVideoPlayer().getPlayerResponse().videoDetails.videoId;
+}
+
+export type captionId=string;
+export function getCaptionId({languageCode}:ytCaptionTrack):captionId{
+  return `${getVideoId()}.${languageCode}`;
 }
 
 export function getCaptions() {

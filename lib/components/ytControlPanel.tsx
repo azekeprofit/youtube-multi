@@ -1,13 +1,17 @@
 import { useEffect } from "preact/hooks";
-import { getVideoId, getCaptions } from "../classes/youtube";
+import { getVideoId, getCaptions, getCaptionId } from "../classes/youtube";
 import { YtLangCheckbox } from "./ytLangCheckbox";
-import { loadTrack } from "../classes/store";
+import { loadTrack, setShowCap } from "../classes/store";
 
 
 export function YtControlPanel() {
     const videoId = getVideoId();
+    const capts = getCaptions();
     useEffect(() => {
-        getCaptions().forEach(loadTrack)
+        Promise.all(capts.map(loadTrack)).then(() => {
+            if (capts.length == 1)
+                setShowCap(capts[0], true)
+        })
     }, [videoId])
 
     //   if (!getVideoPlayer().dataset.stateChangeListener)
@@ -15,7 +19,9 @@ export function YtControlPanel() {
     // if(e===-1)setCaptions(loadCaptions());
     // }));
 
-    return <>{getCaptions().map(caption => <YtLangCheckbox caption={caption} />)}</>
+
+
+    return <>{capts.map(caption => <YtLangCheckbox caption={caption} />)}</>
 }
 
 
