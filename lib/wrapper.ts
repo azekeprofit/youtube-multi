@@ -14,8 +14,6 @@ setInterval(() => {
       (aButton.firstChild as SVGElement).setAttribute('fill-opacity', (multiLangButton.firstChild as SVGElement).getAttribute('fill-opacity'));
     } else {
       aButton = multiLangButton.cloneNode(true) as HTMLElement;
-      // multiLangButton.classList.add(langHead);
-      aButton.title="";
       aButton.setAttribute("href", bookmarkletAddress);
       multiLangButton.insertAdjacentHTML(
         "beforebegin",
@@ -24,4 +22,14 @@ setInterval(() => {
       );
     }
   }
+
+  if(!document.getElementById('srtFileInput')){
+const menu = document.querySelector(".ytp-popup.ytp-settings-menu .ytp-panel .ytp-panel-menu");
+if (menu)
+menu.insertAdjacentHTML("afterbegin", `
+<div class="ytp-menuitem" aria-haspopup="true" role="menuitem" tabindex="0">
+<div class="ytp-menuitem-icon">CC</div>
+<div class="ytp-menuitem-label">Load .srt</div>
+<div class="ytp-menuitem-content"><div><input id="srtFileInput" type="file" /></div></div></div>
+`);}
 }, 700);
