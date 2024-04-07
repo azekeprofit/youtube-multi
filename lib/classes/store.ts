@@ -4,15 +4,12 @@ import {
   type PersistStorage,
   type StorageValue,
 } from "zustand/middleware";
-import {
-  getVideoId,
-  getCaptions,
-  type ytCaptionTrack,
-  type captionId,
-  type videoId,
-  getCaptionId,
-} from "./youtube";
 import { loadYoutubeCaptions } from "./subtitle";
+import {
+  getCaptionId,
+  type captionId,
+  type ytCaptionTrack
+} from "./youtube";
 
 export const ccButtonSelector = ".ytp-subtitles-button.ytp-button";
 const aButton = document.querySelector<HTMLElement>(`a${ccButtonSelector}`);
@@ -62,8 +59,7 @@ export const useStore = create(
   )
 );
 
-export function setShowCap(caption: ytCaptionTrack, show: status) {
-  const captionId = getCaptionId(caption);
+export function setShowCap(captionId: captionId, show: status) {
   useStore.setState((prev) => ({
     showCap: new Map(prev.showCap).set(captionId, show),
   }));

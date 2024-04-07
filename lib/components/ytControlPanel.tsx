@@ -10,7 +10,7 @@ export function YtControlPanel() {
     useEffect(() => {
         Promise.all(capts.map(loadTrack)).then(() => {
             if (capts.length == 1)
-                setShowCap(capts[0], true)
+                setShowCap(getCaptionId(capts[0]), true)
         })
     }, [videoId])
 

@@ -9,7 +9,7 @@ export function YtLangCheckbox({ caption }: { caption: ytCaptionTrack }) {
 
     return <label class={styles.red}>
         <input type="checkbox" checked={showCap}
-            onInput={(e) => setShowCap(caption, e.currentTarget.checked)} />
+            onInput={(e) => setShowCap(captionId, e.currentTarget.checked)} />
         {languageCode}{kind == 'asr' ? ' (auto)' : ''}
     </label>
 }
