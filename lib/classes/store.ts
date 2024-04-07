@@ -30,10 +30,12 @@ const storage: PersistStorage<youtubeMultiStorage> = {
   getItem: (name) => {
     const str = localStorage.getItem(name);
     if (!str) return null;
-    const showCap = JSON.parse(str);
+    const {
+      state: { showCap },
+    } = JSON.parse(str);
     return {
       state: {
-        showCap: new Map<string, status>(showCap),
+        showCap: new Map<captionId, status>(showCap),
       },
     };
   },
