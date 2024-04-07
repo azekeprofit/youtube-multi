@@ -7,24 +7,23 @@ import './app.module.css'
 export function YtControlPanel() {
     const videoId = getVideoId();
     const capts = useCaptions();
-    const multiLangButton = useMemo(() => document.querySelector<HTMLAnchorElement>('a.ytp-subtitles-button.ytp-button'), []);
+    const anyCaptions = capts.length > 0;
+
     useEffect(() => {
         if (capts.length == 1)
             setShowCap(getCaptionId(capts[0]), true)
-        const originalButton = multiLangButton.nextElementSibling as HTMLButtonElement;
-        multiLangButton.title = originalButton.title;
-        multiLangButton.style.opacity = originalButton.style.opacity;
     }, [videoId])
-    const [pressed, setPressed] = useState(true);
+    const [pressed, setPressed] = useState(anyCaptions);
+    const multiLangButton = useMemo(() => document.querySelector<HTMLAnchorElement>('a.ytp-subtitles-button.ytp-button'), []);
     useEffect(() => {
         multiLangButton.addEventListener('click', e => {
-            setPressed(p => !p);
+            if (anyCaptions) setPressed(p => !p);
             e.preventDefault();
         });
-    }, [multiLangButton])
+    }, [multiLangButton, anyCaptions])
     useEffect(() => {
         multiLangButton.setAttribute('aria-pressed', pressed ? 'true' : 'false');
-    }, [pressed]);
+    }, [pressed, multiLangButton]);
 
     if (!pressed) return null;
 

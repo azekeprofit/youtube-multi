@@ -10,9 +10,12 @@ setInterval(() => {
     let aButton = document.querySelector<HTMLElement>(`a${ccButtonSelector}`);
     if (aButton) {
       if (aButton.style.display == "none") aButton.style.display = multiLangButton.style.display;
+      aButton.setAttribute('title', multiLangButton.title);
+      (aButton.firstChild as SVGElement).setAttribute('fill-opacity', (multiLangButton.firstChild as SVGElement).getAttribute('fill-opacity'));
     } else {
       aButton = multiLangButton.cloneNode(true) as HTMLElement;
       // multiLangButton.classList.add(langHead);
+      aButton.title="";
       aButton.setAttribute("href", bookmarkletAddress);
       multiLangButton.insertAdjacentHTML(
         "beforebegin",

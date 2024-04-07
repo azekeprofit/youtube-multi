@@ -1,5 +1,1 @@
 button.ytp-subtitles-button.ytp-button { display: none;}
-
-a.ytp-subtitles-button.ytp-button[aria-pressed="true"] svg {
-    fill-opacity: 1;
-}

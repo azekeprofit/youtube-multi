@@ -71,7 +71,7 @@ export function useCaptions() {
   }
 
   const response = player.getPlayerResponse();
-  const allTracks = response?.captions.playerCaptionsTracklistRenderer.captionTracks??[];
+  const allTracks = response?.captions?.playerCaptionsTracklistRenderer?.captionTracks??[];
   return allTracks.length == 1
     ? allTracks
     : allTracks.filter((t) => t.kind != "asr");
