@@ -1,9 +1,11 @@
 import { type line } from "./subtitle";
 
 export function loadSrtCaptions(srtFilesObj: File) {
-  var fileReader = new FileReader();
-  fileReader.onload = (e) => load(e.target.result as string); // srtFilesObj.name
-  fileReader.readAsText(srtFilesObj, "UTF-8");
+  return new Promise<line[]>((succ, fail) => {
+    var fileReader = new FileReader();
+    fileReader.onload = (e) => succ(load(e.target.result as string));
+    fileReader.readAsText(srtFilesObj, "UTF-8");
+  });
 }
 
 function load(srtLines: string) {

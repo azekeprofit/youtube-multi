@@ -22,3 +22,5 @@ export function setShowCap(captionId: captionId, show: captionStatus) {
     showCap: {...prev.showCap,[captionId]:show},
   }));
 }
+
+export const trackCache = new Map<captionId, TextTrack>();

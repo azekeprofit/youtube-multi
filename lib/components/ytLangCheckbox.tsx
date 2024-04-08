@@ -1,11 +1,9 @@
 import { useEffect, useMemo, useState } from "preact/hooks";
-import { setShowCap, useStore } from "../classes/store";
+import { setShowCap, trackCache, useStore } from "../classes/store";
 import { getCaptionId, type captionId, type ytCaptionTrack } from "../classes/youtube";
 import { addLinesToTrack, loadYoutubeCaptions } from "../classes/subtitle";
 import './app.module.css'
 import { CaptionCheckbox } from "./CaptionCheckbox";
-
-const trackCache = new Map<captionId, TextTrack>();
 
 export function YtLangCheckbox({ caption }: { caption: ytCaptionTrack }) {
     const { languageCode, kind, baseUrl } = caption;
