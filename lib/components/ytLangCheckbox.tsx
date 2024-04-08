@@ -1,15 +1,15 @@
-import { useEffect, useMemo, useState } from "preact/hooks";
-import { setShowCap, trackCache, useStore } from "../classes/store";
-import { getCaptionId, type captionId, type ytCaptionTrack } from "../classes/youtube";
+import { useEffect, useState } from "preact/hooks";
+import { trackCache, useStore } from "../classes/store";
 import { addLinesToTrack, loadYoutubeCaptions } from "../classes/subtitle";
-import './app.module.css'
+import { getCaptionId, videoTag, type ytCaptionTrack } from "../classes/youtube";
 import { CaptionCheckbox } from "./CaptionCheckbox";
+import './app.module.css';
 
 export function YtLangCheckbox({ caption }: { caption: ytCaptionTrack }) {
     const { languageCode, kind, baseUrl } = caption;
     const captionId = getCaptionId(caption);
     const showCap = useStore(s => s.showCap[captionId]);
-    const player = useMemo(() => document.querySelector<HTMLVideoElement>('#movie_player video'), []);
+
     const [track, setTrack] = useState<TextTrack>(null);
 
     useEffect(() => {
@@ -19,7 +19,7 @@ export function YtLangCheckbox({ caption }: { caption: ytCaptionTrack }) {
     useEffect(() => {
         let track = trackCache.get(captionId);
         if (!track) {
-            track = player.addTextTrack('captions', languageCode, languageCode);
+            track = videoTag.addTextTrack('captions', languageCode, languageCode);
             fetch(baseUrl).then(r => r.text()).then(text =>
                 addLinesToTrack(track, loadYoutubeCaptions(text)));
             trackCache.set(captionId, track);
@@ -28,7 +28,7 @@ export function YtLangCheckbox({ caption }: { caption: ytCaptionTrack }) {
         return () => {
             track.mode = 'disabled';
         }
-    }, [baseUrl, player])
+    }, [baseUrl])
 
     return <CaptionCheckbox showCap={showCap} label={`${languageCode}${kind == 'asr' ? ' (auto)' : ''}`} captionId={captionId} />
 }

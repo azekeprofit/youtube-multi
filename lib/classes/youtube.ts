@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "preact/hooks";
+import { useEffect, useMemo, useReducer, useState } from "preact/hooks";
 
 export interface ytName {
   simpleText: string;
@@ -45,13 +45,16 @@ interface ytPlayer {
   ) => void;
 }
 
-export function getVideoPlayer() {
-  return document.querySelector("#movie_player") as unknown as ytPlayer;
-}
+export const videoPlayer = document.querySelector(
+  "#movie_player"
+) as unknown as ytPlayer;
+export const videoTag = document.querySelector<HTMLVideoElement>(
+  "#movie_player video"
+);
 
 export type videoId = string;
 export function getVideoId(): videoId {
-  return getVideoPlayer().getPlayerResponse().videoDetails.videoId;
+  return videoPlayer.getPlayerResponse().videoDetails.videoId;
 }
 
 export type captionId = string;
@@ -60,18 +63,21 @@ export function getCaptionId({ languageCode }: ytCaptionTrack): captionId {
 }
 
 export function useCaptions() {
-  const [vId, setVId] = useState(getVideoId());
-  const player = getVideoPlayer();
+  const [, forceUpdate] = useReducer(() => ({}), {});
 
-  if (!player.stateChangeListener) {
-    player.stateChangeListener = (e: number) => {
-      if (e == -1) setVId(getVideoId());
+  if (!videoPlayer.stateChangeListener) {
+    videoPlayer.stateChangeListener = (e: number) => {
+      if (e == -1) forceUpdate(0);
     };
-    player.addEventListener("onStateChange", player.stateChangeListener);
+    videoPlayer.addEventListener(
+      "onStateChange",
+      videoPlayer.stateChangeListener
+    );
   }
 
-  const response = player.getPlayerResponse();
-  const allTracks = response?.captions?.playerCaptionsTracklistRenderer?.captionTracks??[];
+  const response = videoPlayer.getPlayerResponse();
+  const allTracks =
+    response?.captions?.playerCaptionsTracklistRenderer?.captionTracks ?? [];
   return allTracks.length == 1
     ? allTracks
     : allTracks.filter((t) => t.kind != "asr");

@@ -4,6 +4,8 @@ import { getCaptionId, getVideoId, useCaptions } from "../classes/youtube";
 import { YtLangCheckbox } from "./ytLangCheckbox";
 import './app.module.css'
 
+const multiLangButton = document.querySelector<HTMLAnchorElement>('a.ytp-subtitles-button.ytp-button');
+
 export function YtControlPanel() {
     const videoId = getVideoId();
     const capts = useCaptions();
@@ -14,16 +16,16 @@ export function YtControlPanel() {
             setShowCap(getCaptionId(capts[0]), true)
     }, [videoId])
     const [pressed, setPressed] = useState(anyCaptions);
-    const multiLangButton = useMemo(() => document.querySelector<HTMLAnchorElement>('a.ytp-subtitles-button.ytp-button'), []);
+
     useEffect(() => {
         multiLangButton.addEventListener('click', e => {
             if (anyCaptions) setPressed(p => !p);
             e.preventDefault();
         });
-    }, [multiLangButton, anyCaptions])
+    }, [anyCaptions])
     useEffect(() => {
         multiLangButton.setAttribute('aria-pressed', pressed ? 'true' : 'false');
-    }, [multiLangButton, pressed]);
+    }, [pressed]);
 
     if (!pressed) return null;
 
