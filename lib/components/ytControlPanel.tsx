@@ -23,7 +23,7 @@ export function YtControlPanel() {
     }, [multiLangButton, anyCaptions])
     useEffect(() => {
         multiLangButton.setAttribute('aria-pressed', pressed ? 'true' : 'false');
-    }, [pressed, multiLangButton]);
+    }, [multiLangButton, pressed]);
 
     if (!pressed) return null;
 
@@ -31,8 +31,3 @@ export function YtControlPanel() {
         <YtLangCheckbox key={caption.baseUrl} caption={caption} />)}
     </>
 }
-
-
-
-
-//   stateChange(-1);

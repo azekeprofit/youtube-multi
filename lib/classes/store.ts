@@ -1,53 +1,24 @@
 import { create } from "zustand";
 import {
-  persist,
-  type PersistStorage,
-  type StorageValue,
+  persist
 } from "zustand/middleware";
 import { type captionId } from "./youtube";
 
-type status = boolean | undefined;
-
-interface youtubeMultiStorage {
-  showCap: Map<captionId, status>;
-}
-
-const storage: PersistStorage<youtubeMultiStorage> = {
-  getItem: (name) => {
-    const str = localStorage.getItem(name);
-    if (!str) return null;
-    const {
-      state: { showCap },
-    } = JSON.parse(str);
-    return {
-      state: {
-        showCap: new Map<captionId, status>(showCap),
-      },
-    };
-  },
-  setItem: (name, newValue: StorageValue<youtubeMultiStorage>) => {
-    const str = JSON.stringify({
-      state: { showCap: Array.from(newValue.state.showCap.entries()) },
-    });
-    localStorage.setItem(name, str);
-  },
-  removeItem: (name) => localStorage.removeItem(name),
-};
+export type captionStatus = boolean | undefined;
 
 export const useStore = create(
   persist(
     () => ({
-      showCap: new Map<captionId, status>(),
+      showCap: {} as Record<captionId, captionStatus>,
     }),
     {
       name: "youtube multi storage",
-      storage,
     }
   )
 );
 
-export function setShowCap(captionId: captionId, show: status) {
+export function setShowCap(captionId: captionId, show: captionStatus) {
   useStore.setState((prev) => ({
-    showCap: new Map(prev.showCap).set(captionId, show),
+    showCap: {...prev.showCap,[captionId]:show},
   }));
 }

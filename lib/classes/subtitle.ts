@@ -5,11 +5,11 @@ export interface line {
   html: string;
 }
 
-export function addLinesToTrack(track:TextTrack, lines:line[]) {
-  function rounded(rTime){
-    return Math.round(rTime*10)/10;
-  }
+function rounded(rTime){
+  return Math.round(rTime*10)/10;
+}
 
+export function addLinesToTrack(track:TextTrack, lines:line[]) {
   lines.forEach(({ start, end }, index) => {
     for(let rStart=rounded(start);rStart<rounded(end);rStart=rounded(rStart+.1))
     track.addCue(new VTTCue(rStart, rStart+.1, lines[index].html));
