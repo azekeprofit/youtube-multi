@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useReducer, useState } from "preact/hooks";
+import { useReducer } from "preact/hooks";
 
 export interface ytName {
   simpleText: string;
@@ -36,7 +36,7 @@ interface ytPlayerResponse {
   videoDetails: ytVideoDetails;
 }
 type stateChangeListener = (e: number) => void;
-interface ytPlayer {
+export interface ytPlayer {
   getPlayerResponse: () => ytPlayerResponse;
   stateChangeListener: stateChangeListener;
   addEventListener: (
@@ -45,16 +45,17 @@ interface ytPlayer {
   ) => void;
 }
 
-export const videoPlayer = document.querySelector(
-  "#movie_player"
-) as unknown as ytPlayer;
-export const videoTag = document.querySelector<HTMLVideoElement>(
-  "#movie_player video"
-);
+export function getVideoPlayer(){ 
+  return document.querySelector("#movie_player") as unknown as ytPlayer;
+}
+
+export function getVideoTag(){ 
+  return document.querySelector<HTMLVideoElement>("#movie_player video");
+}
 
 export type videoId = string;
 export function getVideoId(): videoId {
-  return videoPlayer.getPlayerResponse().videoDetails.videoId;
+  return getVideoPlayer().getPlayerResponse().videoDetails.videoId;
 }
 
 export type captionId = string;
@@ -65,17 +66,17 @@ export function getCaptionId({ languageCode }: ytCaptionTrack): captionId {
 export function useCaptions() {
   const [, forceUpdate] = useReducer(() => ({}), {});
 
-  if (!videoPlayer.stateChangeListener) {
-    videoPlayer.stateChangeListener = (e: number) => {
+  if (!getVideoPlayer().stateChangeListener) {
+    getVideoPlayer().stateChangeListener = (e: number) => {
       if (e == -1) forceUpdate(0);
     };
-    videoPlayer.addEventListener(
+    getVideoPlayer().addEventListener(
       "onStateChange",
-      videoPlayer.stateChangeListener
+      getVideoPlayer().stateChangeListener
     );
   }
 
-  const response = videoPlayer.getPlayerResponse();
+  const response = getVideoPlayer().getPlayerResponse();
   const allTracks =
     response?.captions?.playerCaptionsTracklistRenderer?.captionTracks ?? [];
   return allTracks.length == 1

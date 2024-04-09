@@ -13,15 +13,10 @@
     {
       "js": ["wrapper.js"],
       "css": ["style.css"],
+      "world": "MAIN",
       "run_at": "document_start",
-      "matches": [
-          "https://*.youtube.com/*",
-          "https://www.youtube-nocookie.com/embed/*"
-      ],
+      "matches": ["https://*.youtube.com/*"],
       "all_frames": true
     }
-  ],
-  "permissions": [
-    "storage"
   ]
 }
