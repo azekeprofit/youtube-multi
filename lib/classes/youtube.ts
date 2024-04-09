@@ -55,7 +55,7 @@ export function getVideoTag(){
 
 export type videoId = string;
 export function getVideoId(): videoId {
-  return getVideoPlayer().getPlayerResponse().videoDetails.videoId;
+  return getVideoPlayer().getPlayerResponse()?.videoDetails?.videoId;
 }
 
 export type captionId = string;

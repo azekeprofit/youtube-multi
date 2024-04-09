@@ -15,8 +15,7 @@
       "css": ["style.css"],
       "world": "MAIN",
       "run_at": "document_start",
-      "matches": ["https://*.youtube.com/*"],
-      "all_frames": true
+      "matches": ["https://*.youtube.com/*"]
     }
   ]
 }
