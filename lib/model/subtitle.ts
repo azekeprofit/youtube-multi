@@ -12,7 +12,7 @@ function rounded(rTime){
 
 export function addLinesToTrack(capId:captionId, track:TextTrack, lines:line[]) {
   lines.forEach(({ start, end, html }, index) => {
-    const cue=new VTTCue(start, end, html);
+    let cue=new VTTCue(start, end, html);
     cue.id=`${capId}.${index.toString()}`;
     track.addCue(cue);
   });
