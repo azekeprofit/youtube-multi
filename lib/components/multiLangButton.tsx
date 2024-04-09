@@ -17,13 +17,17 @@ export function MultiLangButton() {
             setShowCap(getCaptionId(capts[0]), true)
     }, [videoId])
     const [pressed, setPressed] = useState(false);
+    useEffect(() => {
+        const originalCaptions = document.querySelector<HTMLDivElement>('#ytp-caption-window-container');
+        if (originalCaptions) originalCaptions.style.display = pressed?'none':'';
+    }, [pressed])
 
     return <>
         {pressed && capts.map(caption =>
             <YtLangCheckbox key={caption.baseUrl} caption={caption} />)}
         <button
             class="ytp-subtitles-button ytp-button"
-            aria-pressed={anyCaptions&&pressed}
+            aria-pressed={anyCaptions && pressed}
             onClick={() => { if (anyCaptions) setPressed(p => !p) }}
             title={anyCaptions ? "Subtitles/closed captions" : "Subtitles/closed captions unavailable"}>
             <svg class="ytp-subtitles-button-icon" height="100%" version="1.1" viewBox="0 0 36 36" width="100%" fill-opacity={anyCaptions ? 1 : .3}>

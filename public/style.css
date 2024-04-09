@@ -29,7 +29,7 @@ button.ytp-subtitles-button.ytp-button {
   right: 25%;
   text-align: center;
   font-size: 21.3333px;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 1);
   font-family: "YouTube Noto", Roboto, "Arial Unicode Ms", Arial, Helvetica,
     Verdana, "PT Sans Caption", sans-serif;
 
@@ -43,15 +43,5 @@ button.ytp-subtitles-button.ytp-button {
   }
 }
 
-.youtube-multi-segment {
-  display: inline-block;
-  white-space: pre-wrap;
-  background: rgba(8, 8, 8, 0.75);
-  font-size: 21.3333px;
-  color: rgb(255, 255, 255);
-  fill: rgb(255, 255, 255);
-  font-family: "YouTube Noto", Roboto, "Arial Unicode Ms", Arial, Helvetica,
-    Verdana, "PT Sans Caption", sans-serif;
-}
 
-#movie_player video::cue { background: transparent; visibility: hidden;}
+#movie_player video::cue { visibility: hidden;}
