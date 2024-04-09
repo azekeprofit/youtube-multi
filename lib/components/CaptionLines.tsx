@@ -17,7 +17,7 @@ export function CaptionLines() {
     return <div class="caption-window ytp-caption-window-bottom youtube-multi-bottom">
         {activeTracks.map(cId =>
             <div class="captions-text" key={cId}>
-                {Array.from(trackCache.get(cId)?.activeCues??[]).map((c: VTTCue) => <Cue cue={c} />)}
+                {Array.from(trackCache.get(cId)?.activeCues??[]).map((c: VTTCue) => <Cue key={c.id} cue={c} />)}
             </div>
         )}
     </div>

@@ -1,3 +1,4 @@
+import type { captionId } from "./youtube";
 
 export interface line {
   start:number;
@@ -9,12 +10,11 @@ function rounded(rTime){
   return Math.round(rTime*10)/10;
 }
 
-export function addLinesToTrack(track:TextTrack, lines:line[]) {
-  lines.forEach(({ start, end, html }) => {
-    track.addCue(new VTTCue(start, end, html))
-    // for(let rStart=rounded(start);rStart<rounded(end);rStart=rounded(rStart+.1)){
-    // track.addCue(new VTTCue(rStart, rStart+.1, lines[index].html));
-    // }
+export function addLinesToTrack(capId:captionId, track:TextTrack, lines:line[]) {
+  lines.forEach(({ start, end, html }, index) => {
+    const cue=new VTTCue(start, end, html);
+    cue.id=`${capId}.${index.toString()}`;
+    track.addCue(cue);
   });
 }
 

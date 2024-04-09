@@ -20,7 +20,7 @@ export function YtLangCheckbox({ caption }: { caption: ytCaptionTrack }) {
         if (!track) {
             track = getVideoTag().addTextTrack('captions', languageCode, languageCode);
             fetch(baseUrl).then(r => r.text()).then(text =>
-                addLinesToTrack(track, loadYoutubeCaptions(text)));
+                addLinesToTrack(captionId, track, loadYoutubeCaptions(text)));
             trackCache.set(captionId, track);
         }
         setTrack(track);
