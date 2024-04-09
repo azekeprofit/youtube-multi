@@ -1,9 +1,11 @@
 import { createPortal, useEffect, useState } from "preact/compat";
-import { setShowCap } from "../classes/store";
-import { getCaptionId, getVideoId, useCaptions } from "../classes/youtube";
+import { setShowCap } from "../model/store";
+import { getCaptionId, getVideoId } from "../model/youtube";
 import { YtLangCheckbox } from "./ytLangCheckbox";
 import { SrtMenuItem } from "./SrtMenuItem";
 import './app.module.css';
+import { CaptionLines } from "./CaptionLines";
+import { useCaptions } from "../hooks/useCaptions";
 
 export function MultiLangButton() {
     const videoId = getVideoId();
@@ -20,6 +22,7 @@ export function MultiLangButton() {
         {pressed && capts.map(caption =>
             <YtLangCheckbox key={caption.baseUrl} caption={caption} />)}
         {<button
+            class="ytp-subtitles-button ytp-button"
             aria-pressed={pressed}
             onClick={() => { if (anyCaptions) setPressed(p => !p) }}
             title={anyCaptions ? "Subtitles/closed captions" : "Subtitles/closed captions unavailable"}>
@@ -29,5 +32,6 @@ export function MultiLangButton() {
             </svg>
         </button>}
         {createPortal(<SrtMenuItem />, document.getElementById('srtFileInput'))}
+        {createPortal(pressed&&<CaptionLines />, document.getElementById('ytp-caption-window-container'))}
     </>
 }

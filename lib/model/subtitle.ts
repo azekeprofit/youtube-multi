@@ -10,9 +10,11 @@ function rounded(rTime){
 }
 
 export function addLinesToTrack(track:TextTrack, lines:line[]) {
-  lines.forEach(({ start, end }, index) => {
-    for(let rStart=rounded(start);rStart<rounded(end);rStart=rounded(rStart+.1))
-    track.addCue(new VTTCue(rStart, rStart+.1, lines[index].html));
+  lines.forEach(({ start, end, html }) => {
+    track.addCue(new VTTCue(start, end, html))
+    // for(let rStart=rounded(start);rStart<rounded(end);rStart=rounded(rStart+.1)){
+    // track.addCue(new VTTCue(rStart, rStart+.1, lines[index].html));
+    // }
   });
 }
 

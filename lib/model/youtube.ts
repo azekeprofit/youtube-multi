@@ -62,24 +62,3 @@ export type captionId = string;
 export function getCaptionId({ languageCode }: ytCaptionTrack): captionId {
   return `${getVideoId()}.${languageCode}`;
 }
-
-/// hook that returns captions in a youtube video
-/// re-renders on changing video
-export function useCaptions() {
-  const videoPlayer = getVideoPlayer();
-  const [, forceUpdate] = useReducer(() => ({}), {});
-
-  if (!videoPlayer.stateChangeListener) {
-    const stateChangeListener = (videoPlayer.stateChangeListener = (e: number) => {
-      if (e == -1) forceUpdate(0);
-    });
-    videoPlayer.addEventListener("onStateChange", stateChangeListener);
-  }
-
-  const response = videoPlayer.getPlayerResponse();
-  const allTracks =
-    response?.captions?.playerCaptionsTracklistRenderer?.captionTracks ?? [];
-  return allTracks.length == 1
-    ? allTracks
-    : allTracks.filter((t) => t.kind != "asr");
-}

@@ -1,5 +1,5 @@
-import { setShowCap, type captionStatus } from "../classes/store";
-import type { captionId } from "../classes/youtube";
+import { setShowCap, type captionStatus } from "../model/store";
+import type { captionId } from "../model/youtube";
 
 export function CaptionCheckbox({ showCap, label, captionId }: { label: string, captionId: captionId, showCap: captionStatus }) {
     return <label>

@@ -1,23 +1,57 @@
 button.ytp-subtitles-button.ytp-button {
   display: none;
 }
-button.ytp-subtitles-button.ytp-button.youtube-multi {
-  display: block;
-}
+
 #ytControlPanel {
   display: inline-block;
   width: auto;
   height: 100%;
-}
-#ytControlPanel .ytp-subtitles-button-icon {
-  height: 48px;
-}
-#ytControlPanel button {
-  background: transparent;
-  border: none;
-  cursor: pointer;
+
+  .ytp-subtitles-button-icon {
+    height: 48px;
+  }
+
+  button {
+    display: inline-block;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+
+  label {
+    vertical-align: text-bottom;
+  }
 }
 
-#ytControlPanel label {
-    vertical-align: text-bottom;
+.youtube-multi-bottom {
+  bottom: 2%;
+  left: 25%;
+  right: 25%;
+  text-align: center;
+  font-size: 21.3333px;
+  color: rgba(255, 255, 255, 0.5);
+  font-family: "YouTube Noto", Roboto, "Arial Unicode Ms", Arial, Helvetica,
+    Verdana, "PT Sans Caption", sans-serif;
+
+  .captions-text {
+    display: inline;
+  }
+  .captions-text .bg {
+    display: inline-block;
+    background: rgba(8, 8, 8, 0.75);
+    fill: rgb(255, 255, 255);
+  }
 }
+
+.youtube-multi-segment {
+  display: inline-block;
+  white-space: pre-wrap;
+  background: rgba(8, 8, 8, 0.75);
+  font-size: 21.3333px;
+  color: rgb(255, 255, 255);
+  fill: rgb(255, 255, 255);
+  font-family: "YouTube Noto", Roboto, "Arial Unicode Ms", Arial, Helvetica,
+    Verdana, "PT Sans Caption", sans-serif;
+}
+
+#movie_player video::cue { background: transparent; visibility: hidden;}
