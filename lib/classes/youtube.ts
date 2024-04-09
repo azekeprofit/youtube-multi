@@ -45,11 +45,11 @@ export interface ytPlayer {
   ) => void;
 }
 
-export function getVideoPlayer(){ 
+export function getVideoPlayer() {
   return document.querySelector("#movie_player") as unknown as ytPlayer;
 }
 
-export function getVideoTag(){ 
+export function getVideoTag() {
   return document.querySelector<HTMLVideoElement>("#movie_player video");
 }
 
@@ -63,20 +63,20 @@ export function getCaptionId({ languageCode }: ytCaptionTrack): captionId {
   return `${getVideoId()}.${languageCode}`;
 }
 
+/// hook that returns captions in a youtube video
+/// re-renders on changing video
 export function useCaptions() {
+  const videoPlayer = getVideoPlayer();
   const [, forceUpdate] = useReducer(() => ({}), {});
 
-  if (!getVideoPlayer().stateChangeListener) {
-    getVideoPlayer().stateChangeListener = (e: number) => {
+  if (!videoPlayer.stateChangeListener) {
+    const stateChangeListener = (videoPlayer.stateChangeListener = (e: number) => {
       if (e == -1) forceUpdate(0);
-    };
-    getVideoPlayer().addEventListener(
-      "onStateChange",
-      getVideoPlayer().stateChangeListener
-    );
+    });
+    videoPlayer.addEventListener("onStateChange", stateChangeListener);
   }
 
-  const response = getVideoPlayer().getPlayerResponse();
+  const response = videoPlayer.getPlayerResponse();
   const allTracks =
     response?.captions?.playerCaptionsTracklistRenderer?.captionTracks ?? [];
   return allTracks.length == 1

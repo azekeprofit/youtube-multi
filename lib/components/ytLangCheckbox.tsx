@@ -3,7 +3,6 @@ import { trackCache, useStore } from "../classes/store";
 import { addLinesToTrack, loadYoutubeCaptions } from "../classes/subtitle";
 import { getCaptionId, getVideoTag, type ytCaptionTrack } from "../classes/youtube";
 import { CaptionCheckbox } from "./CaptionCheckbox";
-import './app.module.css';
 
 export function YtLangCheckbox({ caption }: { caption: ytCaptionTrack }) {
     const { languageCode, kind, baseUrl } = caption;
