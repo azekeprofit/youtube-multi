@@ -4,7 +4,7 @@ import { getCaptionId, getVideoId } from "../model/youtube";
 import { YtLangCheckbox } from "./ytLangCheckbox";
 import { SrtMenuItem } from "./SrtMenuItem";
 import './app.module.css';
-import { CaptionLines } from "./CaptionLines";
+import { CaptionLinesContainer } from "./CaptionLines";
 import { useCaptions } from "../hooks/useCaptions";
 
 export function MultiLangButton() {
@@ -23,7 +23,7 @@ export function MultiLangButton() {
             <YtLangCheckbox key={caption.baseUrl} caption={caption} />)}
         <button
             class="ytp-subtitles-button ytp-button"
-            aria-pressed={pressed}
+            aria-pressed={anyCaptions&&pressed}
             onClick={() => { if (anyCaptions) setPressed(p => !p) }}
             title={anyCaptions ? "Subtitles/closed captions" : "Subtitles/closed captions unavailable"}>
             <svg class="ytp-subtitles-button-icon" height="100%" version="1.1" viewBox="0 0 36 36" width="100%" fill-opacity={anyCaptions ? 1 : .3}>
@@ -32,6 +32,6 @@ export function MultiLangButton() {
             </svg>
         </button>
         {createPortal(<SrtMenuItem />, document.getElementById('srtFileInput'))}
-        {createPortal(pressed&&<CaptionLines />, document.getElementById('ytp-caption-window-container'))}
+        {createPortal(<CaptionLinesContainer pressed={pressed} />, document.getElementById('youtube-multi-caption-container'))}
     </>
 }

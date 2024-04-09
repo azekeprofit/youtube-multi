@@ -4,7 +4,11 @@ import { getCaptionId } from "../model/youtube";
 import { forceUpdate } from "../hooks/forceUpdate";
 import { useCaptions } from "../hooks/useCaptions";
 
-export function CaptionLines() {
+export function CaptionLinesContainer({pressed}:{pressed:boolean}){
+    return pressed&&<CaptionLines />;
+}
+
+function CaptionLines() {
     const capts=useCaptions().map(getCaptionId);
     const activeTracks = useStore(s => capts.filter(c=>s.showCap[c]));
     const update = forceUpdate();

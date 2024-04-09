@@ -21,7 +21,12 @@ const stop = setInterval(() => {
       menu.insertAdjacentHTML("afterbegin", `<div class="ytp-menuitem" aria-haspopup="true" role="menuitem" tabindex="0" id="srtFileInput"></div>`);
   }
 
-  if (srtFileMenuItem && controlPanel) {
+  const windowContainer=document.getElementById('ytp-caption-window-container');
+  if(windowContainer){
+    windowContainer.insertAdjacentHTML("beforebegin", `<div id="youtube-multi-caption-container"></div>`)
+  }
+
+  if (srtFileMenuItem && controlPanel && windowContainer) {
     render(<MultiLangButton />, controlPanel);
     clearInterval(stop);
   }
