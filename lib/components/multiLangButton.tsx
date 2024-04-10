@@ -4,7 +4,6 @@ import { clearSrtCaptions, setShowCap, useSrt } from "../model/store";
 import { getCaptionId, getVideoId } from "../model/youtube";
 import { CaptionLines } from "./CaptionLines";
 import { SrtMenuItem } from "./SrtMenuItem";
-import './app.module.css';
 import { SrtCheckbox } from "./srtCheckbox";
 import { YtLangCheckbox } from "./ytLangCheckbox";
 
