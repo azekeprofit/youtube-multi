@@ -1,16 +1,14 @@
 import { useEffect } from "preact/hooks";
-import { trackCache, useStore } from "../model/store";
+import { useSrt, useShowCaps, useTracks } from "../model/store";
 import { getCaptionId } from "../model/youtube";
 import { forceUpdate } from "../hooks/forceUpdate";
 import { useCaptions } from "../hooks/useCaptions";
 
-export function CaptionLinesContainer({pressed}:{pressed:boolean}){
-    return pressed&&<CaptionLines />;
-}
-
-function CaptionLines() {
-    const capts=useCaptions().map(getCaptionId);
-    const activeTracks = useStore(s => capts.filter(c=>s.showCap[c]));
+export function CaptionLines() {
+    const capts = useCaptions().map(getCaptionId);
+    const srtCaps = useSrt(s => s.srtCaptions);
+    const activeTracks = useShowCaps(s => (capts.concat(Object.keys(srtCaps))).filter(c => s.showCap[c]));
+    const trackCache = useTracks(s => s.cache);
     const update = forceUpdate();
 
     useEffect(() => {
@@ -21,7 +19,7 @@ function CaptionLines() {
     return <div class="caption-window ytp-caption-window-bottom youtube-multi-bottom">
         {activeTracks.map(cId =>
             <div class="captions-text" key={cId}>
-                {Array.from(trackCache.get(cId)?.activeCues??[]).map((c: VTTCue) => <Cue key={c.id} cue={c} />)}
+                {Array.from(trackCache[cId]?.activeCues ?? []).map((c: VTTCue) => <Cue key={c.id} cue={c} />)}
             </div>
         )}
     </div>

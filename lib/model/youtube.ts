@@ -1,4 +1,4 @@
-import { useReducer } from "preact/hooks";
+import { addTrackToCache } from "./store";
 
 export interface ytName {
   simpleText: string;
@@ -61,4 +61,26 @@ export function getVideoId(): videoId {
 export type captionId = string;
 export function getCaptionId({ languageCode }: ytCaptionTrack): captionId {
   return `${getVideoId()}.${languageCode}`;
+}
+
+export function addTrack(captionId: captionId, langCode: string) {
+  const track = getVideoTag().addTextTrack("captions", langCode, langCode);
+  addTrackToCache(captionId, track);
+  return track;
+}
+
+export function addCue(
+  track: TextTrack,
+  capId: captionId,
+  start: number,
+  end: number,
+  html: string,
+  index: number
+) {
+  if (html.length) {
+    const cue = new VTTCue(start, end, html);
+    cue.id = `${capId}.${index.toString()}`;
+    track.addCue(cue);
+    return cue;
+  }
 }

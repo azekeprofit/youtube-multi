@@ -1,15 +1,22 @@
-import { type line } from "./subtitle";
+import { addSrtCaption, setShowCap } from "./store";
+import { addCue, addTrack, type captionId } from "./youtube";
 
 export function loadSrtCaptions(srtFilesObj: File) {
-  return new Promise<line[]>((succ, fail) => {
-    var fileReader = new FileReader();
-    fileReader.onload = (e) => succ(load(e.target.result as string));
-    fileReader.readAsText(srtFilesObj, "UTF-8");
-  });
+  var fileReader = new FileReader();
+  fileReader.onload = (e) =>
+    createTrack(srtFilesObj.name, e.target.result as string);
+  fileReader.readAsText(srtFilesObj, "UTF-8");
 }
 
-function load(srtLines: string) {
-  let lines: line[] = [];
+function createTrack(fileName: string, lines: string) {
+  const capId = "srtFile." + fileName;
+  const track = addTrack(capId, fileName);
+  loadSrtLine(track, capId, lines);
+  setShowCap(capId, true);
+  addSrtCaption(capId, fileName);
+}
+
+function loadSrtLine(track: TextTrack, capId: captionId, srtLines: string) {
   const lineRegex =
     /(\d+)\r?\n(\d\d):(\d\d):(\d\d)\,(\d\d\d) --> (\d\d):(\d\d):(\d\d)\,(\d\d\d)\r?\n/;
 
@@ -23,8 +30,6 @@ function load(srtLines: string) {
   while (true) {
     const index = pop();
     if (isNaN(index)) break;
-    lines.push({ start: popTime(), end: popTime(), html: popStr() });
+    addCue(track, capId, popTime(), popTime(), popStr(), index);
   }
-
-  return lines;
 }

@@ -1,33 +1,25 @@
-import { useEffect, useState } from "preact/hooks";
-import { trackCache, useStore } from "../model/store";
-import { addLinesToTrack, loadYoutubeCaptions } from "../model/subtitle";
-import { getCaptionId, getVideoTag, type ytCaptionTrack } from "../model/youtube";
+import { useEffect } from "preact/hooks";
+import { useShowCaps, useTracks } from "../model/store";
+import { loadYoutubeCaptions } from "../model/subtitle";
+import { addTrack, getCaptionId, type ytCaptionTrack } from "../model/youtube";
 import { CaptionCheckbox } from "./CaptionCheckbox";
 
 export function YtLangCheckbox({ caption }: { caption: ytCaptionTrack }) {
     const { languageCode, kind, baseUrl } = caption;
     const captionId = getCaptionId(caption);
-    const showCap = useStore(s => s.showCap[captionId]);
 
-    const [track, setTrack] = useState<TextTrack>(null);
-
+    const track = useTracks(s => s.cache[captionId]);
+    
     useEffect(() => {
-        if (track) track.mode = showCap ? "showing" : "hidden";
-    }, [showCap, track])
-
-    useEffect(() => {
-        let track = trackCache.get(captionId);
         if (!track) {
-            track = getVideoTag().addTextTrack('captions', languageCode, languageCode);
+            const newTrack = addTrack(captionId, languageCode);
             fetch(baseUrl).then(r => r.text()).then(text =>
-                addLinesToTrack(captionId, track, loadYoutubeCaptions(text)));
-            trackCache.set(captionId, track);
+                loadYoutubeCaptions(captionId, newTrack, text));
+            return () => {
+                newTrack.mode = 'disabled';
+            }
         }
-        setTrack(track);
-        return () => {
-            track.mode = 'disabled';
-        }
-    }, [baseUrl])
+    }, [])
 
-    return <CaptionCheckbox showCap={showCap} label={`${languageCode}${kind == 'asr' ? ' (auto)' : ''}`} captionId={captionId} />
+    return <CaptionCheckbox track={track} label={`${languageCode}${kind == 'asr' ? ' (auto)' : ''}`} captionId={captionId} />
 }
