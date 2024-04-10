@@ -1,15 +1,13 @@
+.ytp-small-mode .ytp-chrome-controls .ytp-subtitles-button.ytp-button,
 button.ytp-subtitles-button.ytp-button {
   display: none;
 }
 
+.ytp-small-mode .ytp-chrome-controls #ytControlPanel,
 #ytControlPanel {
   display: inline-block;
   width: auto;
   height: 100%;
-
-  .ytp-subtitles-button-icon {
-    height: 48px;
-  }
 
   button {
     display: inline-block;
@@ -22,13 +20,15 @@ button.ytp-subtitles-button.ytp-button {
     vertical-align: text-bottom;
   }
 }
+.ytp-small-mode.ytp-autohide #youtube-multi-caption-container .caption-window.ytp-caption-window-bottom { margin-bottom: 0;}
+.ytp-small-mode #youtube-multi-caption-container .caption-window.ytp-caption-window-bottom { margin-bottom: 32px;}
 
 .youtube-multi-bottom {
   bottom: 2%;
-  left: 25%;
-  right: 25%;
+  left: 0;
+  right: 0;
+  container-type: inline-size;
   text-align: center;
-  font-size: 21.3333px;
   color: rgba(255, 255, 255, 1);
   font-family: "YouTube Noto", Roboto, "Arial Unicode Ms", Arial, Helvetica,
     Verdana, "PT Sans Caption", sans-serif;
@@ -40,8 +40,28 @@ button.ytp-subtitles-button.ytp-button {
     display: inline-block;
     background: rgba(8, 8, 8, 0.75);
     fill: rgb(255, 255, 255);
+    font-size: 12px;
   }
 }
 
+@container (min-width: 500px) {
+  .youtube-multi-bottom .captions-text .bg {
+    font-size: 15px;
+  }
+}
 
-#movie_player video::cue { visibility: hidden;}
+@container (min-width: 700px) {
+  .youtube-multi-bottom .captions-text .bg {
+    font-size: 17px;
+  }
+}
+
+@container (min-width: 900px) {
+  .youtube-multi-bottom .captions-text .bg {
+    font-size: 21px;
+  }
+}
+
+#movie_player video::cue {
+  visibility: hidden;
+}
