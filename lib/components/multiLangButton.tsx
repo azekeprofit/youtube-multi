@@ -11,8 +11,9 @@ import { YtLangCheckbox } from "./ytLangCheckbox";
 export function MultiLangButton() {
     const videoId = getVideoId();
     const capts = useCaptions();
-    const anyCaptions = capts.length > 0;
     const srtCaps = useSrt(s => s.srtCaptions);
+    const capIds=Object.keys(srtCaps);
+    const anyCaptions = (capts.length+capIds.length) > 0;
 
     useEffect(() => {
         if (capts.length == 1)
@@ -26,10 +27,12 @@ export function MultiLangButton() {
     }, [pressed])
 
     return <>
+    <span className="youtube-multi-checkboxes">
         {pressed && capts.map(caption =>
             <YtLangCheckbox key={caption.baseUrl} caption={caption} />)}
-        {pressed && Object.keys(srtCaps).map(capId =>
+        {pressed && capIds.map(capId =>
             <SrtCheckbox key={capId} label={srtCaps[capId]} captionId={capId} />)}
+            </span>
         <button
             class="ytp-subtitles-button ytp-button"
             aria-pressed={anyCaptions && pressed}

@@ -20,6 +20,9 @@ button.ytp-subtitles-button.ytp-button {
     vertical-align: text-bottom;
   }
 }
+
+.youtube-multi-checkboxes { max-width: 40em; overflow: hidden auto; line-height: 2ex;}
+
 .ytp-small-mode.ytp-autohide #youtube-multi-caption-container .caption-window.ytp-caption-window-bottom { margin-bottom: 0;}
 .ytp-small-mode #youtube-multi-caption-container .caption-window.ytp-caption-window-bottom { margin-bottom: 32px;}
 
