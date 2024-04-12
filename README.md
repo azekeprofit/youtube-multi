@@ -6,6 +6,15 @@
 
 ![UI for adding .srt file](asset/640x400customSrt.png)
 
+## Videos with multi-lingual subtitles
+
+Here are some of the videos i tested this extension on:
+
+* [Past, present and future tenses of "Go" in Kazakh](https://www.youtube.com/watch?v=xRJKt67K4BA) -- has English, Kazakh, Korean (and an auto-generated Russian track but script disables those unless it's the only subtitle available)
+
+* [도시로 간 처녀(1981) The Maiden Who Went to the City](https://www.youtube.com/watch?v=QHSN2HJiLIQ) -- one of the many old films on Korean Classic Films Archive channel, has English and Korean subtitles.
+
+
 ## Building
 
 Extension is built with [Bun](https://bun.sh). After cloning repository, install dependencies:
