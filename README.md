@@ -1,6 +1,6 @@
 # Youtube Multi
 
-Chrome Extension to add checkboxes for each provided language caption on Youtube video, allowing to watch several subtitles simultaneously. Additionally, extension also adds an option to add your own .srt subtitle files for videos.
+[Chrome Extension](https://chromewebstore.google.com/detail/youtube-multi-captions/mlkecnkjoepkpihbgdbglelggneafihm) to add checkboxes for each provided language caption on Youtube video, allowing to watch several subtitles simultaneously. Additionally, extension also adds an option to add your own .srt subtitle files for videos.
 
 ![UI of extension](asset/640x400.png)
 
