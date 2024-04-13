@@ -5,6 +5,7 @@ export function loadYoutubeCaptions(
   track: TextTrack,
   text: string
 ) {
+  // add stub cue
   addCue(track, capId, -1, -1, '', -1);
   let prevCue: VTTCue = null;
   new DOMParser()

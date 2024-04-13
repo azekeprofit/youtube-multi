@@ -27,5 +27,5 @@ export function YtLangCheckbox({ caption }: { caption: ytCaptionTrack }) {
                 loadYoutubeCaptions(captionId, track, text));
     }, [showCap, track])
 
-    return <CaptionCheckbox track={track} title={getTranslation(languageCode)} label={`${languageCode}${kind == 'asr' ? ' (auto)' : ''}`} captionId={captionId} />
+    return <CaptionCheckbox showCap={showCap} track={track} title={getTranslation(languageCode)} label={`${languageCode}${kind == 'asr' ? ' (auto)' : ''}`} captionId={captionId} />
 }
