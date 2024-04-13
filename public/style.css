@@ -21,7 +21,9 @@ button.ytp-subtitles-button.ytp-button {
   }
 }
 
-.youtube-multi-checkboxes { max-width: 40em; display: inline-block; max-height: 100%;}
+.youtube-multi-checkboxes { max-width: 30em; display: inline-block; max-height: 100%; overflow-y: auto; scrollbar-gutter: stable; scrollbar-width: thin; }
+
+.youtube-multi-checkboxes label { white-space: nowrap;}
 
 .ytp-small-mode.ytp-autohide #youtube-multi-caption-container .caption-window.ytp-caption-window-bottom { margin-bottom: 0;}
 .ytp-small-mode #youtube-multi-caption-container .caption-window.ytp-caption-window-bottom { margin-bottom: 32px;}

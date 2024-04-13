@@ -21,7 +21,8 @@ function loadSrtLine(track: TextTrack, capId: captionId, srtLines: string) {
     /(\d+)\r?\n(\d\d):(\d\d):(\d\d)\,(\d\d\d) --> (\d\d):(\d\d):(\d\d)\,(\d\d\d)\r?\n/;
 
   const arr = srtLines.split(lineRegex);
-  const popStr = () => arr.splice(0, 1)[0];
+  let i=0;
+  const popStr = ()=>arr[i++];
   const pop = () => parseFloat(popStr());
   pop();
   const popTime = () =>
