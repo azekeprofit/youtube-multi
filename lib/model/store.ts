@@ -2,7 +2,13 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { type captionId } from "./youtube";
 
-export type captionStatus = boolean | undefined;
+export type captionStatus = Date | boolean | undefined;
+
+function addDays(date, days) {
+  var result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
+}
 
 export const useShowCaps = create(
   persist(
@@ -11,6 +17,19 @@ export const useShowCaps = create(
     }),
     {
       name: "youtube multi storage",
+      partialize: ({ showCap }) => {
+        const previousDay = addDays(new Date(), -1);
+        return {
+          showCap: Object.fromEntries(
+            Object.entries(showCap).map(([key, value]) =>
+                value === false ? [key, undefined] :
+                value === true ? [key, new Date()] :
+                value instanceof Date ? [key, value > previousDay ? value : undefined] :
+                [key, value]
+            )
+          ),
+        };
+      },
     }
   )
 );
@@ -34,7 +53,6 @@ export function addTrackToCache(captionId: captionId, track: TextTrack) {
 export const useSrt = create(() => ({
   srtCaptions: {} as Record<captionId, string>,
 }));
-
 
 export function addSrtCaption(captionId: captionId, fileName: string) {
   useSrt.setState({
