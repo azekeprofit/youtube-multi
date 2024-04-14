@@ -21,12 +21,72 @@ button.ytp-subtitles-button.ytp-button {
   }
 }
 
-.youtube-multi-checkboxes { max-width: 30em; display: inline-block; max-height: 100%; overflow-y: auto; scrollbar-gutter: stable; scrollbar-width: thin; }
+.youtube-multi-checkboxes {
+  display: inline-block;
+  position: relative;
+  height: 48px;  
+  vertical-align: text-bottom;
+}
 
-.youtube-multi-checkboxes label { white-space: nowrap;}
+.youtube-multi-checkboxes .scroll {
+  overflow: auto;
+  scroll-behavior: smooth;
+  position: relative;
+  scrollbar-width: none;
+  padding: 0 10px;
 
-.ytp-small-mode.ytp-autohide #youtube-multi-caption-container .caption-window.ytp-caption-window-bottom { margin-bottom: 0;}
-.ytp-small-mode #youtube-multi-caption-container .caption-window.ytp-caption-window-bottom { margin-bottom: 32px;}
+  display: flex;
+  max-width: 30em;
+  height: 48px;
+  position: relative;
+  left: 0;
+}
+
+.not-to-scroll {
+  position: relative;
+}
+
+.carousel-arrows {
+  position: absolute;
+  top: 12px;
+  z-index: -1;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* arrows */
+.arrow {
+  border: solid white 10px;
+  border-width: 0 2px 2px 0;
+  display: inline-block;
+  padding: 5px;
+}
+
+.right {
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+}
+
+.left {
+  transform: rotate(135deg);
+  -webkit-transform: rotate(135deg);
+}
+
+.youtube-multi-checkboxes label {
+  white-space: nowrap;
+}
+
+.ytp-small-mode.ytp-autohide
+  #youtube-multi-caption-container
+  .caption-window.ytp-caption-window-bottom {
+  margin-bottom: 0;
+}
+.ytp-small-mode
+  #youtube-multi-caption-container
+  .caption-window.ytp-caption-window-bottom {
+  margin-bottom: 32px;
+}
 
 .youtube-multi-bottom {
   bottom: 2%;
