@@ -24,8 +24,7 @@ export const useShowCaps = create(
             Object.entries(showCap).map(([key, value]) =>
                 value === false ? [key, undefined] :
                 value === true ? [key, new Date()] :
-                value instanceof Date ? [key, value > previousDay ? value : undefined] :
-                [key, value]
+                [key, new Date(value) > previousDay ? new Date(value) : undefined]
             )
           ),
         };
