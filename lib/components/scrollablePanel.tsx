@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "preact/hooks";
+import { useCallback, useEffect, useRef, useState } from "preact/hooks";
 import { YtLangCheckbox } from "./ytLangCheckbox";
 import { SrtCheckbox } from "./srtCheckbox";
 import type { captionId, ytCaptionTrack } from "../model/youtube";
@@ -7,7 +7,7 @@ export function ScrollablePanel({ capIds, capts, srtCaps }: { capIds: captionId[
     const ref = useRef<HTMLDivElement>(null);
     const intervalRef = useRef<Timer>();
     const [showLeft, setShowLeft] = useState(false);
-    const [showRight, setShowRight] = useState(true);
+    const [showRight, setShowRight] = useState(false);
 
     const scroll = useCallback(() => {
         const scroll = ref.current;
@@ -15,6 +15,7 @@ export function ScrollablePanel({ capIds, capts, srtCaps }: { capIds: captionId[
         setShowRight(scroll.scrollLeft < (scroll.scrollWidth - scroll.clientWidth - 15));
     }, [])
 
+    useEffect(scroll, [])
     const mouseUp = useCallback(() => {
         if (intervalRef.current) {
             clearInterval(intervalRef.current)
@@ -34,14 +35,14 @@ export function ScrollablePanel({ capIds, capts, srtCaps }: { capIds: captionId[
 
     return <div id="youtube-multi-checkboxes">
         <div class="unscroll">
+            <span class={`arrow left${showLeft ? ' show' : ''}`} {...mouseHold(-15)}>🠜</span>
             <div class="scroll" ref={ref} onScroll={scroll}>
                 {capts.map(caption =>
                     <YtLangCheckbox key={caption.baseUrl} caption={caption} />)}
                 {capIds.map(capId =>
                     <SrtCheckbox key={capId} label={srtCaps[capId]} captionId={capId} />)}
             </div>
-            <i class={`arrow left${showLeft ? ' show' : ''}`} {...mouseHold(-15)}></i>
-            <i class={`arrow right${showRight ? ' show' : ''}`} {...mouseHold(15)}></i>
+            <span class={`arrow right ${showRight ? ' show' : ''}`} {...mouseHold(15)}>🠞</span>
         </div>
     </div>
 }

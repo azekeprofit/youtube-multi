@@ -23,36 +23,22 @@ button.ytp-subtitles-button.ytp-button {
 
 #youtube-multi-checkboxes {
   display: inline-block;
-  position: relative;
   height: 48px;
   vertical-align: text-bottom;
 
   .unscroll {
-    position: relative;
-    width: 100%;
-
+    display: flex;
     
     .arrow {
-      border: solid white 10px;
-      border-width: 0 2px 2px 0;
       display: block;
-      top: 12px;
-      position: absolute;
+      cursor: pointer;
       visibility: hidden;
-      padding: 5px;
+    
+      &.left { padding-right: 3px;}
+      &.right { padding-left: 3px;}
       
     &.show {
       visibility: visible;
-    }
-
-    &.right {
-      right:0;
-      transform: rotate(-45deg);
-    }
-
-    &.left {
-      left: 0;
-      transform: rotate(135deg);
     }
     }
     
@@ -60,19 +46,11 @@ button.ytp-subtitles-button.ytp-button {
     .scroll {
       overflow: auto;
       scroll-behavior: smooth;
-      position: relative;
+      white-space: nowrap;
       scrollbar-width: none;
-      padding: 0 15px 0 10px;
-
-      display: flex;
+      display: block;
       max-width: 30em;
       height: 48px;
-      position: relative;
-      left: 0;
-
-      label {
-        white-space: nowrap;
-      }
     }
   }
 }
