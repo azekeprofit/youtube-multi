@@ -45,7 +45,7 @@ button.ytp-subtitles-button.ytp-button {
       white-space: nowrap;
       scrollbar-width: none;
       display: block;
-      max-width: 30em;
+      max-width: 10em;
       height: 48px;
     }
   }
@@ -61,6 +61,8 @@ button.ytp-subtitles-button.ytp-button {
   .caption-window.ytp-caption-window-bottom {
   margin-bottom: 32px;
 }
+
+.ytp-chrome-controls { container-type: inline-size; }
 
 .youtube-multi-bottom {
   bottom: 2%;
@@ -99,6 +101,7 @@ button.ytp-subtitles-button.ytp-button {
   .youtube-multi-bottom .captions-text .bg {
     font-size: 21px;
   }
+   #youtube-multi-checkboxes .unscroll .scroll { max-width: 20em;}
 }
 
 #movie_player video::cue {
