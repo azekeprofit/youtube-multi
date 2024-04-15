@@ -27,52 +27,47 @@ button.ytp-subtitles-button.ytp-button {
   height: 48px;
   vertical-align: text-bottom;
 
-  .scroll {
-    overflow: auto;
-    scroll-behavior: smooth;
-    position: relative;
-    scrollbar-width: none;
-    padding: 0 15px 0 10px;
-
-    display: flex;
-    max-width: 30em;
-    height: 48px;
-    position: relative;
-    left: 0;
-  }
-
   .unscroll {
     position: relative;
 
-    .carousel-arrows {
-      position: absolute;
-      top: 12px;
-      z-index: 100;
-      width: 100%;
-      display: flex;
-    }
-
+    
     .arrow {
       border: solid white 10px;
       border-width: 0 2px 2px 0;
       display: block;
       visibility: hidden;
       padding: 5px;
+    }
+    
+    .arrow.show {
+      visibility: visible;
+    }
 
-      .show {
-        visibility: visible;
-      }
+    .arrow.right {
+      float: right;
+      transform: rotate(-45deg);
+    }
 
-      .right {
-        float: right;
-        transform: rotate(-45deg);
-        -webkit-transform: rotate(-45deg);
-      }
+    .arrow.left {
+      float: left;
+      transform: rotate(135deg);
+    }
 
-      .left {
-        float: left;
-        transform: rotate(135deg);
-        -webkit-transform: rotate(135deg);
+    .scroll {
+      overflow: auto;
+      scroll-behavior: smooth;
+      position: relative;
+      scrollbar-width: none;
+      padding: 0 15px 0 10px;
+
+      display: flex;
+      max-width: 30em;
+      height: 48px;
+      position: relative;
+      left: 0;
+
+      label {
+        white-space: nowrap;
       }
     }
   }
