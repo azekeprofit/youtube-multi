@@ -29,29 +29,33 @@ button.ytp-subtitles-button.ytp-button {
 
   .unscroll {
     position: relative;
+    width: 100%;
 
     
     .arrow {
       border: solid white 10px;
       border-width: 0 2px 2px 0;
       display: block;
+      top: 12px;
+      position: absolute;
       visibility: hidden;
       padding: 5px;
-    }
-    
-    .arrow.show {
+      
+    &.show {
       visibility: visible;
     }
 
-    .arrow.right {
-      float: right;
+    &.right {
+      right:0;
       transform: rotate(-45deg);
     }
 
-    .arrow.left {
-      float: left;
+    &.left {
+      left: 0;
       transform: rotate(135deg);
     }
+    }
+    
 
     .scroll {
       overflow: auto;
