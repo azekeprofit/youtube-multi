@@ -21,60 +21,61 @@ button.ytp-subtitles-button.ytp-button {
   }
 }
 
-.youtube-multi-checkboxes {
+#youtube-multi-checkboxes {
   display: inline-block;
   position: relative;
-  height: 48px;  
-  vertical-align: text-bottom;
-}
-
-.youtube-multi-checkboxes .scroll {
-  overflow: auto;
-  scroll-behavior: smooth;
-  position: relative;
-  scrollbar-width: none;
-  padding: 0 10px;
-
-  display: flex;
-  max-width: 30em;
   height: 48px;
-  position: relative;
-  left: 0;
-}
+  vertical-align: text-bottom;
 
-.not-to-scroll {
-  position: relative;
-}
+  .scroll {
+    overflow: auto;
+    scroll-behavior: smooth;
+    position: relative;
+    scrollbar-width: none;
+    padding: 0 15px 0 10px;
 
-.carousel-arrows {
-  position: absolute;
-  top: 12px;
-  z-index: -1;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-}
+    display: flex;
+    max-width: 30em;
+    height: 48px;
+    position: relative;
+    left: 0;
+  }
 
-/* arrows */
-.arrow {
-  border: solid white 10px;
-  border-width: 0 2px 2px 0;
-  display: inline-block;
-  padding: 5px;
-}
+  .unscroll {
+    position: relative;
 
-.right {
-  transform: rotate(-45deg);
-  -webkit-transform: rotate(-45deg);
-}
+    .carousel-arrows {
+      position: absolute;
+      top: 12px;
+      z-index: 100;
+      width: 100%;
+      display: flex;
+    }
 
-.left {
-  transform: rotate(135deg);
-  -webkit-transform: rotate(135deg);
-}
+    .arrow {
+      border: solid white 10px;
+      border-width: 0 2px 2px 0;
+      display: block;
+      visibility: hidden;
+      padding: 5px;
 
-.youtube-multi-checkboxes label {
-  white-space: nowrap;
+      .show {
+        visibility: visible;
+      }
+
+      .right {
+        float: right;
+        transform: rotate(-45deg);
+        -webkit-transform: rotate(-45deg);
+      }
+
+      .left {
+        float: left;
+        transform: rotate(135deg);
+        -webkit-transform: rotate(135deg);
+      }
+    }
+  }
 }
 
 .ytp-small-mode.ytp-autohide

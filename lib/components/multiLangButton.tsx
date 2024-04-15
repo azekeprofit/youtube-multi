@@ -1,12 +1,11 @@
-import { createPortal, useEffect, useRef, useState } from "preact/compat";
+import { createPortal, useEffect, useState } from "preact/compat";
 import { useCaptions } from "../hooks/useCaptions";
 import { clearSrtCaptions, setShowCap, useSrt } from "../model/store";
 import { getCaptionId, getVideoId } from "../model/youtube";
 import { CaptionLines } from "./CaptionLines";
 import { SrtMenuItem } from "./SrtMenuItem";
 import { CcIcon } from "./ccIcon";
-import { SrtCheckbox } from "./srtCheckbox";
-import { YtLangCheckbox } from "./ytLangCheckbox";
+import { ScrollablePanel } from "./scrollablePanel";
 
 export function MultiLangButton() {
     const videoId = getVideoId();
@@ -26,40 +25,9 @@ export function MultiLangButton() {
         if (originalCaptions) originalCaptions.style.display = pressed ? 'none' : '';
     }, [pressed])
 
-    const ref = useRef<HTMLDivElement>(null);
-    const intervalRef=useRef<Timer>();
-
-    function mouseDown(step:number){
-        return ()=>{
-        if(!intervalRef.current){
-            intervalRef.current=setInterval(()=>ref?.current.scrollBy(step,0), 100)
-        }}
-    }
-    
-    
-    function mouseUp(){
-        if(intervalRef.current){
-            clearInterval(intervalRef.current)
-            intervalRef.current=null;
-        }
-    }
-    
 
     return <>
-        {pressed&&<div className="youtube-multi-checkboxes">
-            <div class="not-to-scroll">
-                <div className="scroll" ref={ref}>
-                    {capts.map(caption =>
-                        <YtLangCheckbox key={caption.baseUrl} caption={caption} />)}
-                    {capIds.map(capId =>
-                        <SrtCheckbox key={capId} label={srtCaps[capId]} captionId={capId} />)}
-                </div>
-                <div class="carousel-arrows">
-                    <i class="arrow left" onMouseDown={mouseDown(-15)} onMouseUp={mouseUp} onMouseLeave={mouseUp}  ></i>
-                    <i class="arrow right" onMouseDown={mouseDown(15)} onMouseUp={mouseUp} onMouseLeave={mouseUp}  ></i>
-                </div>
-            </div>
-        </div>}
+        {pressed && <ScrollablePanel capts={capts} capIds={capIds} srtCaps={srtCaps} />}
         <button
             class="ytp-subtitles-button ytp-button"
             aria-pressed={anyCaptions && pressed}
