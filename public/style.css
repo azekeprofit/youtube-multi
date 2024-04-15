@@ -15,16 +15,12 @@ button.ytp-subtitles-button.ytp-button {
     border: none;
     cursor: pointer;
   }
-
-  label {
-    vertical-align: text-bottom;
-  }
 }
 
 #youtube-multi-checkboxes {
   display: inline-block;
   height: 48px;
-  vertical-align: text-bottom;
+  vertical-align: top;
 
   .unscroll {
     display: flex;
