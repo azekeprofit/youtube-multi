@@ -10,9 +10,8 @@ import { ScrollablePanel } from "./scrollablePanel";
 export function MultiLangButton() {
     const videoId = getVideoId();
     const capts = useCaptions();
-    const srtCaps = useSrt(s => s.srtCaptions);
-    const capIds = Object.keys(srtCaps);
-    const anyCaptions = (capts.length + capIds.length) > 0;
+    const srtCapsCount  = useSrt(s => Object.keys(s.srtCaptions).length);
+    const anyCaptions = (capts.length + srtCapsCount) > 0;
 
     useEffect(() => {
         if (capts.length == 1)
@@ -27,7 +26,7 @@ export function MultiLangButton() {
 
 
     return <>
-        {pressed && <ScrollablePanel capts={capts} capIds={capIds} srtCaps={srtCaps} />}
+        {pressed && <ScrollablePanel />}
         <button
             class="ytp-subtitles-button ytp-button"
             aria-pressed={anyCaptions && pressed}

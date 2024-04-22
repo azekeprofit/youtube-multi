@@ -3,8 +3,9 @@ import { useShowCaps, useTracks } from "../model/store";
 import { loadYoutubeCaptions } from "../model/subtitle";
 import { addTrack, getCaptionId, getTranslation, type ytCaptionTrack } from "../model/youtube";
 import { CaptionCheckbox } from "./CaptionCheckbox";
+import { useCaptions } from "../hooks/useCaptions";
 
-export function YtLangCheckbox({ caption }: { caption: ytCaptionTrack }) {
+function YtLangCheckbox({ caption }: { caption: ytCaptionTrack }) {
     const { languageCode, kind, baseUrl } = caption;
     const captionId = getCaptionId(caption);
 
@@ -28,4 +29,9 @@ export function YtLangCheckbox({ caption }: { caption: ytCaptionTrack }) {
     }, [showCap, track])
 
     return <CaptionCheckbox showCap={showCap} track={track} title={getTranslation(languageCode)} label={`${languageCode}${kind == 'asr' ? ' (auto)' : ''}`} captionId={captionId} />
+}
+
+export function YoutubeCaptionCheckboxes(){
+    const capts=useCaptions();
+    return <>{capts.map(caption => <YtLangCheckbox key={caption.baseUrl} caption={caption} />)}</>
 }

@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "preact/hooks";
-import { YtLangCheckbox } from "./ytLangCheckbox";
-import { SrtCheckbox } from "./srtCheckbox";
-import type { captionId, ytCaptionTrack } from "../model/youtube";
+import { SrtCheckboxes } from "./srtCheckbox";
+import { YoutubeCaptionCheckboxes } from "./ytLangCheckbox";
 
-export function ScrollablePanel({ capIds, capts, srtCaps }: { capIds: captionId[], capts: ytCaptionTrack[], srtCaps: Record<captionId, string> }) {
+export function ScrollablePanel() {
     const ref = useRef<HTMLDivElement>(null);
     const intervalRef = useRef<Timer>();
     const [showLeft, setShowLeft] = useState(false);
@@ -37,10 +36,8 @@ export function ScrollablePanel({ capIds, capts, srtCaps }: { capIds: captionId[
         <div class="unscroll">
             <span class={`arrow left${showLeft ? ' show' : ''}`} {...mouseHold(-15)}>🠜</span>
             <div class="scroll" ref={ref} onScroll={scroll}>
-                {capts.map(caption =>
-                    <YtLangCheckbox key={caption.baseUrl} caption={caption} />)}
-                {capIds.map(capId =>
-                    <SrtCheckbox key={capId} label={srtCaps[capId]} captionId={capId} />)}
+                <YoutubeCaptionCheckboxes />
+                <SrtCheckboxes />
             </div>
             <span class={`arrow right ${showRight ? ' show' : ''}`} {...mouseHold(15)}>🠞</span>
         </div>
