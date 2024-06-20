@@ -14,7 +14,7 @@ Here are some of the videos i tested this extension on:
 
 * [도시로 간 처녀(1981) The Maiden Who Went to the City](https://www.youtube.com/watch?v=QHSN2HJiLIQ) -- one of the many old films on Korean Classic Films Archive channel, has English and Korean subtitles.
 
-* [Similarities of QAZAQ and JAPANESE!](https://www.youtube.com/watch?v=h_FAznIsIoY) -- has English, Kazakh Cyrillic and Kazakh Latin subtitles.
+* [Similarities of QAZAQ and JAPANESE](https://www.youtube.com/watch?v=h_FAznIsIoY) -- has English, Kazakh Cyrillic and Kazakh Latin subtitles.
 
 
 ## Building
