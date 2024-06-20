@@ -4,7 +4,7 @@ import { type captionId } from "./youtube";
 
 export type captionStatus = Date | boolean | undefined;
 
-function addDays(date, days) {
+function addDays(date: Date, days: number) {
   var result = new Date(date);
   result.setDate(result.getDate() + days);
   return result;
@@ -22,9 +22,9 @@ export const useShowCaps = create(
         return {
           showCap: Object.fromEntries(
             Object.entries(showCap).map(([key, value]) =>
-                value === false ? [key, undefined] :
+              value === false ? [key, undefined] :
                 value === true ? [key, new Date()] :
-                [key, new Date(value) > previousDay ? new Date(value) : undefined]
+                  [key, new Date(value) > previousDay ? new Date(value) : undefined]
             )
           ),
         };

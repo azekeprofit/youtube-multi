@@ -6,18 +6,19 @@ export interface ytName {
 
 export type ytCaptionKind = "asr" | undefined;
 
-type languageCode=string;
+type languageCode = string;
+type vssId = string;
 
 export interface ytCaptionTrack {
   baseUrl: string;
-  // vssId:string;
+  vssId: vssId;
   languageCode: languageCode;
   name: ytName;
   kind: ytCaptionKind;
 }
 
 interface ytTranslationLanguage {
-  languageCode:languageCode;
+  languageCode: languageCode;
   languageName: ytName;
 }
 
@@ -61,7 +62,7 @@ export function getVideoTag() {
   return document.querySelector<HTMLVideoElement>("#movie_player video");
 }
 
-function getResponse(){
+function getResponse() {
   return getVideoPlayer().getPlayerResponse()
 }
 
@@ -70,18 +71,22 @@ export function getVideoId() {
   return getResponse()?.videoDetails?.videoId;
 }
 
-export function getTranslation(langCode:languageCode){
-  const tl=getResponse()?.captions?.playerCaptionsTracklistRenderer?.translationLanguages??[];
-  return tl.find(l=>l.languageCode===langCode)?.languageName?.simpleText ?? langCode;
+export function extractName(name: ytName) {
+  return name.simpleText;
+}
+
+export function getTranslation(langCode: languageCode) {
+  const tl = getResponse()?.captions?.playerCaptionsTracklistRenderer?.translationLanguages ?? [];
+  return tl.find(l => l.languageCode === langCode)?.languageName?.simpleText ?? langCode;
 }
 
 export type captionId = string;
-export function getCaptionId({ languageCode }: ytCaptionTrack): captionId {
-  return `${getVideoId()}.${languageCode}`;
+export function getCaptionId({ vssId }: ytCaptionTrack): captionId {
+  return `${getVideoId()}.${vssId}`;
 }
 
-export function addTrack(captionId: captionId, langCode: languageCode) {
-  const track = getVideoTag().addTextTrack("captions", langCode, langCode);
+export function addTrack(captionId: captionId, vssId: vssId) {
+  const track = getVideoTag().addTextTrack("captions", vssId, vssId);
   addTrackToCache(captionId, track);
   return track;
 }

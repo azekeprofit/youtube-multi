@@ -1,12 +1,12 @@
 import { useEffect } from "preact/hooks";
+import { useCaptions } from "../hooks/useCaptions";
 import { useShowCaps, useTracks } from "../model/store";
 import { loadYoutubeCaptions } from "../model/subtitle";
-import { addTrack, getCaptionId, getTranslation, type ytCaptionTrack } from "../model/youtube";
+import { addTrack, extractName, getCaptionId, type ytCaptionTrack } from "../model/youtube";
 import { CaptionCheckbox } from "./CaptionCheckbox";
-import { useCaptions } from "../hooks/useCaptions";
 
 function YtLangCheckbox({ caption }: { caption: ytCaptionTrack }) {
-    const { languageCode, kind, baseUrl } = caption;
+    const { vssId, kind, baseUrl, name, languageCode } = caption;
     const captionId = getCaptionId(caption);
 
     const track = useTracks(s => s.cache[captionId]);
@@ -14,7 +14,7 @@ function YtLangCheckbox({ caption }: { caption: ytCaptionTrack }) {
 
     useEffect(() => {
         if (!track) {
-            const newTrack = addTrack(captionId, languageCode);
+            const newTrack = addTrack(captionId, vssId);
             return () => {
                 newTrack.mode = 'disabled';
             }
@@ -28,10 +28,10 @@ function YtLangCheckbox({ caption }: { caption: ytCaptionTrack }) {
                 loadYoutubeCaptions(captionId, track, text));
     }, [showCap, track])
 
-    return <CaptionCheckbox showCap={showCap} track={track} title={getTranslation(languageCode)} label={`${languageCode}${kind == 'asr' ? ' (auto)' : ''}`} captionId={captionId} />
+    return <CaptionCheckbox showCap={showCap} track={track} title={extractName(name)} label={`${languageCode}${kind == 'asr' ? ' (auto)' : ''}`} captionId={captionId} />
 }
 
 export function YoutubeCaptionCheckboxes(){
     const capts=useCaptions();
-    return <>{capts.map(caption => <YtLangCheckbox key={caption.baseUrl} caption={caption} />)}</>
+    return <>{capts.map(caption => <YtLangCheckbox key={caption.vssId} caption={caption} />)}</>
 }
