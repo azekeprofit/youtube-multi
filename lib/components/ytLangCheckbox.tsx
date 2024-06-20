@@ -12,6 +12,7 @@ function YtLangCheckbox({ caption }: { caption: ytCaptionTrack }) {
     const track = useTracks(s => s.cache[captionId]);
     const showCap = useShowCaps(s => s.showCap[captionId]);
 
+    
     useEffect(() => {
         if (!track) {
             const newTrack = addTrack(captionId, vssId);
