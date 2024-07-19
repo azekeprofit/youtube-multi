@@ -1,9 +1,9 @@
-import Markup from "preact-markup";
-import { useEffect, useMemo } from "preact/hooks";
+import { useEffect } from "preact/hooks";
 import { forceUpdate } from "../hooks/forceUpdate";
 import { useCaptions } from "../hooks/useCaptions";
 import { useShowCaps, useSrt, useTracks } from "../model/store";
 import { getCaptionId, type captionId } from "../model/youtube";
+import { Cue } from "./Cue";
 
 export function CaptionLines() {
   const cpt = useCaptions().map(getCaptionId);
@@ -39,29 +39,6 @@ function ActiveTrack({ captionId }: { captionId: captionId }) {
         {Array.from(track?.activeCues ?? []).map((c: VTTCue) => (
           <Cue key={c.id} cue={c} />
         ))}
-      </div>
-    )
-  );
-}
-
-function htmlDecode(input) {
-  var doc = new DOMParser().parseFromString(input, "text/html");
-  return doc.documentElement.textContent;
-}
-
-const components = { i: ({ children }) => <> <i>{children}</i></> };
-
-function Cue({ cue: { text } }: { cue: VTTCue }) {
-  const parsed = useMemo(() => htmlDecode(text), [text]);
-
-  return (
-    parsed && (
-      <div class="caption-visual-line">
-        <div class="bg">
-          <div class="ytp-caption-segment">
-            <Markup markup={parsed} type="html" components={components} />
-          </div>
-        </div>
       </div>
     )
   );
