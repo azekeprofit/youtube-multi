@@ -9,7 +9,7 @@ export function loadYoutubeCaptions(
   addCue(track, capId, -1, -1, '', -1);
   let prevCue: VTTCue = null;
   new DOMParser()
-    .parseFromString(text.replace(/&amp;/g, "&"), "text/xml")
+    .parseFromString(text, "text/xml")
     .querySelectorAll<HTMLElement>("text")
     .forEach((l, index) => {
       const start = parseInt(l.getAttribute("start") ?? "");
