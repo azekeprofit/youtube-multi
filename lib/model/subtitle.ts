@@ -12,7 +12,7 @@ export function loadYoutubeCaptions(
     .parseFromString(text, "text/xml")
     .querySelectorAll<HTMLElement>("text")
     .forEach((l, index) => {
-      const start = parseInt(l.getAttribute("start") ?? "");
+      const start = parseFloat(l.getAttribute("start"));
       if (prevCue != null) {
         if (prevCue.startTime == prevCue.endTime) prevCue.endTime = start;
       }
@@ -20,8 +20,8 @@ export function loadYoutubeCaptions(
         track,
         capId,
         start,
-        parseInt(l.getAttribute("dur") ?? "") + start,
-        l.innerHTML.trim(),
+        parseFloat(l.getAttribute("dur") ?? "0") + start,
+        l.innerHTML,
         index
       );
       if (cue) prevCue = cue;
