@@ -1,33 +1,41 @@
 import { render } from "preact";
 import { MultiLangButton } from "./components/multiLangButton";
 
-const ccButtonSelector = ".ytp-subtitles-button.ytp-button";
 const stop = setInterval(() => {
-  const multiLangButton = document.querySelector<HTMLElement>(`button${ccButtonSelector}`);
-  const controlPanel = document.getElementById(`ytControlPanel`);
+  const multiLangButton = document.querySelector<HTMLElement>(`button.ytp-subtitles-button.ytp-button`);
+  let controlPanel = document.getElementById(`ytControlPanel`);
 
   if (multiLangButton && !controlPanel) {
-    multiLangButton.insertAdjacentHTML(
-      "beforebegin",
-      "<span id=ytControlPanel></span>"
-    )
+    controlPanel = document.createElement('span');
+    controlPanel.id = 'ytControlPanel';
+    multiLangButton.parentNode.insertBefore(controlPanel, multiLangButton);
   }
 
   const srtFileMenuItem = document.getElementById('srtFileInput');
 
   if (!srtFileMenuItem) {
     const menu = document.querySelector(".ytp-popup.ytp-settings-menu .ytp-panel .ytp-panel-menu");
-    if (menu)
-      menu.insertAdjacentHTML("afterbegin", `<div class="ytp-menuitem" aria-haspopup="true" role="menuitem" tabindex="0" id="srtFileInput"></div>`);
+    if (menu) {
+      const srtFileInput = document.createElement('span');
+      srtFileInput.id = 'srtFileInput';
+      srtFileInput.className = 'ytp-menuitem';
+      srtFileInput.ariaHasPopup = 'true';
+      srtFileInput.role = 'menuitem';
+      srtFileInput.tabIndex = 0;
+      menu.insertBefore(srtFileInput, menu.firstChild);
+    }
   }
 
+  let captionContainer = document.getElementById('youtube-multi-caption-container');
   const chromeBottom = document.querySelector('.ytp-chrome-bottom');
-  if (chromeBottom) {
-    chromeBottom.insertAdjacentHTML("beforebegin", `<div id="youtube-multi-caption-container"></div>`)
+  if (chromeBottom && !captionContainer) {
+    captionContainer = document.createElement('div');
+    captionContainer.id = 'youtube-multi-caption-container';
+    chromeBottom.parentNode.insertBefore(captionContainer, chromeBottom);
   }
 
   if (srtFileMenuItem && controlPanel && chromeBottom) {
     render(<MultiLangButton />, controlPanel);
     clearInterval(stop);
   }
-}, 700);
+}, 200)

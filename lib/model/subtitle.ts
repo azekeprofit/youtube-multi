@@ -3,14 +3,12 @@ import { addCue, type captionId } from "./youtube";
 export function loadYoutubeCaptions(
   capId: captionId,
   track: TextTrack,
-  text: string
+  doc: Document
 ) {
   // add stub cue
   addCue(track, capId, -1, -1, '', -1);
   let prevCue: VTTCue = null;
-  new DOMParser()
-    .parseFromString(text, "text/xml")
-    .querySelectorAll<HTMLElement>("text")
+  doc.querySelectorAll<HTMLElement>("text")
     .forEach((l, index) => {
       const start = parseFloat(l.getAttribute("start"));
       if (prevCue != null) {
@@ -21,7 +19,7 @@ export function loadYoutubeCaptions(
         capId,
         start,
         parseFloat(l.getAttribute("dur") ?? "0") + start,
-        l.innerHTML,
+        l.textContent,
         index
       );
       if (cue) prevCue = cue;

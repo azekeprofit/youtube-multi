@@ -12,7 +12,7 @@ function YtLangCheckbox({ caption }: { caption: ytCaptionTrack }) {
     const track = useTracks(s => s.cache[captionId]);
     const showCap = useShowCaps(s => s.showCap[captionId]);
 
-    
+
     useEffect(() => {
         if (!track) {
             const newTrack = addTrack(captionId, vssId);
@@ -24,15 +24,19 @@ function YtLangCheckbox({ caption }: { caption: ytCaptionTrack }) {
 
     useEffect(() => {
         // loadYoutubeCaptions always adds at least one cue so by checking if cues are empty we prevent over-fetching
-        if (track && showCap && track.cues.length == 0)
-            fetch(baseUrl).then(r => r.text()).then(text =>
-                loadYoutubeCaptions(captionId, track, text));
+        if (track && showCap && track.cues.length == 0) {
+            const xhr = new XMLHttpRequest();
+            xhr.onload = () => loadYoutubeCaptions(captionId, track, xhr.responseXML);
+            xhr.open("GET", baseUrl);
+            xhr.responseType = "document";
+            xhr.send();
+        }
     }, [showCap, track])
 
     return <CaptionCheckbox showCap={showCap} track={track} title={extractName(name)} label={`${languageCode}${kind == 'asr' ? ' (auto)' : ''}`} captionId={captionId} />
 }
 
-export function YoutubeCaptionCheckboxes(){
-    const capts=useCaptions();
+export function YoutubeCaptionCheckboxes() {
+    const capts = useCaptions();
     return <>{capts.map(caption => <YtLangCheckbox key={caption.vssId} caption={caption} />)}</>
 }
