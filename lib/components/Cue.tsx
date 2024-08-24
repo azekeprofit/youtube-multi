@@ -3,7 +3,7 @@ import { useMemo } from "preact/hooks";
 
 export function Cue({ cue: { text } }: { cue: VTTCue }) {
   const parsed = useMemo(() =>
-    sanitize(text, { ALLOWED_TAGS: ['b', 'i'], RETURN_TRUSTED_TYPE: true })
+    sanitize(text, { ALLOWED_TAGS: ['b', 'i', 'u', 'font'], RETURN_TRUSTED_TYPE: true })
     , [text]);
 
   return (
