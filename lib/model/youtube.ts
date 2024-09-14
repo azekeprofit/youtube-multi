@@ -44,14 +44,18 @@ interface ytPlayerResponse {
   captions: ytCaptions;
   videoDetails: ytVideoDetails;
 }
+
 type stateChangeListener = (e: number) => void;
+
+type eventListener = (
+  event: "onStateChange",
+  listener: stateChangeListener
+) => void;
+
 export interface ytPlayer {
   getPlayerResponse: () => ytPlayerResponse;
-  stateChangeListener: stateChangeListener;
-  addEventListener: (
-    event: "onStateChange",
-    listener: stateChangeListener
-  ) => void;
+  addEventListener: eventListener;
+  removeEventListener: eventListener;
 }
 
 export function getVideoPlayer() {
@@ -63,7 +67,7 @@ export function getVideoTag() {
 }
 
 function getResponse() {
-  return getVideoPlayer().getPlayerResponse()
+  return getVideoPlayer().getPlayerResponse();
 }
 
 export type videoId = string;
@@ -76,8 +80,13 @@ export function extractName(name: ytName) {
 }
 
 export function getTranslation(langCode: languageCode) {
-  const tl = getResponse()?.captions?.playerCaptionsTracklistRenderer?.translationLanguages ?? [];
-  return tl.find(l => l.languageCode === langCode)?.languageName?.simpleText ?? langCode;
+  const tl =
+    getResponse()?.captions?.playerCaptionsTracklistRenderer
+      ?.translationLanguages ?? [];
+  return (
+    tl.find((l) => l.languageCode === langCode)?.languageName?.simpleText ??
+    langCode
+  );
 }
 
 export type captionId = string;
