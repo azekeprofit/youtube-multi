@@ -8,6 +8,7 @@ button.ytp-subtitles-button.ytp-button {
   display: inline-block;
   width: auto;
   height: 100%;
+  line-height: normal;
 
   button {
     display: inline-block;
@@ -20,7 +21,7 @@ button.ytp-subtitles-button.ytp-button {
 #youtube-multi-checkboxes {
   display: inline-block;
   height: 48px;
-  vertical-align: top;
+  vertical-align: middle;
 
   .unscroll {
     display: flex;

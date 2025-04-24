@@ -3,16 +3,16 @@
   "module": "lib/wrapper.tsx",
   "type": "module",
   "devDependencies": {
-    "@types/bun": "^1.0.12",
-    "@types/dompurify": "^3.0.5",
-    "typescript": "^5.4.3",
-    "typescript-plugin-css-modules": "^5.1.0"
+    "@types/bun": "^1.2.10",
+    "@types/dompurify": "^3.2.0",
+    "typescript": "^5.8.3"
   },
   "scripts": {
     "build": "bun run cfg/build.ts"
   },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
-  },
-  "dependencies": { "dompurify": "^3.1.6", "preact": "^10.20.1", "zustand": "^4.5.2" }
+  "dependencies": {
+    "dompurify": "^3.2.5",
+    "preact": "^10.26.5",
+    "zustand": "^4.5.6"
+  }
 }
