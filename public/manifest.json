@@ -13,7 +13,7 @@
   "service_worker": "background.js",
   "type": "module"
 },
-  "permissions":["webRequest","storage","scripting"],
+  "permissions":["webRequest","scripting"],
   "host_permissions": ["https://www.youtube.com/*"],
   "content_scripts": [
     {

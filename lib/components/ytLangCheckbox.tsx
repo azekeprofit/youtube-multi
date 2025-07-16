@@ -1,7 +1,7 @@
 import { useEffect } from "preact/hooks";
 import { useCaptions } from "../hooks/useCaptions";
 import { useShowCaps, useTracks } from "../model/store";
-import { addTrack, extractName, getCaptionId, type ytCaptionTrack } from "../model/youtube";
+import { addTrack, extractName, getCaptionId, getVideoId, type ytCaptionTrack } from "../model/youtube";
 import { CaptionCheckbox } from "./CaptionCheckbox";
 import { loadSrtLine } from "../model/srtSubtitle";
 
@@ -11,7 +11,8 @@ function YtLangCheckbox({ caption }: { caption: ytCaptionTrack }) {
 
     const track = useTracks(s => s.cache[captionId]);
     const showCap = useShowCaps(s => s.showCap[captionId]);
-    const pot = localStorage.getItem('youtube multi pot');
+    const videoId = getVideoId();
+    const pot = sessionStorage.getItem(`youtube multi pot ${videoId}`);
 
     useEffect(() => {
         if (!track) {
@@ -27,7 +28,7 @@ function YtLangCheckbox({ caption }: { caption: ytCaptionTrack }) {
         if (track && showCap && track.cues.length == 0) {
             const xhr = new XMLHttpRequest();
             xhr.onload = () => loadSrtLine(track, captionId, xhr.responseText);
-            xhr.open("GET", baseUrl+`&c=WEB&potc=1&fmt=srt&pot=` + pot);
+            xhr.open("GET", baseUrl + `&c=WEB&potc=1&fmt=srt&pot=` + pot);
             xhr.responseType = "text";
             xhr.send();
         }
