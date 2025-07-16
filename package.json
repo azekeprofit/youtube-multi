@@ -5,6 +5,7 @@
   "devDependencies": {
     "@types/bun": "^1.2.10",
     "@types/dompurify": "^3.2.0",
+    "@types/chrome": "^0.1.0",
     "typescript": "^5.8.3"
   },
   "scripts": {

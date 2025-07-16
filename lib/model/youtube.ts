@@ -56,6 +56,8 @@ export interface ytPlayer {
   getPlayerResponse: () => ytPlayerResponse;
   addEventListener: eventListener;
   removeEventListener: eventListener;
+  toggleSubtitles:()=>void;
+  toggleSubtitlesOn:()=>void;
 }
 
 export function getVideoPlayer() {

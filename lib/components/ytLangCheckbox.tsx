@@ -1,9 +1,9 @@
 import { useEffect } from "preact/hooks";
 import { useCaptions } from "../hooks/useCaptions";
 import { useShowCaps, useTracks } from "../model/store";
-import { loadYoutubeCaptions } from "../model/subtitle";
 import { addTrack, extractName, getCaptionId, type ytCaptionTrack } from "../model/youtube";
 import { CaptionCheckbox } from "./CaptionCheckbox";
+import { loadSrtLine } from "../model/srtSubtitle";
 
 function YtLangCheckbox({ caption }: { caption: ytCaptionTrack }) {
     const { vssId, kind, baseUrl, name, languageCode } = caption;
@@ -11,7 +11,7 @@ function YtLangCheckbox({ caption }: { caption: ytCaptionTrack }) {
 
     const track = useTracks(s => s.cache[captionId]);
     const showCap = useShowCaps(s => s.showCap[captionId]);
-
+    const pot = localStorage.getItem('youtube multi pot');
 
     useEffect(() => {
         if (!track) {
@@ -26,12 +26,12 @@ function YtLangCheckbox({ caption }: { caption: ytCaptionTrack }) {
         // loadYoutubeCaptions always adds at least one cue so by checking if cues are empty we prevent over-fetching
         if (track && showCap && track.cues.length == 0) {
             const xhr = new XMLHttpRequest();
-            xhr.onload = () => loadYoutubeCaptions(captionId, track, xhr.responseXML);
-            xhr.open("GET", baseUrl);
-            xhr.responseType = "document";
+            xhr.onload = () => loadSrtLine(track, captionId, xhr.responseText);
+            xhr.open("GET", baseUrl+`&c=WEB&potc=1&fmt=srt&pot=` + pot);
+            xhr.responseType = "text";
             xhr.send();
         }
-    }, [showCap, track])
+    }, [showCap, track, pot])
 
     return <CaptionCheckbox showCap={showCap} track={track} title={extractName(name)} label={`${languageCode}${kind == 'asr' ? ' (auto)' : ''}`} captionId={captionId} />
 }

@@ -16,7 +16,7 @@ function createTrack(fileName: string, lines: string) {
   addSrtCaption(capId, fileName);
 }
 
-function loadSrtLine(track: TextTrack, capId: captionId, srtLines: string) {
+export function loadSrtLine(track: TextTrack, capId: captionId, srtLines: string) {
   const lineRegex =
     /(\d+)\r?\n(\d\d):(\d\d):(\d\d)\,(\d\d\d) --> (\d\d):(\d\d):(\d\d)\,(\d\d\d)\r?\n/;
 
