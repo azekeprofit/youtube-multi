@@ -16,8 +16,6 @@ export function MultiLangButton() {
     const anyCaptions = (capts.length + srtCapsCount) > 0;
 
     useEffect(() => {
-        player.toggleSubtitlesOn();
-
         if (capts.length == 1)
             setShowCap(getCaptionId(capts[0]), true);
         clearSrtCaptions();

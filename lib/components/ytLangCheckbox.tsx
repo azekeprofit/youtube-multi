@@ -2,7 +2,7 @@ import { useEffect } from "preact/hooks";
 import { useCaptions } from "../hooks/useCaptions";
 import { loadSrtLine } from "../model/srtSubtitle";
 import { usePots, useShowCaps, useTracks } from "../model/store";
-import { addTrack, extractName, getCaptionId, getVideoId, type ytCaptionTrack } from "../model/youtube";
+import { addTrack, extractName, getCaptionId, getVideoId, getVideoPlayer, type ytCaptionTrack } from "../model/youtube";
 import { CaptionCheckbox } from "./CaptionCheckbox";
 
 function YtLangCheckbox({ caption }: { caption: ytCaptionTrack }) {
@@ -11,8 +11,7 @@ function YtLangCheckbox({ caption }: { caption: ytCaptionTrack }) {
 
     const track = useTracks(s => s.cache[captionId]);
     const showCap = useShowCaps(s => s.showCap[captionId]);
-    const pot = usePots(s=>s.pots[getVideoId()]);
-console.dir([showCap, track, pot,getVideoId()]);
+    const pot = usePots(s => s.pots[getVideoId()]);
     useEffect(() => {
         if (!track) {
             const newTrack = addTrack(captionId, vssId);
@@ -23,6 +22,7 @@ console.dir([showCap, track, pot,getVideoId()]);
     }, [getVideoId()])
 
     useEffect(() => {
+        if (!pot) getVideoPlayer().toggleSubtitlesOn();
         // loadSrtLine always adds at least one cue so by checking if cues are empty we prevent over-fetching
         if (showCap && track?.cues?.length === 0 && pot) {
             const xhr = new XMLHttpRequest();
