@@ -10,8 +10,10 @@ export function ScrollablePanel() {
 
     const scroll = useCallback(() => {
         const scroll = ref.current;
+        if(scroll){
         setShowLeft(scroll.scrollLeft != 0);
         setShowRight(scroll.scrollLeft < (scroll.scrollWidth - scroll.clientWidth - 15));
+        }
     }, [])
 
     useEffect(scroll, [])

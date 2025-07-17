@@ -1,5 +1,7 @@
 import { render } from "preact";
 import { MultiLangButton } from "./components/multiLangButton";
+import { usePots } from "./model/store";
+import type { videoId } from "./model/youtube";
 
 const stop = setInterval(() => {
   const multiLangButton = document.querySelector<HTMLElement>(`button.ytp-subtitles-button.ytp-button`);
@@ -39,3 +41,9 @@ const stop = setInterval(() => {
     clearInterval(stop);
   }
 }, 200)
+
+document.addEventListener("youtube multi pot",
+   ({detail:{videoId,pot}}:CustomEventInit<{videoId:videoId,pot:string}>)=>
+usePots.setState({pots:{
+      ...usePots.getState().pots,
+      [videoId]:pot}}))

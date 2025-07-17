@@ -18,16 +18,14 @@ export function MultiLangButton() {
         if (capts.length == 1)
             setShowCap(getCaptionId(capts[0]), true);
         clearSrtCaptions();
-        player.toggleSubtitlesOn();
     }, [videoId])
     const [pressed, setPressed] = useState(false);
     useEffect(() => {
         const originalCaptions = document.querySelector<HTMLDivElement>('#ytp-caption-window-container');
         if (originalCaptions) originalCaptions.style.display = pressed ? 'none' : '';
-        if (!pressed) {
-            player.toggleSubtitlesOn();
+        player.toggleSubtitlesOn();
+        if (!pressed)
             player.toggleSubtitles();
-        }
     }, [pressed])
 
 

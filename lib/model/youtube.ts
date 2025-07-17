@@ -1,3 +1,4 @@
+import type { Brand } from "./branded";
 import { addTrackToCache } from "./store";
 
 export interface ytName {
@@ -72,9 +73,9 @@ function getResponse() {
   return getVideoPlayer().getPlayerResponse();
 }
 
-export type videoId = string;
+export type videoId = Brand<string,'videoId'>;
 export function getVideoId() {
-  return getResponse()?.videoDetails?.videoId;
+  return getResponse()?.videoDetails?.videoId as videoId;
 }
 
 export function extractName(name: ytName) {
@@ -91,9 +92,9 @@ export function getTranslation(langCode: languageCode) {
   );
 }
 
-export type captionId = string;
-export function getCaptionId({ vssId }: ytCaptionTrack): captionId {
-  return `${getVideoId()}.${vssId}`;
+export type captionId = Brand<string,'captionId'>;
+export function getCaptionId({ vssId }: ytCaptionTrack) {
+  return `${getVideoId()}.${vssId}` as captionId;
 }
 
 export function addTrack(captionId: captionId, vssId: vssId) {

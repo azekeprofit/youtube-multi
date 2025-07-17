@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { type captionId } from "./youtube";
+import { type captionId, type videoId } from "./youtube";
 
 export type captionStatus = Date | boolean | undefined;
 
@@ -38,6 +38,11 @@ export function setShowCap(captionId: captionId, show: captionStatus) {
     showCap: { ...prev.showCap, [captionId]: show },
   }));
 }
+
+
+export const usePots = create(() => ({
+  pots: {} as Record<videoId, string>,
+}));
 
 export const useTracks = create(() => ({
   cache: {} as Record<captionId, TextTrack>,
