@@ -24,7 +24,7 @@ function YtLangCheckbox({ caption }: { caption: ytCaptionTrack }) {
     }, [])
 
     useEffect(() => {
-        // loadYoutubeCaptions always adds at least one cue so by checking if cues are empty we prevent over-fetching
+        // loadSrtLine always adds at least one cue so by checking if cues are empty we prevent over-fetching
         if (track && showCap && track.cues.length == 0) {
             const xhr = new XMLHttpRequest();
             xhr.onload = () => loadSrtLine(track, captionId, xhr.responseText);

@@ -20,6 +20,9 @@ export function loadSrtLine(track: TextTrack, capId: captionId, srtLines: string
   const lineRegex =
     /(\d+)\r?\n(\d\d):(\d\d):(\d\d)\,(\d\d\d) --> (\d\d):(\d\d):(\d\d)\,(\d\d\d)\r?\n/;
 
+  // add stub cue
+  addCue(track, capId, -1, -1, '', -1);
+
   const arr = srtLines.split(lineRegex);
   let i=0;
   const popStr = ()=>arr[i++];
