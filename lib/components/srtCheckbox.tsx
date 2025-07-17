@@ -1,4 +1,4 @@
-import { useMemo } from "preact/hooks";
+import { getKeys } from "../model/getKeys";
 import { useShowCaps, useSrt, useTracks } from "../model/store";
 import { type captionId } from "../model/youtube";
 import { CaptionCheckbox } from "./CaptionCheckbox";
@@ -15,5 +15,5 @@ function SrtCheckbox({ captionId, label }: { captionId: captionId, label: string
 
 export function SrtCheckboxes(){
     const srt=useSrt(s=>s.srtCaptions);
-    return <>{Object.keys(srt).map(capId => <SrtCheckbox key={capId} label={srt[capId]} captionId={capId} />)}</>
+    return <>{getKeys(srt).map(capId => <SrtCheckbox key={capId} label={srt[capId]} captionId={capId} />)}</>
 }

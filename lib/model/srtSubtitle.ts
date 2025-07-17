@@ -9,7 +9,7 @@ export function loadSrtCaptions(srtFilesObj: File) {
 }
 
 function createTrack(fileName: string, lines: string) {
-  const capId = "srtFile." + fileName;
+  const capId = `srtFile.${fileName}` as captionId;
   const track = addTrack(capId, fileName);
   loadSrtLine(track, capId, lines);
   setShowCap(capId, true);

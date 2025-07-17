@@ -3,6 +3,8 @@ button.ytp-subtitles-button.ytp-button {
   display: none;
 }
 
+#ytp-caption-window-container  {display: none;}
+
 .ytp-small-mode .ytp-chrome-controls #ytControlPanel,
 #ytControlPanel {
   display: inline-block;

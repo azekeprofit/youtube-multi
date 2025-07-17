@@ -4,10 +4,11 @@ import { useCaptions } from "../hooks/useCaptions";
 import { useShowCaps, useSrt, useTracks } from "../model/store";
 import { getCaptionId, type captionId } from "../model/youtube";
 import { Cue } from "./Cue";
+import { getKeys } from "../model/getKeys";
 
 export function CaptionLines() {
   const cpt = useCaptions().map(getCaptionId);
-  const srt = useSrt((s) => Object.keys(s.srtCaptions));
+  const srt = useSrt((s) => getKeys(s.srtCaptions));
 
   return (
     <div class="caption-window ytp-caption-window-bottom youtube-multi-bottom">
