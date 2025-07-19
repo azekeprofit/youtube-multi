@@ -19,7 +19,7 @@ function YtLangCheckbox({ caption }: { caption: ytCaptionTrack }) {
                 newTrack.mode = 'disabled';
             }
         }
-    }, [getVideoId()])
+    }, [])
 
     useEffect(() => {
         if (!pot) getVideoPlayer().toggleSubtitlesOn();
@@ -27,7 +27,7 @@ function YtLangCheckbox({ caption }: { caption: ytCaptionTrack }) {
         if (showCap && track?.cues?.length === 0 && pot) {
             const xhr = new XMLHttpRequest();
             xhr.onload = () => loadSrtLine(track, captionId, xhr.responseText);
-            xhr.open("GET", baseUrl + `&c=WEB&potc=1&fmt=srt&pot=` + pot);
+            xhr.open("GET", `${baseUrl}&c=WEB&potc=1&fmt=srt&pot=${pot}`);
             xhr.responseType = "text";
             xhr.send();
         }

@@ -114,6 +114,5 @@ export function addCue(
     const cue = new VTTCue(start, end, html);
     cue.id = `${capId}.${index.toString()}`;
     track.addCue(cue);
-    return cue;
   }
 }
