@@ -4,7 +4,7 @@ import { YoutubeCaptionCheckboxes } from "./ytLangCheckbox";
 
 export function ScrollablePanel() {
     const ref = useRef<HTMLDivElement>(null);
-    const intervalRef = useRef<Timer>();
+    const intervalRef = useRef<Timer>(null);
     const [showLeft, setShowLeft] = useState(false);
     const [showRight, setShowRight] = useState(false);
 
