@@ -17,6 +17,10 @@ button.ytp-subtitles-button.ytp-button {
     background: transparent;
     border: none;
     cursor: pointer;
+
+    svg {
+      padding: 0;
+    }
   }
 }
 
