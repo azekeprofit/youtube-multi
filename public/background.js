@@ -1,6 +1,6 @@
 
 function setPot(videoId,pot){
-    document.dispatchEvent(new CustomEvent("youtube multi pot", {detail:{videoId,pot}}));
+    document.dispatchEvent(new CustomEvent("youtube multi pot", {detail:[videoId,pot]}));
 }
 
 function handler(o){

@@ -1,12 +1,12 @@
 import { createPortal, useEffect, useState } from "preact/compat";
 import { useCaptions } from "../hooks/useCaptions";
-import { clearSrtCaptions, setShowCap, usePots, useSrt } from "../model/store";
+import { getKeys } from "../model/getKeys";
+import { clearSrtCaptions, setShowCap, useSrt } from "../model/store";
 import { getCaptionId, getVideoId, getVideoPlayer } from "../model/youtube";
 import { CaptionLines } from "./CaptionLines";
 import { SrtMenuItem } from "./SrtMenuItem";
 import { CcIcon } from "./ccIcon";
 import { ScrollablePanel } from "./scrollablePanel";
-import { getKeys } from "../model/getKeys";
 
 export function MultiLangButton() {
     const videoId = getVideoId();

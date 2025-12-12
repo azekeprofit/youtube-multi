@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { type captionId, type videoId } from "./youtube";
+import { atomFamily } from "jotai-family";
+import { atom } from "jotai";
 
 export type captionStatus = Date | boolean | undefined;
 
@@ -39,10 +41,9 @@ export function setShowCap(captionId: captionId, show: captionStatus) {
   }));
 }
 
+export type potPayload = [videoId, string];
 
-export const usePots = create(() => ({
-  pots: {} as Record<videoId, string>,
-}));
+export const potFam = atomFamily((pot: potPayload) => atom(pot), (a, b) => a[0] === b[0]);
 
 export const useTracks = create(() => ({
   cache: {} as Record<captionId, TextTrack>,
