@@ -38,20 +38,10 @@ function addDays(date: Date, days: number) {
 // );
 
 export function setShowCap(captionId: captionId, show: captionStatus) {
-  getDefaultStore().set(getShowCapFam(captionId), show);
+  getDefaultStore().set(showCapFam(captionId), show);
 }
 
-function getFam<D>(fam: AtomFamily<string, D>) {
-  return (captionId: captionId) => fam([getVideoId(), captionId].join(','))
-}
-
-function useKeysFam<D>(fam: AtomFamily<string, D>) {
-  return () => useAllMyFam(fam).map(c => c.split(',')[1]);
-}
-
-const showCapFam = atomFamily((videoIdPluscaptionId: captionId) => atom(false as captionStatus));
-export const getShowCapFam = getFam(showCapFam);
-export const useShowCapKeys = useKeysFam(showCapFam);
+export const showCapFam = atomFamily((videoIdPluscaptionId: captionId) => atom(false as captionStatus));
 
 export const potFam = atomFamily((id: videoId) => atom(''));
 
@@ -67,10 +57,13 @@ export function useAllMyFam<P, A>(fam: AtomFamily<P, A>) {
   return [...fam.getParams()];
 }
 
-const srtFam = atomFamily((videoIdPluscaptionId: captionId) => atom(''));
-export const srtGetFam = getFam(srtFam);
-export const useSrtFam = useKeysFam(srtFam);
+export const srtFam = atomFamily((captionId: captionId) => atom(''));
 
 export function addSrtCaption(captionId: captionId, fileName: string) {
-  getDefaultStore().set(srtGetFam(captionId), fileName);
+  getDefaultStore().set(srtFam(captionId), fileName);
+}
+
+
+export function clearSrtCaptions() {
+  for (const s of srtFam.getParams()) srtFam.remove(s);
 }

@@ -2,7 +2,7 @@ import { useAtomValue } from "jotai";
 import { useEffect } from "preact/hooks";
 import { useCaptions } from "../hooks/useCaptions";
 import { loadSrtLine } from "../model/srtSubtitle";
-import { getShowCapFam, potFam, trackFam } from "../model/store";
+import { potFam, showCapFam, trackFam } from "../model/store";
 import { addTrack, extractName, getCaptionId, getVideoId, getVideoPlayer, type ytCaptionTrack } from "../model/youtube";
 import { CaptionCheckbox } from "./CaptionCheckbox";
 
@@ -11,7 +11,7 @@ function YtLangCheckbox({ caption }: { caption: ytCaptionTrack }) {
     const captionId = getCaptionId(caption);
 
     const track = useAtomValue(trackFam(captionId));
-    const showCap = useAtomValue(getShowCapFam(captionId));
+    const showCap = useAtomValue(showCapFam(captionId));
     const pot = useAtomValue(potFam(getVideoId()));
     useEffect(() => {
         if (!track) {
