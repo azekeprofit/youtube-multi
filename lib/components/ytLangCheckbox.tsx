@@ -34,7 +34,7 @@ function YtLangCheckbox({ caption }: { caption: ytCaptionTrack }) {
         }
     }, [showCap, track, pot])
 
-    return <CaptionCheckbox showCap={showCap} track={track} title={extractName(name)} label={`${languageCode}${kind == 'asr' ? ' (auto)' : ''}`} captionId={captionId} />
+    return <CaptionCheckbox track={track} title={extractName(name)} label={`${languageCode}${kind == 'asr' ? ' (auto)' : ''}`} captionId={captionId} />
 }
 
 export function YoutubeCaptionCheckboxes() {
