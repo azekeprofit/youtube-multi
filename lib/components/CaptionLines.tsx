@@ -1,16 +1,14 @@
 import { useAtomValue } from "jotai";
 import { useEffect } from "preact/hooks";
-import { useShallow } from "zustand/react/shallow";
 import { forceUpdate } from "../hooks/forceUpdate";
 import { useCaptions } from "../hooks/useCaptions";
-import { getKeys } from "../model/getKeys";
-import { trackFam, useShowCaps, useSrt } from "../model/store";
+import { trackFam, useShowCaps, useSrtFam } from "../model/store";
 import { getCaptionId, type captionId } from "../model/youtube";
 import { Cue } from "./Cue";
 
 export function CaptionLines() {
   const cpt = useCaptions().map(getCaptionId);
-  const srt = useSrt(useShallow((s) => getKeys(s.srtCaptions)));
+  const srt = useSrtFam();
 
   return (
     <div class="caption-window ytp-caption-window-bottom youtube-multi-bottom">

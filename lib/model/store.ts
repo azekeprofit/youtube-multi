@@ -1,8 +1,10 @@
 import { atom, getDefaultStore } from "jotai";
-import { atomFamily } from "jotai-family";
+import { atomFamily, type AtomFamily } from "jotai-family";
+import { useEffect } from "preact/hooks";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { type captionId, type videoId } from "./youtube";
+import { forceUpdate } from "../hooks/forceUpdate";
+import { getVideoId, type captionId, type videoId } from "./youtube";
 
 export type captionStatus = Date | boolean | undefined;
 
@@ -49,20 +51,17 @@ export function addTrackToCache(captionId: captionId, track: TextTrack) {
   getDefaultStore().set(trackFam(captionId), track);
 }
 
-
-export const useSrt = create(() => ({
-  srtCaptions: {} as Record<captionId, string>,
-}));
-
-export function addSrtCaption(captionId: captionId, fileName: string) {
-  useSrt.setState({
-    srtCaptions: {
-      ...useSrt.getState().srtCaptions,
-      [captionId]: fileName,
-    },
-  });
+export function useAllMyFam<P, A>(fam: AtomFamily<P, A>) {
+  const update = forceUpdate();
+  useEffect(() => fam.unstable_listen(update), [])
+  return [...fam.getParams()];
 }
 
-export function clearSrtCaptions() {
-  useSrt.setState({ srtCaptions: {} });
+const srtFam = atomFamily((videoIdPluscaptionId: captionId) => atom(''));
+export const srtGetFam = (captionId: captionId) => srtFam([getVideoId(), captionId].join(','));
+export const useSrtFam = () => useAllMyFam(srtFam).map(c => c.split(',')[1]);
+
+
+export function addSrtCaption(captionId: captionId, fileName: string) {
+  getDefaultStore().set(srtGetFam(captionId), fileName);
 }

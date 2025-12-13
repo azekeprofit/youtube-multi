@@ -1,7 +1,6 @@
 import { createPortal, useEffect, useState } from "preact/compat";
 import { useCaptions } from "../hooks/useCaptions";
-import { getKeys } from "../model/getKeys";
-import { clearSrtCaptions, setShowCap, useSrt } from "../model/store";
+import { setShowCap, useSrtFam } from "../model/store";
 import { getCaptionId, getVideoId, getVideoPlayer } from "../model/youtube";
 import { CaptionLines } from "./CaptionLines";
 import { SrtMenuItem } from "./SrtMenuItem";
@@ -12,13 +11,12 @@ export function MultiLangButton() {
     const videoId = getVideoId();
     const player = getVideoPlayer();
     const capts = useCaptions();
-    const srtCapsCount = useSrt(s => getKeys(s.srtCaptions).length);
+    const srtCapsCount = useSrtFam().length;
     const anyCaptions = (capts.length + srtCapsCount) > 0;
 
     useEffect(() => {
         if (capts.length == 1)
             setShowCap(getCaptionId(capts[0]), true);
-        clearSrtCaptions();
     }, [videoId])
     const [pressed, setPressed] = useState(false);
 
