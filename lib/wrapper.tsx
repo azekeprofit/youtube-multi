@@ -1,7 +1,7 @@
 import { getDefaultStore } from "jotai";
 import { render } from "preact";
 import { MultiLangButton } from "./components/multiLangButton";
-import { potFam, type potPayload } from "./model/store";
+import { potFam } from "./model/store";
 
 const stop = setInterval(() => {
   const multiLangButton = document.querySelector<HTMLElement>(`button.ytp-subtitles-button.ytp-button`);
@@ -42,5 +42,5 @@ const stop = setInterval(() => {
   }
 }, 200)
 
-document.addEventListener("youtube multi pot", 
-  ({detail:pot}:CustomEventInit<potPayload>)=>getDefaultStore().set(potFam(pot),pot))
+document.addEventListener("youtube multi pot",
+  ({ detail: { videoId, pot } }: CustomEventInit<{ videoId: string, pot: string }>) => getDefaultStore().set(potFam(videoId), pot))

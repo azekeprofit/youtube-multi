@@ -1,11 +1,12 @@
+import { useAtomValue } from "jotai";
 import { useEffect } from "preact/hooks";
+import { useShallow } from "zustand/react/shallow";
 import { forceUpdate } from "../hooks/forceUpdate";
 import { useCaptions } from "../hooks/useCaptions";
-import { useShowCaps, useSrt, useTracks } from "../model/store";
+import { getKeys } from "../model/getKeys";
+import { trackFam, useShowCaps, useSrt } from "../model/store";
 import { getCaptionId, type captionId } from "../model/youtube";
 import { Cue } from "./Cue";
-import { getKeys } from "../model/getKeys";
-import { useShallow } from "zustand/react/shallow";
 
 export function CaptionLines() {
   const cpt = useCaptions().map(getCaptionId);
@@ -24,7 +25,7 @@ export function CaptionLines() {
 }
 
 function ActiveTrack({ captionId }: { captionId: captionId }) {
-  const track = useTracks((s) => s.cache[captionId]);
+  const track = useAtomValue(trackFam(captionId));
   const update = forceUpdate();
   const show = useShowCaps((s) => s.showCap[captionId]);
 

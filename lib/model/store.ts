@@ -1,8 +1,8 @@
+import { atom, getDefaultStore } from "jotai";
+import { atomFamily } from "jotai-family";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { type captionId, type videoId } from "./youtube";
-import { atomFamily } from "jotai-family";
-import { atom } from "jotai";
 
 export type captionStatus = Date | boolean | undefined;
 
@@ -41,19 +41,14 @@ export function setShowCap(captionId: captionId, show: captionStatus) {
   }));
 }
 
-export type potPayload = [videoId, string];
+export const potFam = atomFamily((id: videoId) => atom(''));
 
-export const potFam = atomFamily((pot: potPayload) => atom(pot), (a, b) => a[0] === b[0]);
-
-export const useTracks = create(() => ({
-  cache: {} as Record<captionId, TextTrack>,
-}));
+export const trackFam = atomFamily((captionId: captionId) => atom(null as TextTrack));
 
 export function addTrackToCache(captionId: captionId, track: TextTrack) {
-  useTracks.setState({
-    cache: { ...useTracks.getState().cache, [captionId]: track },
-  });
+  getDefaultStore().set(trackFam(captionId), track);
 }
+
 
 export const useSrt = create(() => ({
   srtCaptions: {} as Record<captionId, string>,
