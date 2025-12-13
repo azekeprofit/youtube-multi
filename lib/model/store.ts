@@ -14,34 +14,44 @@ function addDays(date: Date, days: number) {
   return result;
 }
 
-export const useShowCaps = create(
-  persist(
-    () => ({
-      showCap: {} as Record<captionId, captionStatus>,
-    }),
-    {
-      name: "youtube multi storage",
-      partialize: ({ showCap }) => {
-        const previousDay = addDays(new Date(), -1);
-        return {
-          showCap: Object.fromEntries(
-            Object.entries(showCap).map(([key, value]) =>
-              value === false ? [key, undefined] :
-                value === true ? [key, new Date()] :
-                  [key, new Date(value) > previousDay ? new Date(value) : undefined]
-            )
-          ),
-        };
-      },
-    }
-  )
-);
+// export const useShowCaps = create(
+//   persist(
+//     () => ({
+//       showCap: {} as Record<captionId, captionStatus>,
+//     }),
+//     {
+//       name: "youtube multi storage",
+//       partialize: ({ showCap }) => {
+//         const previousDay = addDays(new Date(), -1);
+//         return {
+//           showCap: Object.fromEntries(
+//             Object.entries(showCap).map(([key, value]) =>
+//               value === false ? [key, undefined] :
+//                 value === true ? [key, new Date()] :
+//                   [key, new Date(value) > previousDay ? new Date(value) : undefined]
+//             )
+//           ),
+//         };
+//       },
+//     }
+//   )
+// );
 
 export function setShowCap(captionId: captionId, show: captionStatus) {
-  useShowCaps.setState((prev) => ({
-    showCap: { ...prev.showCap, [captionId]: show },
-  }));
+  getDefaultStore().set(getShowCapFam(captionId), show);
 }
+
+function getFam<D>(fam: AtomFamily<string, D>) {
+  return (captionId: captionId) => fam([getVideoId(), captionId].join(','))
+}
+
+function useKeysFam<D>(fam: AtomFamily<string, D>) {
+  return () => useAllMyFam(fam).map(c => c.split(',')[1]);
+}
+
+const showCapFam = atomFamily((videoIdPluscaptionId: captionId) => atom(false as captionStatus));
+export const getShowCapFam = getFam(showCapFam);
+export const useShowCapKeys = useKeysFam(showCapFam);
 
 export const potFam = atomFamily((id: videoId) => atom(''));
 
@@ -58,9 +68,8 @@ export function useAllMyFam<P, A>(fam: AtomFamily<P, A>) {
 }
 
 const srtFam = atomFamily((videoIdPluscaptionId: captionId) => atom(''));
-export const srtGetFam = (captionId: captionId) => srtFam([getVideoId(), captionId].join(','));
-export const useSrtFam = () => useAllMyFam(srtFam).map(c => c.split(',')[1]);
-
+export const srtGetFam = getFam(srtFam);
+export const useSrtFam = useKeysFam(srtFam);
 
 export function addSrtCaption(captionId: captionId, fileName: string) {
   getDefaultStore().set(srtGetFam(captionId), fileName);

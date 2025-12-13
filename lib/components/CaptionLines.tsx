@@ -2,7 +2,7 @@ import { useAtomValue } from "jotai";
 import { useEffect } from "preact/hooks";
 import { forceUpdate } from "../hooks/forceUpdate";
 import { useCaptions } from "../hooks/useCaptions";
-import { trackFam, useShowCaps, useSrtFam } from "../model/store";
+import { getShowCapFam, trackFam, useSrtFam } from "../model/store";
 import { getCaptionId, type captionId } from "../model/youtube";
 import { Cue } from "./Cue";
 
@@ -25,7 +25,7 @@ export function CaptionLines() {
 function ActiveTrack({ captionId }: { captionId: captionId }) {
   const track = useAtomValue(trackFam(captionId));
   const update = forceUpdate();
-  const show = useShowCaps((s) => s.showCap[captionId]);
+  const show = useAtomValue(getShowCapFam(captionId));
 
   useEffect(() => {
     if (show && track) {
