@@ -12,7 +12,7 @@ function createTrack(fileName: string, lines: string) {
   const capId = `srtFile.${fileName}` as captionId;
   const track = addTrack(capId, fileName);
   loadSrtLine(track, capId, lines);
-  setShowCap(capId, true);
+  setShowCap(capId, new Date());
   addSrtCaption(capId, fileName);
 }
 

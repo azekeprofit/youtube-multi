@@ -16,7 +16,7 @@ export function MultiLangButton() {
 
     useEffect(() => {
         if (capts.length == 1) {
-            setShowCap(getCaptionId(capts[0]), true);
+            setShowCap(getCaptionId(capts[0]), new Date());
         }
         clearSrtCaptions();
     }, [videoId])

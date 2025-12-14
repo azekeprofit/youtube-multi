@@ -14,34 +14,39 @@ function addDays(date: Date, days: number) {
   return result;
 }
 
-// export const useShowCaps = create(
-//   persist(
-//     () => ({
-//       showCap: {} as Record<captionId, captionStatus>,
-//     }),
-//     {
-//       name: "youtube multi storage",
-//       partialize: ({ showCap }) => {
-//         const previousDay = addDays(new Date(), -1);
-//         return {
-//           showCap: Object.fromEntries(
-//             Object.entries(showCap).map(([key, value]) =>
-//               value === false ? [key, undefined] :
-//                 value === true ? [key, new Date()] :
-//                   [key, new Date(value) > previousDay ? new Date(value) : undefined]
-//             )
-//           ),
-//         };
-//       },
-//     }
-//   )
-// );
+interface storage {
+  state: {
+    showCap: Record<captionId, captionStatus>
+  }
+}
+const storageId = 'youtube multi storage';
+function getStorageShowCaps() {
+  return (JSON.parse(localStorage.getItem(storageId)) as storage)?.state?.showCap??{};
+}
+
+function setStorage(captionId: captionId, showCap: captionStatus) {
+  const previousDay = addDays(new Date(), -1);
+  const storage = getStorageShowCaps();
+  const newStorage: storage = {
+    state: {
+      showCap: Object.fromEntries(
+        [...Object.entries(storage).map(([key, value]) =>
+          value === false ? [key, undefined] :
+            value === true ? [key, new Date()] :
+              [key, new Date(value) > previousDay ? new Date(value) : undefined]
+        ), [captionId, showCap]]
+      )
+    }
+  };
+  localStorage.setItem(storageId, JSON.stringify(newStorage));
+}
 
 export function setShowCap(captionId: captionId, show: captionStatus) {
   getDefaultStore().set(showCapFam(captionId), show);
+  setStorage(captionId, show);
 }
 
-export const showCapFam = atomFamily((videoIdPluscaptionId: captionId) => atom(false as captionStatus));
+export const showCapFam = atomFamily((captionId: captionId) => atom(getStorageShowCaps()?.[captionId] ?? false));
 
 export const potFam = atomFamily((id: videoId) => atom(''));
 
