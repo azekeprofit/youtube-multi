@@ -1,29 +1,23 @@
 import { useEffect } from "preact/hooks";
 import { forceUpdate } from "../hooks/forceUpdate";
 import { useCaptions } from "../hooks/useCaptions";
-import { useShowCaps, useSrt, useTracks } from "../model/store";
+import { useShowCaps, useSrtKeys, useTracks } from "../model/store";
 import { getCaptionId, type captionId } from "../model/youtube";
 import { Cue } from "./Cue";
-import { getKeys } from "../model/getKeys";
-import { useShallow } from "zustand/react/shallow";
 
 export function CaptionLines() {
   const cpt = useCaptions().map(getCaptionId);
-
-
-  return (
-    <div class="caption-window ytp-caption-window-bottom youtube-multi-bottom">
-      {cpt.map((cId) => (
-        <ActiveTrack key={cId} captionId={cId} />
-      ))}
-      <SrtLines />
-    </div>
-  );
+  return <Lines lines={cpt} />
 }
 
-function SrtLines() {
-  const srt = useSrt(useShallow((s) => getKeys(s)));
-  return srt.map((cId) => <ActiveTrack key={cId} captionId={cId} />)
+export function SrtLines() {
+  const srt = useSrtKeys();
+  return <Lines lines={srt} />
+}
+
+
+function Lines({ lines }: { lines: captionId[] }) {
+  return lines.map((cId) => <ActiveTrack key={cId} captionId={cId} />)
 }
 
 function ActiveTrack({ captionId }: { captionId: captionId }) {
