@@ -7,7 +7,7 @@ import { SrtMenuItem } from "./SrtMenuItem";
 import { CcIcon } from "./ccIcon";
 import { ScrollablePanel } from "./scrollablePanel";
 
-export function MultiLangButton() {
+export function MultiLangButton({ srtFileInput, multiCaptionContainer }: { srtFileInput: HTMLSpanElement, multiCaptionContainer: HTMLDivElement }) {
   const videoId = getVideoId();
   const player = getVideoPlayer();
   const capts = useCaptions();
@@ -31,7 +31,7 @@ export function MultiLangButton() {
       title={anyCaptions ? "Subtitles/closed captions" : "Subtitles/closed captions unavailable"}>
       <CcIcon opacity={anyCaptions ? 1 : .3} />
     </button>
-    {createPortal(<SrtMenuItem />, document.getElementById('srtFileInput'))}
-    {createPortal(pressed && <div class="caption-window ytp-caption-window-bottom youtube-multi-bottom"><CaptionLines /><SrtLines /></div>, document.getElementById('youtube-multi-caption-container'))}
+    {createPortal(<SrtMenuItem />, srtFileInput)}
+    {createPortal(pressed && <div class="caption-window ytp-caption-window-bottom youtube-multi-bottom"><CaptionLines /><SrtLines /></div>, multiCaptionContainer)}
   </>
 }
