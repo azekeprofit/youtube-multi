@@ -3,43 +3,34 @@ import { MultiLangButton } from "./components/multiLangButton";
 import { usePots } from "./model/store";
 import type { videoId } from "./model/youtube";
 
-const ytControlPanelId = 'ytControlPanel';
-const multiCaptionContainerId = 'youtube-multi-caption-container';
-const srtFileInputId = 'srtFileInput';
+function insertBefore<K extends keyof HTMLElementTagNameMap>(beforeSelector: string, attrs: { tagName: K, id: string } & Record<string, string | number>) {
+  let node = document.getElementById(attrs.id) as HTMLElementTagNameMap[K] | null;
+  if (!node) {
+    const beforeNode = document.querySelector(beforeSelector);
+    if (beforeNode) {
+      node = document.createElement(attrs.tagName);
+      for (const a in attrs)
+        node[a] = attrs[a];
+      beforeNode.parentNode.insertBefore(node, beforeNode);
+    }
+  }
+  return node;
+}
 
 const stop = setInterval(() => {
 
-  const multiLangButton = document.querySelector<HTMLElement>(`button.ytp-subtitles-button.ytp-button`);
-  let controlPanel = document.getElementById(ytControlPanelId);
-  if (multiLangButton && !controlPanel) {
-    controlPanel = document.createElement('span');
-    controlPanel.id = ytControlPanelId;
-    multiLangButton.parentNode.insertBefore(controlPanel, multiLangButton);
-  }
+  const controlPanel = insertBefore(`button.ytp-subtitles-button.ytp-button`, { tagName: 'span', id: 'ytControlPanel' });
+  const ytSettingsMenu = document.querySelector(`.ytp-popup.ytp-settings-menu .ytp-panel .ytp-panel-menu`);
 
-  let srtFileInput = document.getElementById(srtFileInputId) as HTMLSpanElement | null;
-  const menu = document.querySelector(".ytp-popup.ytp-settings-menu .ytp-panel .ytp-panel-menu");
-  if (!srtFileInput && menu) {
-    srtFileInput = document.createElement('span');
-    srtFileInput.id = srtFileInputId;
-    srtFileInput.className = 'ytp-menuitem';
-    srtFileInput.ariaHasPopup = 'true';
-    srtFileInput.role = 'menuitem';
-    srtFileInput.tabIndex = 0;
-    menu.insertBefore(srtFileInput, menu.firstChild);
-  }
+  const captionContainer = insertBefore(`.ytp-chrome-bottom`, {
+    tagName: 'div',
+    id: 'youtube-multi-caption-container',
+    className: "caption-window ytp-caption-window-bottom youtube-multi-bottom",
+  })
 
-  let captionContainer = document.getElementById(multiCaptionContainerId) as HTMLDivElement | null;
-  const chromeBottom = document.querySelector('.ytp-chrome-bottom');
-  if (chromeBottom && !captionContainer) {
-    captionContainer = document.createElement('div');
-    captionContainer.id = multiCaptionContainerId;
-    chromeBottom.parentNode.insertBefore(captionContainer, chromeBottom);
-  }
-
-  if (controlPanel && captionContainer && srtFileInput) {
+  if (controlPanel && captionContainer && ytSettingsMenu) {
     clearInterval(stop);
-    render(<MultiLangButton srtFileInput={srtFileInput} multiCaptionContainer={captionContainer} />, controlPanel);
+    render(<MultiLangButton ytSettingsMenu={ytSettingsMenu} multiCaptionContainer={captionContainer} />, controlPanel);
   }
 }, 200)
 
