@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "preact/hooks";
 import { useSrtKeysCount } from "../model/store";
 import { SrtCheckboxes } from "./srtCheckbox";
 import { YoutubeCaptionCheckboxes } from "./ytLangCheckbox";
+import { useCaptions } from "../hooks/useCaptions";
 
 export function ScrollablePanel() {
   const ref = useRef<HTMLDivElement>(null);

@@ -26,6 +26,7 @@ button.ytp-subtitles-button.ytp-button {
 
 #youtube-multi-checkboxes {
   display: inline-block;
+  max-width: 200px;
   height: 48px;
   vertical-align: middle;
 
@@ -33,7 +34,7 @@ button.ytp-subtitles-button.ytp-button {
     display: flex;
 
     .arrow {
-      display: block;
+      flex-basis: 10px;
       cursor: pointer;
       visibility: hidden;
 
@@ -51,7 +52,7 @@ button.ytp-subtitles-button.ytp-button {
       scroll-behavior: smooth;
       white-space: nowrap;
       scrollbar-width: none;
-      display: block;
+      flex: 1;
       max-width: 10em;
       height: 48px;
     }
