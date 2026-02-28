@@ -7,7 +7,7 @@ import { SrtMenuItem } from "./SrtMenuItem";
 import { CcIcon } from "./ccIcon";
 import { ScrollablePanel } from "./scrollablePanel";
 
-export function MultiLangButton({ ytSettingsMenu, multiCaptionContainer }: { ytSettingsMenu: Element, multiCaptionContainer: HTMLDivElement }) {
+export function MultiLangButton({ ytSettingsMenu }: { ytSettingsMenu: Element }) {
   const videoId = getVideoId();
   const player = getVideoPlayer();
   const capts = useCaptions();
@@ -31,6 +31,6 @@ export function MultiLangButton({ ytSettingsMenu, multiCaptionContainer }: { ytS
       <CcIcon opacity={anyCaptions ? 1 : .3} />
     </button>
     {createPortal(<SrtMenuItem />, ytSettingsMenu)}
-    {createPortal(pressed && <><CaptionLines /><SrtLines /></>, multiCaptionContainer)}
+    {createPortal(pressed && <div id='youtube-multi-caption-container' class="caption-window ytp-caption-window-bottom youtube-multi-bottom"><CaptionLines /><SrtLines /></div>, player as unknown as HTMLElement)}
   </>
 }

@@ -70,7 +70,7 @@ export interface ytPlayer {
 }
 
 export function getVideoPlayer() {
-  return document.querySelector("#movie_player") as unknown as ytPlayer;
+  return document.getElementById("movie_player") as unknown as ytPlayer;
 }
 
 export function getVideoTag() {
