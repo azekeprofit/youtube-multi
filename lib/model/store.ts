@@ -11,62 +11,39 @@ function addDays(date: Date, days: number) {
 }
 
 export const useShowCaps = create(
-  persist(
-    () => ({
-      showCap: {} as Record<captionId, captionStatus>,
-    }),
+  persist(() => ({} as Record<captionId, captionStatus>),
     {
       name: "youtube multi storage",
-      partialize: ({ showCap }) => {
+      partialize: (s) => {
         const previousDay = addDays(new Date(), -1);
-        return {
-          showCap: Object.fromEntries(
-            Object.entries(showCap).map(([key, value]) =>
-              value === false ? [key, undefined] :
-                value === true ? [key, new Date()] :
-                  [key, new Date(value) > previousDay ? new Date(value) : undefined]
-            )
-          ),
-        };
+        return Object.fromEntries(Object.entries(s).map(([key, value]) =>
+          value === false ? [key, undefined] :
+            value === true ? [key, new Date()] :
+              [key, new Date(value) > previousDay ? new Date(value) : undefined]));
       },
     }
   )
 );
 
 export function setShowCap(captionId: captionId, show: captionStatus) {
-  useShowCaps.setState((prev) => ({
-    showCap: { ...prev.showCap, [captionId]: show },
-  }));
+  useShowCaps.setState({ [captionId]: show });
 }
 
 
-export const usePots = create(() => ({
-  pots: {} as Record<videoId, string>,
-}));
+export const usePots = create<Record<videoId, string>>(() => ({}));
 
-export const useTracks = create(() => ({
-  cache: {} as Record<captionId, TextTrack>,
-}));
+export const useTracks = create<Record<captionId, TextTrack>>(() => ({}));
 
 export function addTrackToCache(captionId: captionId, track: TextTrack) {
-  useTracks.setState({
-    cache: { ...useTracks.getState().cache, [captionId]: track },
-  });
+  useTracks.setState({ [captionId]: track });
 }
 
-export const useSrt = create(() => ({
-  srtCaptions: {} as Record<captionId, string>,
-}));
+export const useSrt = create<Record<captionId, string>>(() => ({}));
 
 export function addSrtCaption(captionId: captionId, fileName: string) {
-  useSrt.setState({
-    srtCaptions: {
-      ...useSrt.getState().srtCaptions,
-      [captionId]: fileName,
-    },
-  });
+  useSrt.setState({ [captionId]: fileName });
 }
 
 export function clearSrtCaptions() {
-  useSrt.setState({ srtCaptions: {} });
+  useSrt.setState({}, true);
 }

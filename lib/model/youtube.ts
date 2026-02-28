@@ -45,6 +45,15 @@ interface ytPlayerResponse {
   videoDetails: ytVideoDetails;
 }
 
+export const enum ytPlayerState {
+  unstarted = -1,
+  ended = 0,
+  playing = 1,
+  paused = 2,
+  buffering = 3,
+  videoCued = 5
+}
+
 type stateChangeListener = (e: number) => void;
 
 type eventListener = (
@@ -56,8 +65,8 @@ export interface ytPlayer {
   getPlayerResponse: () => ytPlayerResponse;
   addEventListener: eventListener;
   removeEventListener: eventListener;
-  toggleSubtitles:()=>void;
-  toggleSubtitlesOn:()=>void;
+  toggleSubtitles: () => void;
+  toggleSubtitlesOn: () => void;
 }
 
 export function getVideoPlayer() {

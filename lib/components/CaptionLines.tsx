@@ -9,24 +9,27 @@ import { useShallow } from "zustand/react/shallow";
 
 export function CaptionLines() {
   const cpt = useCaptions().map(getCaptionId);
-  const srt = useSrt(useShallow((s) => getKeys(s.srtCaptions)));
+
 
   return (
     <div class="caption-window ytp-caption-window-bottom youtube-multi-bottom">
       {cpt.map((cId) => (
         <ActiveTrack key={cId} captionId={cId} />
       ))}
-      {srt.map((cId) => (
-        <ActiveTrack key={cId} captionId={cId} />
-      ))}
+      <SrtLines />
     </div>
   );
 }
 
+function SrtLines() {
+  const srt = useSrt(useShallow((s) => getKeys(s)));
+  return srt.map((cId) => <ActiveTrack key={cId} captionId={cId} />)
+}
+
 function ActiveTrack({ captionId }: { captionId: captionId }) {
-  const track = useTracks((s) => s.cache[captionId]);
+  const track = useTracks((s) => s[captionId]);
   const update = forceUpdate();
-  const show = useShowCaps((s) => s.showCap[captionId]);
+  const show = useShowCaps((s) => s[captionId]);
 
   useEffect(() => {
     if (show && track) {

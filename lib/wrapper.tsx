@@ -43,7 +43,5 @@ const stop = setInterval(() => {
 }, 200)
 
 document.addEventListener("youtube multi pot",
-   ({detail:{videoId,pot}}:CustomEventInit<{videoId:videoId,pot:string}>)=>
-usePots.setState({pots:{
-      ...usePots.getState().pots,
-      [videoId]:pot}}))
+  ({ detail: { videoId, pot } }: CustomEventInit<{ videoId: videoId, pot: string }>) =>
+    usePots.setState({ [videoId]: pot }))

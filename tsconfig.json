@@ -27,7 +27,6 @@
     // Some stricter flags (disabled by default)
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "noPropertyAccessFromIndexSignature": false,
-    "plugins": [{ "name": "typescript-plugin-css-modules" }]
+    "noPropertyAccessFromIndexSignature": false
   }
 }
