@@ -7,7 +7,7 @@ import { SrtMenuItem } from "./SrtMenuItem";
 import { CcIcon } from "./ccIcon";
 import { ScrollablePanel } from "./scrollablePanel";
 
-export function MultiLangButton({ ytSettingsMenu }: { ytSettingsMenu: Element }) {
+export const MultiLangButton = () => {
   const videoId = getVideoId();
   const player = getVideoPlayer();
   const capts = useCaptions();
@@ -20,6 +20,9 @@ export function MultiLangButton({ ytSettingsMenu }: { ytSettingsMenu: Element })
     clearSrtCaptions();
   }, [videoId])
   const [pressed, setPressed] = useState(false);
+
+
+  const ytSettingsMenu = document.querySelector(`.ytp-popup.ytp-settings-menu .ytp-panel .ytp-panel-menu`);
 
   return <>
     {pressed && <ScrollablePanel />}

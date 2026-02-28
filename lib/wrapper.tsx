@@ -13,11 +13,10 @@ const stop = setInterval(() => {
     controlPanel.id = ytControlPanelId;
     multiLangButton.parentNode.insertBefore(controlPanel, multiLangButton);
   }
-  const ytSettingsMenu = document.querySelector(`.ytp-popup.ytp-settings-menu .ytp-panel .ytp-panel-menu`);
 
-  if (controlPanel && ytSettingsMenu) {
+  if (controlPanel) {
     clearInterval(stop);
-    render(<MultiLangButton ytSettingsMenu={ytSettingsMenu} />, controlPanel);
+    render(<MultiLangButton />, controlPanel);
   }
 }, 200)
 
