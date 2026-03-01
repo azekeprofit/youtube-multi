@@ -5,7 +5,7 @@ import { CaptionCheckbox } from "./CaptionCheckbox";
 const ellipseLimit = 4;
 
 function SrtCheckbox({ captionId }: { captionId: captionId }) {
-  const label  = useSrt(s=>s[captionId]);
+  const label = useSrt(s => s[captionId]);
   const track = useTracks(s => s[captionId]);
   const showCap = useShowCaps(s => s[captionId]);
   const ellipsedLabel = label.length > ellipseLimit ? `${label.substring(0, ellipseLimit)}…` : label;

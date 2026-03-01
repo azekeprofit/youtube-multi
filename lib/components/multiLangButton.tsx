@@ -25,7 +25,7 @@ export const MultiLangButton = () => {
   const ytSettingsMenu = document.querySelector(`.ytp-popup.ytp-settings-menu .ytp-panel .ytp-panel-menu`);
 
   return <>
-    {pressed && <ScrollablePanel />}
+    {anyCaptions && pressed && <ScrollablePanel />}
     <button
       class="ytp-subtitles-button ytp-button"
       aria-pressed={anyCaptions && pressed}
@@ -34,6 +34,11 @@ export const MultiLangButton = () => {
       <CcIcon opacity={anyCaptions ? 1 : .3} />
     </button>
     {createPortal(<SrtMenuItem />, ytSettingsMenu)}
-    {createPortal(pressed && <div id='youtube-multi-caption-container' class="caption-window ytp-caption-window-bottom youtube-multi-bottom"><CaptionLines /><SrtLines /></div>, player as unknown as HTMLElement)}
+    {createPortal(pressed &&
+      <div id='youtube-multi-caption-container' class="caption-window ytp-caption-window-bottom youtube-multi-bottom">
+        <CaptionLines />
+        <SrtLines />
+      </div>,
+      player as unknown as HTMLElement)}
   </>
 }

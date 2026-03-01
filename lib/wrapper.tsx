@@ -6,12 +6,11 @@ import type { videoId } from "./model/youtube";
 const ytControlPanelId = 'ytControlPanel';
 
 const stop = setInterval(() => {
-  const multiLangButton = document.querySelector<HTMLElement>(`button.ytp-subtitles-button.ytp-button`);
+  const multiLangButton = document.querySelector(`button.ytp-subtitles-button.ytp-button`);
   let controlPanel = document.getElementById(ytControlPanelId);
   if (multiLangButton && !controlPanel) {
     controlPanel = document.createElement('span');
-    controlPanel.id = ytControlPanelId;
-    multiLangButton.parentNode.insertBefore(controlPanel, multiLangButton);
+    multiLangButton.parentNode.insertBefore(controlPanel, multiLangButton).id = ytControlPanelId;
   }
 
   if (controlPanel) {
