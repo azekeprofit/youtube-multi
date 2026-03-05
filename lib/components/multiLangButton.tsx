@@ -39,6 +39,6 @@ export const MultiLangButton = () => {
         <CaptionLines />
         <SrtLines />
       </div>,
-      player as unknown as HTMLElement)}
+      player)}
   </>
 }

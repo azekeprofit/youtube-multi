@@ -15,9 +15,7 @@ function YtLangCheckbox({ caption }: { caption: ytCaptionTrack }) {
   useEffect(() => {
     if (!track) {
       const newTrack = addTrack(captionId, vssId);
-      return () => {
-        newTrack.mode = 'disabled';
-      }
+      return () => newTrack.mode = 'disabled';
     }
   }, [])
 
@@ -38,5 +36,5 @@ function YtLangCheckbox({ caption }: { caption: ytCaptionTrack }) {
 
 export function YoutubeCaptionCheckboxes() {
   const capts = useCaptions();
-  return <>{capts.map(caption => <YtLangCheckbox key={caption.vssId} caption={caption} />)}</>
+  return capts.map(caption => <YtLangCheckbox key={caption.vssId} caption={caption} />)
 }

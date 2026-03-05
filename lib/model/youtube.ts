@@ -54,14 +54,14 @@ export const enum ytPlayerState {
   videoCued = 5
 }
 
-type stateChangeListener = (e: number) => void;
+type stateChangeListener = (e: ytPlayerState) => void;
 
 type eventListener = (
   event: "onStateChange",
   listener: stateChangeListener
 ) => void;
 
-export interface ytPlayer {
+export type ytPlayer = {
   getPlayerResponse: () => ytPlayerResponse;
   addEventListener: eventListener;
   removeEventListener: eventListener;
@@ -70,7 +70,7 @@ export interface ytPlayer {
 }
 
 export function getVideoPlayer() {
-  return document.getElementById("movie_player") as unknown as ytPlayer;
+  return document.getElementById("movie_player") as unknown as ytPlayer & HTMLElement;
 }
 
 export function getVideoTag() {
