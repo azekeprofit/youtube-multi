@@ -19,17 +19,24 @@ export const MultiLangButton = () => {
       setShowCap(getCaptionId(capts[0]), true);
     clearSrtCaptions();
   }, [videoId])
+
   const [pressed, setPressed] = useState(false);
 
-
   const ytSettingsMenu = document.querySelector(`.ytp-popup.ytp-settings-menu .ytp-panel .ytp-panel-menu`);
+
+  function toggleSubtitles() {
+    if (anyCaptions) {
+      setPressed(!pressed);
+      pressed ? player.toggleSubtitles() : player.toggleSubtitlesOn();
+    }
+  }
 
   return <>
     {anyCaptions && pressed && <ScrollablePanel />}
     <button
       class="ytp-subtitles-button ytp-button"
       aria-pressed={anyCaptions && pressed}
-      onClick={anyCaptions ? () => { setPressed(!pressed); player.toggleSubtitlesOn(); if (!pressed) player.toggleSubtitles() } : undefined}
+      onClick={toggleSubtitles}
       title={anyCaptions ? "Subtitles/closed captions" : "Subtitles/closed captions unavailable"}>
       <CcIcon opacity={anyCaptions ? 1 : .3} />
     </button>
