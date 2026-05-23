@@ -27,7 +27,8 @@ export const MultiLangButton = () => {
   function toggleSubtitles() {
     if (anyCaptions) {
       setPressed(!pressed);
-      pressed ? player.toggleSubtitles() : player.toggleSubtitlesOn();
+      player.toggleSubtitles();
+      if (!pressed) player.toggleSubtitlesOn();
     }
   }
 
