@@ -1,4 +1,4 @@
-import { createPortal, useEffect, useState } from "preact/compat";
+import { useEffect, useState } from "preact/hooks";
 import { useCaptions } from "../hooks/useCaptions";
 import { clearSrtCaptions, setShowCap, useSrtKeysCount } from "../model/store";
 import { getCaptionId, getVideoId, getVideoPlayer } from "../model/youtube";
@@ -6,6 +6,7 @@ import { CaptionLines, SrtLines } from "./CaptionLines";
 import { SrtMenuItem } from "./SrtMenuItem";
 import { CcIcon } from "./ccIcon";
 import { ScrollablePanel } from "./scrollablePanel";
+import { createPortal } from "preact";
 
 export const MultiLangButton = () => {
   const videoId = getVideoId();

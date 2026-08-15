@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { useShallow } from "zustand/shallow";
 import { getKeys } from "./getKeys";
 import { type captionId, type videoId } from "./youtube";
 
@@ -40,7 +39,8 @@ export function addTrackToCache(captionId: captionId, track: TextTrack) {
 }
 
 export const useSrt = create<Record<captionId, string>>(() => ({}));
-export const useSrtKeys = () => useSrt(useShallow(getKeys));
+const useSrtKeysStringArray = () => useSrt(s => getKeys(s).join(','));
+export const useSrtKeys = () => useSrtKeysStringArray().split(',').filter(Boolean);
 export const useSrtKeysCount = () => useSrt(s => getKeys(s).length);
 
 export function addSrtCaption(captionId: captionId, fileName: string) {

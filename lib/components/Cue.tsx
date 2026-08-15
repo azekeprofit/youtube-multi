@@ -10,9 +10,9 @@ export function Cue({ cue: { text } }: { cue: VTTCue }) {
     parsed && (
       <div class="caption-visual-line">
         <div class="bg">
-          <div class="ytp-caption-segment" dangerouslySetInnerHTML={{ 
+          <div class="ytp-caption-segment" dangerouslySetInnerHTML={{
             __html: parsed as unknown as string // hacking the type since Preact innerHTML doesn't list TrustedHTML as possible type
-            // see: https://github.com/preactjs/preact/pull/4901
+            // see: https://github.com/preactjs/preact/pull/4901#issuecomment-3438709024
            }}>
           </div>
         </div>

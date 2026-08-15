@@ -5,6 +5,7 @@ build({
   outdir: "public",
   splitting: false,
   minify: true,
+  metafile: { json: "meta.json" },
   define: {
     "process.env.NODE_ENV": '"production"',
     "import.meta.env": "true",
