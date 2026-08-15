@@ -1,18 +1,18 @@
-import { useEffect } from "preact/hooks";
-import { forceUpdate } from "../hooks/forceUpdate";
+import { useComputed, useSignal, useSignalEffect } from "@preact/signals";
 import { useCaptions } from "../hooks/useCaptions";
-import { useShowCaps, useSrtKeys, useTracks } from "../model/store";
+import { getKeys } from "../model/getKeys";
+import { showCaps, srtContainer, trackContainer } from "../model/store";
 import { getCaptionId, type captionId } from "../model/youtube";
 import { Cue } from "./Cue";
 
 export function CaptionLines() {
-  const cpt = useCaptions().map(getCaptionId);
-  return <Lines lines={cpt} />
+  const cpt = useCaptions();
+  return <Lines lines={cpt.value.map(getCaptionId)} />
 }
 
 export function SrtLines() {
-  const srt = useSrtKeys();
-  return <Lines lines={srt} />
+  const srtLines = useComputed(() => getKeys(srtContainer.value));
+  return <Lines lines={srtLines.value} />
 }
 
 
@@ -21,21 +21,22 @@ function Lines({ lines }: { lines: captionId[] }) {
 }
 
 function ActiveTrack({ captionId }: { captionId: captionId }) {
-  const track = useTracks((s) => s[captionId]);
-  const update = forceUpdate();
-  const show = useShowCaps((s) => s[captionId]);
+  const track = useComputed(() => trackContainer.value[captionId]);
+  const update = useSignal(0);
+  const show = useComputed(() => showCaps.value[captionId]);
 
-  useEffect(() => {
-    if (show && track) {
-      track.addEventListener("cuechange", update);
-      return () => track.removeEventListener("cuechange", update);
+  useSignalEffect(() => {
+    if (show.value && track.value) {
+      function forceUpdate() { update.value++; }
+      track.value.addEventListener("cuechange", forceUpdate);
+      return () => track.value.removeEventListener("cuechange", forceUpdate);
     }
-  }, [captionId, track, show]);
+  });
 
   return (
-    show && (
+    show.value && (
       <div class="captions-text">
-        {Array.from(track?.activeCues ?? []).map((c: VTTCue) => (
+        {Array.from(track.value?.activeCues ?? []).map((c: VTTCue) => (
           <Cue key={c.id} cue={c} />
         ))}
       </div>

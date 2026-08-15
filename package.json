@@ -12,6 +12,7 @@
     "build": "bun run cfg/build.ts"
   },
   "dependencies": {
+    "@preact/signals": "^2.11.1",
     "dompurify": "^3.2.6",
     "preact": "11.0.0-rc.0",
     "zustand": "^5.0.8"

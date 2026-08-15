@@ -125,3 +125,8 @@ export function addCue(
     track.addCue(cue);
   }
 }
+
+export function getAllTracks(player:ytPlayer) {
+  const response = player.getPlayerResponse();
+  return response?.captions?.playerCaptionsTracklistRenderer?.captionTracks ?? [];
+}

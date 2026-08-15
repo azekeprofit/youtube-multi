@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { getKeys } from "./getKeys";
 import { type captionId, type videoId } from "./youtube";
+import { signal, useComputed } from "@preact/signals";
 
 export type captionStatus = Date | boolean | undefined;
 
@@ -11,42 +12,37 @@ function addDays(date: Date, days: number) {
   return result;
 }
 
-export const useShowCaps = create(
-  persist(() => ({} as Record<captionId, captionStatus>),
-    {
-      name: "youtube multi storage",
-      partialize: (s) => {
-        const previousDay = addDays(new Date(), -1);
-        return Object.fromEntries(Object.entries(s).map(([key, value]) =>
-          value === false ? [key, undefined] :
-            value === true ? [key, new Date()] :
-              [key, new Date(value) > previousDay ? new Date(value) : undefined]));
-      },
-    }
-  )
-);
+// export const useShowCaps = create(
+//   persist(() => ({} as Record<captionId, captionStatus>),
+//     {
+//       name: "youtube multi storage",
+//       partialize: (s) => {
+//         const previousDay = addDays(new Date(), -1);
+//         return Object.fromEntries(Object.entries(s).map(([key, value]) =>
+//           value === false ? [key, undefined] :
+//             value === true ? [key, new Date()] :
+//               [key, new Date(value) > previousDay ? new Date(value) : undefined]));
+//       },
+//     }
+//   )
+// );
+
+export const showCaps = signal({} as Record<captionId, captionStatus>);
 
 export function setShowCap(captionId: captionId, show: captionStatus) {
-  useShowCaps.setState({ [captionId]: show });
+  showCaps.value = { ...showCaps.value, [captionId]: show };
 }
 
-export const usePots = create<Record<videoId, string>>(() => ({}));
+export const pots = signal({} as Record<videoId, string>);
 
-export const useTracks = create<Record<captionId, TextTrack>>(() => ({}));
+export const trackContainer = signal({} as Record<captionId, TextTrack>);
 
 export function addTrackToCache(captionId: captionId, track: TextTrack) {
-  useTracks.setState({ [captionId]: track });
+  trackContainer.value = { ...trackContainer.value, [captionId]: track };
 }
 
-export const useSrt = create<Record<captionId, string>>(() => ({}));
-const useSrtKeysStringArray = () => useSrt(s => getKeys(s).join(','));
-export const useSrtKeys = () => useSrtKeysStringArray().split(',').filter(Boolean);
-export const useSrtKeysCount = () => useSrt(s => getKeys(s).length);
+export const srtContainer = signal({} as Record<captionId, string>);
 
 export function addSrtCaption(captionId: captionId, fileName: string) {
-  useSrt.setState({ [captionId]: fileName });
-}
-
-export function clearSrtCaptions() {
-  useSrt.setState({}, true);
+  srtContainer.value = { ...srtContainer.value, [captionId]: fileName };
 }
