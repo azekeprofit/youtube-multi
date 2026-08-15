@@ -1,19 +1,19 @@
-import { addSrtCaption, setShowCap } from "./store";
+import { setShowCap, srtStore } from "./store";
 import { addCue, addTrack, type captionId } from "./youtube";
 
 export function loadSrtCaptions(srtFilesObj: File) {
   var fileReader = new FileReader();
   fileReader.onload = (e) =>
-    createTrack(srtFilesObj.name, e.target.result as string);
+    createTrack(srtFilesObj.name, e.target?.result as string);
   fileReader.readAsText(srtFilesObj, "UTF-8");
 }
 
 function createTrack(fileName: string, lines: string) {
-  const capId = `srtFile.${fileName}` as captionId;
-  const track = addTrack(capId, fileName);
-  loadSrtLine(track, capId, lines);
-  setShowCap(capId, true);
-  addSrtCaption(capId, fileName);
+  const captionId = `srtFile.${fileName}` as captionId;
+  const track = addTrack(captionId, fileName);
+  loadSrtLine(track, captionId, lines);
+  setShowCap(captionId, true);
+  srtStore.trigger.add({ captionId, fileName });
 }
 
 export function loadSrtLine(track: TextTrack, capId: captionId, srtLines: string) {
@@ -24,8 +24,8 @@ export function loadSrtLine(track: TextTrack, capId: captionId, srtLines: string
   addCue(track, capId, -1, -1, '', -1);
 
   const arr = srtLines.split(lineRegex);
-  let i=0;
-  const popStr = ()=>arr[i++];
+  let i = 0;
+  const popStr = () => arr[i++];
   const pop = () => parseFloat(popStr());
   pop();
   const popTime = () =>

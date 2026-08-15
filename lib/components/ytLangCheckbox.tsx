@@ -1,7 +1,8 @@
+import { useSelector } from "@xstate/store-preact";
 import { useEffect } from "preact/hooks";
 import { useCaptions } from "../hooks/useCaptions";
 import { loadSrtLine } from "../model/srtSubtitle";
-import { usePots, useShowCaps, useTracks } from "../model/store";
+import { potStore, showCapsStore, trackStore } from "../model/store";
 import { addTrack, extractName, getCaptionId, getVideoId, getVideoPlayer, type ytCaptionTrack } from "../model/youtube";
 import { CaptionCheckbox } from "./CaptionCheckbox";
 
@@ -9,9 +10,9 @@ function YtLangCheckbox({ caption }: { caption: ytCaptionTrack }) {
   const { vssId, kind, baseUrl, name, languageCode } = caption;
   const captionId = getCaptionId(caption);
 
-  const track = useTracks(s => s[captionId]);
-  const showCap = useShowCaps(s => s[captionId]);
-  const pot = usePots(s => s[getVideoId()]);
+  const track = useSelector(trackStore,({context}) => context[captionId]);
+  const showCap = useSelector(showCapsStore,({context}) => context[captionId]);
+  const pot = useSelector(potStore, ({context}) => context[getVideoId()]);
   useEffect(() => {
     if (!track) {
       const newTrack = addTrack(captionId, vssId);

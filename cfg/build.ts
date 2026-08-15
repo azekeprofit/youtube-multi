@@ -1,7 +1,7 @@
 import { build } from "bun";
 
 build({
-  entrypoints: ["lib/wrapper.tsx"],
+  entrypoints: ["lib/wrapper.tsx","lib/background.ts"],
   outdir: "public",
   splitting: false,
   minify: true,
@@ -12,4 +12,4 @@ build({
     "import.meta.env.MODE": '"production"',
   },
   plugins: [],
-}).catch(e=>console.log(`Error ${e}`))
+}).catch(e => console.log(`Error ${e}`))

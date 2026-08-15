@@ -1,7 +1,8 @@
+import { useSelector } from "@xstate/store-preact";
 import { useEffect } from "preact/hooks";
 import { forceUpdate } from "../hooks/forceUpdate";
 import { useCaptions } from "../hooks/useCaptions";
-import { useShowCaps, useSrtKeys, useTracks } from "../model/store";
+import { showCapsStore, trackStore, useSrtKeys } from "../model/store";
 import { getCaptionId, type captionId } from "../model/youtube";
 import { Cue } from "./Cue";
 
@@ -21,9 +22,9 @@ function Lines({ lines }: { lines: captionId[] }) {
 }
 
 function ActiveTrack({ captionId }: { captionId: captionId }) {
-  const track = useTracks((s) => s[captionId]);
+  const track = useSelector(trackStore,({context}) => context[captionId]);
   const update = forceUpdate();
-  const show = useShowCaps((s) => s[captionId]);
+  const show = useSelector(showCapsStore, ({context}) => context[captionId]);
 
   useEffect(() => {
     if (show && track) {

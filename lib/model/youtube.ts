@@ -1,4 +1,4 @@
-import { addTrackToCache } from "./store";
+import { trackStore } from "./store";
 
 export interface ytName {
   simpleText: string;
@@ -107,7 +107,7 @@ export function getCaptionId({ vssId }: ytCaptionTrack) {
 
 export function addTrack(captionId: captionId, vssId: vssId) {
   const track = getVideoTag().addTextTrack("captions", vssId, vssId);
-  addTrackToCache(captionId, track);
+  trackStore.trigger.add({ captionId, track });
   return track;
 }
 

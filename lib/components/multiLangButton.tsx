@@ -1,12 +1,12 @@
+import { createPortal } from "preact";
 import { useEffect, useState } from "preact/hooks";
 import { useCaptions } from "../hooks/useCaptions";
-import { clearSrtCaptions, setShowCap, useSrtKeysCount } from "../model/store";
+import { setShowCap, srtStore, useSrtKeysCount } from "../model/store";
 import { getCaptionId, getVideoId, getVideoPlayer } from "../model/youtube";
 import { CaptionLines, SrtLines } from "./CaptionLines";
 import { SrtMenuItem } from "./SrtMenuItem";
 import { CcIcon } from "./ccIcon";
 import { ScrollablePanel } from "./scrollablePanel";
-import { createPortal } from "preact";
 
 export const MultiLangButton = () => {
   const videoId = getVideoId();
@@ -18,12 +18,12 @@ export const MultiLangButton = () => {
   useEffect(() => {
     if (capts.length == 1)
       setShowCap(getCaptionId(capts[0]), true);
-    clearSrtCaptions();
+    srtStore.trigger.clear();
   }, [videoId])
 
   const [pressed, setPressed] = useState(false);
 
-  const ytSettingsMenu = document.querySelector(`.ytp-popup.ytp-settings-menu .ytp-panel .ytp-panel-menu`);
+  const ytSettingsMenu = document.querySelector(`.ytp-popup.ytp-settings-menu .ytp-panel .ytp-panel-menu`)!;
 
   function toggleSubtitles() {
     if (anyCaptions) {
