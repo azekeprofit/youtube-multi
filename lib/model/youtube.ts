@@ -74,7 +74,7 @@ export function getVideoPlayer() {
 }
 
 export function getVideoTag() {
-  return document.querySelector<HTMLVideoElement>("#movie_player video");
+  return document.querySelector<HTMLVideoElement>("#movie_player video")!;
 }
 
 function getResponse() {

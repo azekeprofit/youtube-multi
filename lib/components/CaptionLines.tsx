@@ -36,8 +36,8 @@ function ActiveTrack({ captionId }: { captionId: captionId }) {
   return (
     show && (
       <div class="captions-text">
-        {Array.from(track?.activeCues ?? []).map((c: VTTCue) => (
-          <Cue key={c.id} cue={c} />
+        {Array.from(track?.activeCues ?? []).map((c: TextTrackCue) => (
+          <Cue key={c.id} cue={c as VTTCue} />
         ))}
       </div>
     )
