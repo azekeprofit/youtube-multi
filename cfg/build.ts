@@ -1,7 +1,7 @@
 import { build } from "bun";
 
 build({
-  entrypoints: ["lib/wrapper.tsx"],
+  entrypoints: ["lib/wrapper.tsx","lib/background.ts"],
   outdir: "public",
   splitting: false,
   minify: true,

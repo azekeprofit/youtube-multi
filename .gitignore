@@ -174,3 +174,5 @@ dist
 # Finder (MacOS) folder config
 .DS_Store
 public/wrapper.js
+public/background.js
+public/meta.json

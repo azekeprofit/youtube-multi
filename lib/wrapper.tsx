@@ -19,7 +19,9 @@ const stop = setInterval(() => {
   }
 }, 200)
 
+export type potEvent = { videoId: videoId, pot: string };
+
 document.addEventListener("youtube multi pot",
-  ({ detail: { videoId, pot } }: CustomEventInit<{ videoId: videoId, pot: string }>) => {
+  ({ detail: { videoId, pot } }: CustomEventInit<potEvent>) => {
     if (!usePots.getState()?.[videoId]) usePots.setState({ [videoId]: pot })
   })
