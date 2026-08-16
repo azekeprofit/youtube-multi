@@ -1,7 +1,8 @@
 import { useComputed, useSignal } from "@preact/signals";
+import { Show } from "@preact/signals/utils";
 import { createPortal } from "preact";
 import { useEffect } from "preact/hooks";
-import { useCaptions } from "../hooks/useCaptions";
+import { captions } from "../hooks/useCaptions";
 import { getKeys } from "../model/getKeys";
 import { setShowCap, srtContainer } from "../model/store";
 import { getCaptionId, getVideoId, getVideoPlayer } from "../model/youtube";
@@ -9,17 +10,15 @@ import { CaptionLines, SrtLines } from "./CaptionLines";
 import { SrtMenuItem } from "./SrtMenuItem";
 import { CcIcon } from "./ccIcon";
 import { ScrollablePanel } from "./scrollablePanel";
-import { Show } from "@preact/signals/utils";
 
 export const MultiLangButton = () => {
   const videoId = getVideoId();
   const player = getVideoPlayer();
-  const capts = useCaptions();
-  const anyCaptions = useComputed(() => capts.value.length + getKeys(srtContainer.value).length).value > 0;
+  const anyCaptions = useComputed(() => captions.value.length + getKeys(srtContainer.value).length).value > 0;
 
   useEffect(() => {
-    if (capts.value.length == 1)
-      setShowCap(getCaptionId(capts.value[0]), true);
+    if (captions.value.length == 1)
+      setShowCap(getCaptionId(captions.value[0]), true);
     srtContainer.value = {};
   }, [videoId])
 

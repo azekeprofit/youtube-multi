@@ -126,7 +126,7 @@ export function addCue(
   }
 }
 
-export function getAllTracks(player:ytPlayer) {
-  const response = player.getPlayerResponse();
+export function getAllTracks(player?: ytPlayer) {
+  const response = player?.getPlayerResponse();
   return response?.captions?.playerCaptionsTracklistRenderer?.captionTracks ?? [];
 }

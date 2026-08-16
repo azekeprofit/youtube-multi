@@ -1,34 +1,31 @@
 /// hook that returns captions in a youtube video
 
-import { useComputed, useSignal, useSignalEffect } from "@preact/signals";
+import { computed, effect, signal } from "@preact/signals";
 import { getAllTracks, getVideoPlayer, ytPlayerState } from "../model/youtube";
 
+// this used to be a hook that i turned into a global signal
 
-/// re-renders on changing video
-export function useCaptions() {
-  const videoPlayer = getVideoPlayer();
-  const update = useSignal(0);
-  const captions = useComputed(() => {
-    update.value;
-    const allTracks = getAllTracks(videoPlayer);
+export const videoPlayer = signal<ReturnType<typeof getVideoPlayer> | undefined>(undefined);
+const playerState = signal<ytPlayerState | undefined>(undefined);
+
+/// re-calculates on changing video
+export const captions = computed(() => {
+  if (playerState.value === ytPlayerState.playing || playerState.value === ytPlayerState.unstarted) {
+    const allTracks = getAllTracks(videoPlayer.value);
 
     return allTracks.length == 1
       ? allTracks
       : allTracks.filter((t) => t.kind != "asr");
-  });
+  }
+  return []
+});
 
-  useSignalEffect(() => {
-
-    function stateChangeListener(e: ytPlayerState) {
-      if (e == ytPlayerState.playing || e == ytPlayerState.unstarted) {
-        update.value++;
-      }
-    };
-    videoPlayer.addEventListener("onStateChange", stateChangeListener);
-    return () =>
-      videoPlayer.removeEventListener("onStateChange", stateChangeListener);
-  });
-
-
-  return captions;
-}
+effect(() => {
+  const v = videoPlayer.value;
+  function stateChangeListener(e: ytPlayerState) {
+    playerState.value = e;
+  }
+  v?.addEventListener("onStateChange", stateChangeListener);
+  return () =>
+    v?.removeEventListener("onStateChange", stateChangeListener);
+});

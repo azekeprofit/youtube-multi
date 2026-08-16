@@ -1,10 +1,10 @@
 import { useSignalEffect } from "@preact/signals";
-import { useCaptions } from "../hooks/useCaptions";
+import { For } from "@preact/signals/utils";
+import { captions, videoPlayer } from "../hooks/useCaptions";
 import { loadSrtLine } from "../model/srtSubtitle";
 import { pots, showCaps, trackContainer } from "../model/store";
-import { addTrack, extractName, getCaptionId, getVideoId, getVideoPlayer, type ytCaptionTrack } from "../model/youtube";
+import { addTrack, extractName, getCaptionId, getVideoId, type ytCaptionTrack } from "../model/youtube";
 import { CaptionCheckbox } from "./CaptionCheckbox";
-import { For } from "@preact/signals/utils";
 
 function YtLangCheckbox({ caption }: { caption: ytCaptionTrack }) {
   const { vssId, kind, baseUrl, name, languageCode } = caption;
@@ -22,7 +22,7 @@ function YtLangCheckbox({ caption }: { caption: ytCaptionTrack }) {
     const track = trackContainer.value[captionId];
     const showCap = showCaps.value[captionId];
     const pot = pots.value[getVideoId()];
-    if (!pot) getVideoPlayer().toggleSubtitlesOn();
+    if (!pot) videoPlayer.value.toggleSubtitlesOn();
     // loadSrtLine always adds at least one cue so by checking if cues are empty we prevent over-fetching
     if (showCap && track?.cues?.length === 0 && pot) {
       const xhr = new XMLHttpRequest();
@@ -37,6 +37,5 @@ function YtLangCheckbox({ caption }: { caption: ytCaptionTrack }) {
 }
 
 export function YoutubeCaptionCheckboxes() {
-  const capts = useCaptions();
-  return <For each={capts}>{caption => <YtLangCheckbox key={caption.vssId} caption={caption} />}</For>
+  return <For each={captions}>{caption => <YtLangCheckbox key={caption.vssId} caption={caption} />}</For>
 }
