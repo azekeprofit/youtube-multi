@@ -9,6 +9,7 @@ import { CaptionLines, SrtLines } from "./CaptionLines";
 import { SrtMenuItem } from "./SrtMenuItem";
 import { CcIcon } from "./ccIcon";
 import { ScrollablePanel } from "./scrollablePanel";
+import { Show } from "@preact/signals/utils";
 
 export const MultiLangButton = () => {
   const videoId = getVideoId();
@@ -18,7 +19,7 @@ export const MultiLangButton = () => {
 
   useEffect(() => {
     if (capts.value.length == 1)
-      setShowCap(getCaptionId(capts[0]), true);
+      setShowCap(getCaptionId(capts.value[0]), true);
     srtContainer.value = {};
   }, [videoId])
 
@@ -35,7 +36,14 @@ export const MultiLangButton = () => {
   }
 
   return <>
-    {anyCaptions && pressed.value && <ScrollablePanel />}
+    <Show when={pressed}>
+      {anyCaptions && <ScrollablePanel />}
+      {createPortal(<div id='youtube-multi-caption-container' class="caption-window ytp-caption-window-bottom youtube-multi-bottom">
+        <CaptionLines />
+        <SrtLines />
+      </div>,
+        player)}
+    </Show>
     <button
       class="ytp-subtitles-button ytp-button"
       aria-pressed={anyCaptions && pressed.value}
@@ -44,11 +52,5 @@ export const MultiLangButton = () => {
       <CcIcon opacity={anyCaptions ? 1 : .3} />
     </button>
     {createPortal(<SrtMenuItem />, ytSettingsMenu)}
-    {createPortal(pressed.value &&
-      <div id='youtube-multi-caption-container' class="caption-window ytp-caption-window-bottom youtube-multi-bottom">
-        <CaptionLines />
-        <SrtLines />
-      </div>,
-      player)}
   </>
 }

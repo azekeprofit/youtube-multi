@@ -1,22 +1,27 @@
 /// hook that returns captions in a youtube video
 
-import { useSignal, useSignalEffect } from "@preact/signals";
+import { useComputed, useSignal, useSignalEffect } from "@preact/signals";
 import { getAllTracks, getVideoPlayer, ytPlayerState } from "../model/youtube";
 
 
 /// re-renders on changing video
 export function useCaptions() {
   const videoPlayer = getVideoPlayer();
-  const captions = useSignal(getAllTracks(videoPlayer));
+  const update = useSignal(0);
+  const captions = useComputed(() => {
+    update.value;
+    const allTracks = getAllTracks(videoPlayer);
+
+    return allTracks.length == 1
+      ? allTracks
+      : allTracks.filter((t) => t.kind != "asr");
+  });
 
   useSignalEffect(() => {
 
     function stateChangeListener(e: ytPlayerState) {
       if (e == ytPlayerState.playing || e == ytPlayerState.unstarted) {
-        captions.value = getAllTracks(videoPlayer);
-        // console.log(e);
-        // console.log(response);
-
+        update.value++;
       }
     };
     videoPlayer.addEventListener("onStateChange", stateChangeListener);

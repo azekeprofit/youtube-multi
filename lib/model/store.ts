@@ -1,8 +1,5 @@
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
-import { getKeys } from "./getKeys";
+import { signal } from "@preact/signals";
 import { type captionId, type videoId } from "./youtube";
-import { signal, useComputed } from "@preact/signals";
 
 export type captionStatus = Date | boolean | undefined;
 

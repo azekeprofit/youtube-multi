@@ -1,45 +1,48 @@
-import { useComputed, useSignal, useSignalEffect } from "@preact/signals";
+import { Signal, useComputed, useSignal, useSignalEffect, type ReadonlySignal } from "@preact/signals";
 import { useCaptions } from "../hooks/useCaptions";
 import { getKeys } from "../model/getKeys";
 import { showCaps, srtContainer, trackContainer } from "../model/store";
 import { getCaptionId, type captionId } from "../model/youtube";
 import { Cue } from "./Cue";
+import { For } from "@preact/signals/utils";
+import type { Signalish } from "preact";
 
 export function CaptionLines() {
-  const cpt = useCaptions();
-  return <Lines lines={cpt.value.map(getCaptionId)} />
+  const ytLines = useComputed(() => useCaptions().value.map(getCaptionId));
+  return <Lines lines={ytLines} />
 }
 
 export function SrtLines() {
   const srtLines = useComputed(() => getKeys(srtContainer.value));
-  return <Lines lines={srtLines.value} />
+  return <Lines lines={srtLines} />
 }
 
 
-function Lines({ lines }: { lines: captionId[] }) {
-  return lines.map((cId) => <ActiveTrack key={cId} captionId={cId} />)
+function Lines({ lines }: { lines: ReadonlySignal<captionId[]> }) {
+  return <For each={lines}>{(cId:captionId) => <ActiveTrack key={cId} captionId={cId} />}</For>
 }
 
 function ActiveTrack({ captionId }: { captionId: captionId }) {
-  const track = useComputed(() => trackContainer.value[captionId]);
   const update = useSignal(0);
-  const show = useComputed(() => showCaps.value[captionId]);
+  const activeCues = useComputed(() => {
+    update.value;
+    const track = trackContainer.value[captionId];
+    const show = showCaps.value[captionId];
+    console.log(`captionId=${captionId}, show=${show}`);
+    return (show && track) ? Array.from(track.activeCues ?? []) : [];
+  });
+
 
   useSignalEffect(() => {
-    if (show.value && track.value) {
-      function forceUpdate() { update.value++; }
-      track.value.addEventListener("cuechange", forceUpdate);
-      return () => track.value.removeEventListener("cuechange", forceUpdate);
+    const track = trackContainer.value[captionId];
+    if (track) {
+      const forceUpdate = () => update.value++;
+      track.addEventListener("cuechange", forceUpdate);
+      return () => track.removeEventListener("cuechange", forceUpdate);
     }
   });
 
-  return (
-    show.value && (
-      <div class="captions-text">
-        {Array.from(track.value?.activeCues ?? []).map((c: VTTCue) => (
-          <Cue key={c.id} cue={c} />
-        ))}
-      </div>
-    )
-  );
+  return <div class="captions-text">
+    <For each={activeCues}>{(c: VTTCue) => <Cue key={c.id} cue={c} />}</For>
+  </div>
 }
