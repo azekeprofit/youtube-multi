@@ -5,11 +5,11 @@ import { setShowCap, srtContainer } from "../model/store";
 import { getAllTracks, getCaptionIdFromVideoId, getVideoId, getVideoPlayer, ytPlayerState, type videoId } from "../model/youtube";
 
 export const videoPlayer = signal<ReturnType<typeof getVideoPlayer> | undefined>(undefined);
-export const playerState = signal<ytPlayerState|undefined>(undefined);
+const playerState = signal<ytPlayerState | undefined>(undefined);
 export const videoUrlId = signal<videoId>(undefined);
 
 /// re-calculates when video changes
-export const playerCaptions = computed(() => ({ state: playerState.value, captions: videoUrlId.value ? getAllTracks(videoPlayer.value) : [] }));
+export const playerCaptions = computed(() => ({ state: playerState.value, captions: getAllTracks(videoPlayer.value) }));
 
 effect(() => {
   const v = videoPlayer.value;
@@ -27,7 +27,8 @@ effect(() => {
 
 
 effect(() => {
-  if (playerCaptions.value.captions.length == 1)
-    setShowCap(getCaptionIdFromVideoId(videoUrlId.value, playerCaptions.value.captions[0]), true);
+  const caps = playerCaptions.peek().captions;
+  if (caps.length == 1)
+    setShowCap(getCaptionIdFromVideoId(videoUrlId.value, caps[0]), new Date());
   srtContainer.value = {};
 })
