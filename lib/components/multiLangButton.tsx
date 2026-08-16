@@ -6,7 +6,7 @@ import { captions } from "../hooks/useCaptions";
 import { getKeys } from "../model/getKeys";
 import { setShowCap, srtContainer } from "../model/store";
 import { getCaptionId, getVideoId, getVideoPlayer } from "../model/youtube";
-import { CaptionLines, SrtLines } from "./CaptionLines";
+import { CaptionLines } from "./CaptionLines";
 import { SrtMenuItem } from "./SrtMenuItem";
 import { CcIcon } from "./ccIcon";
 import { ScrollablePanel } from "./scrollablePanel";
@@ -37,11 +37,7 @@ export const MultiLangButton = () => {
   return <>
     <Show when={pressed}>
       {anyCaptions && <ScrollablePanel />}
-      {createPortal(<div id='youtube-multi-caption-container' class="caption-window ytp-caption-window-bottom youtube-multi-bottom">
-        <CaptionLines />
-        <SrtLines />
-      </div>,
-        player)}
+      {createPortal(<CaptionLines />, player)}
     </Show>
     <button
       class="ytp-subtitles-button ytp-button"

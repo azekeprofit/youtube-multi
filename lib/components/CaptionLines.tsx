@@ -8,14 +8,12 @@ import { Cue } from "./Cue";
 
 export function CaptionLines() {
   const ytLines = useComputed(() => captions.value.map(getCaptionId));
-  return <Lines lines={ytLines} />
-}
-
-export function SrtLines() {
   const srtLines = useComputed(() => getKeys(srtContainer.value));
-  return <Lines lines={srtLines} />
+  return <div id='youtube-multi-caption-container' class="caption-window ytp-caption-window-bottom youtube-multi-bottom">
+    <Lines lines={ytLines} />
+    <Lines lines={srtLines} />
+  </div>
 }
-
 
 function Lines({ lines }: { lines: ReadonlySignal<captionId[]> }) {
   return <For each={lines}>{(cId: captionId) => <ActiveTrack key={cId} captionId={cId} />}</For>

@@ -10,14 +10,12 @@ const playerState = signal<ytPlayerState | undefined>(undefined);
 
 /// re-calculates on changing video
 export const captions = computed(() => {
-  if (playerState.value === ytPlayerState.playing || playerState.value === ytPlayerState.unstarted) {
-    const allTracks = getAllTracks(videoPlayer.value);
+  playerState.value;
+  const allTracks = getAllTracks(videoPlayer.value);
 
-    return allTracks.length == 1
-      ? allTracks
-      : allTracks.filter((t) => t.kind != "asr");
-  }
-  return []
+  return allTracks.length == 1
+    ? allTracks
+    : allTracks.filter((t) => t.kind != "asr");
 });
 
 effect(() => {
