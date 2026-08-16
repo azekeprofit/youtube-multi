@@ -9,7 +9,7 @@ const playerState = signal<ytPlayerState | undefined>(undefined);
 export const videoUrlId = signal<videoId>(undefined);
 
 /// re-calculates when video changes
-export const playerCaptions = computed(() => ({ state: playerState.value, captions: getAllTracks(videoPlayer.value) }));
+export const playerCaptions = computed(() => ({ state: playerState.value, id: videoUrlId.value, captions: getAllTracks(videoPlayer.value) }));
 
 effect(() => {
   const v = videoPlayer.value;
