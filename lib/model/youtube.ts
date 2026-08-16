@@ -101,9 +101,9 @@ export function getTranslation(langCode: languageCode) {
 }
 
 export type captionId = string;
-export function getCaptionId({ vssId }: ytCaptionTrack) {
-  return `${getVideoId()}.${vssId}` as captionId;
-}
+
+export const getCaptionIdFromVideoId =
+  (videoId: videoId, { vssId }: ytCaptionTrack) => `${getVideoId()}.${vssId}` as captionId;
 
 export function addTrack(captionId: captionId, vssId: vssId) {
   const track = getVideoTag().addTextTrack("captions", vssId, vssId);

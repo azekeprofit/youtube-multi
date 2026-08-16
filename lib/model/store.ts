@@ -27,7 +27,8 @@ function addDays(date: Date, days: number) {
 export const showCaps = signal({} as Record<captionId, captionStatus>);
 
 export function setShowCap(captionId: captionId, show: captionStatus) {
-  showCaps.value = { ...showCaps.value, [captionId]: show };
+  if (showCaps.value[captionId] !== show)
+    showCaps.value = { ...showCaps.value, [captionId]: show };
 }
 
 export const pots = signal({} as Record<videoId, string>);

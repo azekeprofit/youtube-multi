@@ -1,13 +1,13 @@
 import { useComputed, useSignal, useSignalEffect, type ReadonlySignal } from "@preact/signals";
 import { For } from "@preact/signals/utils";
-import { captions } from "../hooks/useCaptions";
+import { playerCaps } from "../hooks/useCaptions";
 import { getKeys } from "../model/getKeys";
 import { showCaps, srtContainer, trackContainer } from "../model/store";
-import { getCaptionId, type captionId } from "../model/youtube";
+import { getCaptionIdFromVideoId, type captionId } from "../model/youtube";
 import { Cue } from "./Cue";
 
 export function CaptionLines() {
-  const ytLines = useComputed(() => captions.value.map(getCaptionId));
+  const ytLines = useComputed(() => playerCaps.value.captions.map(c => getCaptionIdFromVideoId(playerCaps.value.player.id, c)));
   const srtLines = useComputed(() => getKeys(srtContainer.value));
   return <div id='youtube-multi-caption-container' class="caption-window ytp-caption-window-bottom youtube-multi-bottom">
     <Lines lines={ytLines} />
@@ -25,7 +25,7 @@ function ActiveTrack({ captionId }: { captionId: captionId }) {
     update.value;
     const track = trackContainer.value[captionId];
     const show = showCaps.value[captionId];
-    return (show && track) ? Array.from(track.activeCues ?? []) : [];
+    return show ? Array.from(track?.activeCues ?? []) : [];
   });
 
 
