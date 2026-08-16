@@ -1,7 +1,7 @@
 import { useComputed, useSignal } from "@preact/signals";
 import { Show } from "@preact/signals/utils";
 import { createPortal } from "preact";
-import { playerCaps } from "../hooks/useCaptions";
+import { playerCaptions } from "../hooks/useCaptions";
 import { getKeys } from "../model/getKeys";
 import { srtContainer } from "../model/store";
 import { getVideoPlayer } from "../model/youtube";
@@ -12,7 +12,7 @@ import { ScrollablePanel } from "./scrollablePanel";
 
 export const MultiLangButton = () => {
   const player = getVideoPlayer();
-  const anyCaptions = useComputed(() => playerCaps.value.captions.length + getKeys(srtContainer.value).length).value > 0;
+  const anyCaptions = useComputed(() => playerCaptions.value.captions.length + getKeys(srtContainer.value).length).value > 0;
 
   const pressed = useSignal(false);
 

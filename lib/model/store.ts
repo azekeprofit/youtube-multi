@@ -9,26 +9,38 @@ function addDays(date: Date, days: number) {
   return result;
 }
 
-// export const useShowCaps = create(
-//   persist(() => ({} as Record<captionId, captionStatus>),
-//     {
-//       name: "youtube multi storage",
-//       partialize: (s) => {
-//         const previousDay = addDays(new Date(), -1);
-//         return Object.fromEntries(Object.entries(s).map(([key, value]) =>
-//           value === false ? [key, undefined] :
-//             value === true ? [key, new Date()] :
-//               [key, new Date(value) > previousDay ? new Date(value) : undefined]));
-//       },
-//     }
-//   )
-// );
+type showCapsType = Record<captionId, captionStatus>;
 
-export const showCaps = signal({} as Record<captionId, captionStatus>);
+interface storage {
+  state: showCapsType
+}
+const storageId = 'youtube multi storage';
+function getStorageShowCaps() {
+  return (JSON.parse(localStorage.getItem(storageId)) as storage)?.state ?? {};
+}
+
+export const showCaps = signal<showCapsType>(getStorageShowCaps());
+
+function setStorage(captionId: captionId, showCap: captionStatus) {
+  const previousDay = addDays(new Date(), -1);
+  const storage = getStorageShowCaps();
+  const newStorage: storage = {
+    state: Object.fromEntries(
+      [...Object.entries(storage).map(([key, value]) =>
+        value === false ? [key, undefined] :
+          value === true ? [key, new Date()] :
+            [key, new Date(value) > previousDay ? new Date(value) : undefined]
+      ), [captionId, showCap]]
+    )
+  };
+  localStorage.setItem(storageId, JSON.stringify(newStorage));
+}
 
 export function setShowCap(captionId: captionId, show: captionStatus) {
-  if (showCaps.value[captionId] !== show)
+  if (showCaps.value[captionId] !== show) {
     showCaps.value = { ...showCaps.value, [captionId]: show };
+    setStorage(captionId, show);
+  }
 }
 
 export const pots = signal({} as Record<videoId, string>);

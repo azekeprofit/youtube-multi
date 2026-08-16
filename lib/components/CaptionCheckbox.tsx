@@ -1,20 +1,25 @@
 import { useComputed, useSignalEffect } from "@preact/signals";
 import type { Signalish } from "preact";
+import { playerCaptions, videoUrlId } from "../hooks/useCaptions";
 import { setShowCap, showCaps, trackContainer } from "../model/store";
-import type { captionId } from "../model/youtube";
+import { type captionId } from "../model/youtube";
 
 
 export function CaptionCheckbox({ label, title, captionId }: { label: Signalish<string>, captionId: captionId, title?: Signalish<string> }) {
-  const showCap = useComputed(() => showCaps.value[captionId]!= undefined);
+  const checked = useComputed(() => showCaps.value[captionId] != undefined);
+  console.dir(videoUrlId.peek())
+  console.dir(showCaps.peek())
+  console.dir(captionId)
+  console.dir(checked.peek())
   useSignalEffect(() => {
     const track = trackContainer.value[captionId];
-    if (track) track.mode = showCap.value ? "showing" : "hidden";
+    if (track) track.mode = checked.value ? "showing" : "hidden";
   })
 
   //   return <span class={`youtube-multi-showcap${showCap?' show':''}`} onClick={(e) => setShowCap(captionId, !showCap)} title={title}>{label}</span>
 
   return <label title={title}>
-    <input type="checkbox" checked={showCap}
+    <input type="checkbox" checked={checked}
       onInput={(e) => setShowCap(captionId, e.currentTarget.checked ? new Date() : undefined)} />
     {label}
   </label>

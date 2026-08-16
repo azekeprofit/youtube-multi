@@ -77,33 +77,19 @@ export function getVideoTag() {
   return document.querySelector<HTMLVideoElement>("#movie_player video");
 }
 
-function getResponse() {
-  return getVideoPlayer().getPlayerResponse();
-}
-
 export type videoId = string;
-export function getVideoId() {
-  return getResponse()?.videoDetails?.videoId as videoId;
+export function getVideoId(player: ytPlayer) {
+  return player.getPlayerResponse()?.videoDetails?.videoId as videoId;
 }
 
 export function extractName(name: ytName) {
   return name.simpleText;
 }
 
-export function getTranslation(langCode: languageCode) {
-  const tl =
-    getResponse()?.captions?.playerCaptionsTracklistRenderer
-      ?.translationLanguages ?? [];
-  return (
-    tl.find((l) => l.languageCode === langCode)?.languageName?.simpleText ??
-    langCode
-  );
-}
-
 export type captionId = string;
 
 export const getCaptionIdFromVideoId =
-  (videoId: videoId, { vssId }: ytCaptionTrack) => `${getVideoId()}.${vssId}` as captionId;
+  (videoId: videoId, { vssId }: ytCaptionTrack) => `${videoId}.${vssId}` as captionId;
 
 export function addTrack(captionId: captionId, vssId: vssId) {
   const track = getVideoTag().addTextTrack("captions", vssId, vssId);

@@ -1,8 +1,8 @@
 import { render } from "preact";
 import { MultiLangButton } from "./components/multiLangButton";
-import { videoPlayer } from "./hooks/useCaptions";
+import { videoPlayer, videoUrlId } from "./hooks/useCaptions";
 import { pots } from "./model/store";
-import { getVideoPlayer, type videoId } from "./model/youtube";
+import { getVideoId, getVideoPlayer, type videoId } from "./model/youtube";
 
 const ytControlPanelId = 'ytControlPanel';
 
@@ -16,7 +16,7 @@ const stop = setInterval(() => {
 
   if (controlPanel) {
     clearInterval(stop);
-    videoPlayer.value = getVideoPlayer();
+    videoUrlId.value = getVideoId(videoPlayer.value = getVideoPlayer());
     render(<MultiLangButton />, controlPanel);
   }
 }, 200)
