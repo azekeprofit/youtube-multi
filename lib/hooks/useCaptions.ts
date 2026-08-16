@@ -27,8 +27,9 @@ effect(() => {
 
 
 effect(() => {
+  videoUrlId.value;
   const caps = playerCaptions.peek().captions;
   if (caps.length == 1)
-    setShowCap(getCaptionIdFromVideoId(videoUrlId.value, caps[0]), new Date());
+    setShowCap(getCaptionIdFromVideoId(videoUrlId.value, caps[0]), true);
   srtContainer.value = {};
 })
