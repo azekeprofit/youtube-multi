@@ -37,10 +37,8 @@ function setStorage(captionId: captionId, showCap: captionStatus) {
 }
 
 export function setShowCap(captionId: captionId, show: captionStatus) {
-  if (showCaps.value[captionId] !== show) {
-    showCaps.value = { ...showCaps.value, [captionId]: show };
-    setStorage(captionId, show);
-  }
+  showCaps.value = { ...showCaps.value, [captionId]: show };
+  setStorage(captionId, show);
 }
 
 export const pots = signal<Record<videoId, string>>({});

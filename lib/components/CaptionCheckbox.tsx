@@ -2,7 +2,6 @@ import { useComputed, useSignalEffect } from "@preact/signals";
 import type { Signalish } from "preact";
 import { setShowCap, showCaps, trackContainer } from "../model/store";
 import { type captionId } from "../model/youtube";
-import { useDebugValue } from "preact/hooks";
 
 
 export function CaptionCheckbox({ label, title, captionId }: { label: Signalish<string>, captionId: captionId, title?: Signalish<string> }) {
