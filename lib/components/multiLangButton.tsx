@@ -1,4 +1,4 @@
-import { useComputed, useSignal } from "@preact/signals";
+import { signal, useComputed } from "@preact/signals";
 import { Show } from "@preact/signals/utils";
 import { createPortal } from "preact";
 import { playerCaptions } from "../hooks/useCaptions";
@@ -10,11 +10,11 @@ import { SrtMenuItem } from "./SrtMenuItem";
 import { CcIcon } from "./ccIcon";
 import { ScrollablePanel } from "./scrollablePanel";
 
+export const pressed = signal(false);
+
 export const MultiLangButton = () => {
   const player = getVideoPlayer();
   const anyCaptions = useComputed(() => playerCaptions.value.captions.length + getKeys(srtContainer.value).length).value > 0;
-
-  const pressed = useSignal(false);
 
   const ytSettingsMenu = document.querySelector(`.ytp-popup.ytp-settings-menu .ytp-panel .ytp-panel-menu`);
 

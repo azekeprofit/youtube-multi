@@ -105,11 +105,9 @@ export function addCue(
   html: string,
   index: number
 ) {
-  if (html.length) {
-    const cue = new VTTCue(start, end, html);
-    cue.id = `${capId}.${index.toString()}`;
-    track.addCue(cue);
-  }
+  const cue = new VTTCue(start, end, html);
+  cue.id = `${capId}.${index.toString()}`;
+  track.addCue(cue);
 }
 
 export function getAllTracks(player?: ytPlayer) {

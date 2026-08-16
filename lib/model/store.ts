@@ -43,15 +43,19 @@ export function setShowCap(captionId: captionId, show: captionStatus) {
   }
 }
 
-export const pots = signal({} as Record<videoId, string>);
+export const pots = signal<Record<videoId, string>>({});
+export type potEvent = { videoId: videoId, pot: string }
+export function addPot({ videoId, pot }: potEvent) {
+  if (!pots.value[videoId]) pots.value = { ...pots.value, [videoId]: pot };
+}
 
-export const trackContainer = signal({} as Record<captionId, TextTrack>);
+export const trackContainer = signal<Record<captionId, TextTrack>>({});
 
 export function addTrackToCache(captionId: captionId, track: TextTrack) {
   trackContainer.value = { ...trackContainer.value, [captionId]: track };
 }
 
-export const srtContainer = signal({} as Record<captionId, string>);
+export const srtContainer = signal<Record<captionId, string>>({});
 
 export function addSrtCaption(captionId: captionId, fileName: string) {
   srtContainer.value = { ...srtContainer.value, [captionId]: fileName };

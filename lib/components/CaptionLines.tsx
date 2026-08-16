@@ -28,9 +28,9 @@ function ActiveTrack({ captionId }: { captionId: captionId }) {
     return show ? Array.from(track?.activeCues ?? []) : [];
   });
 
-
   useSignalEffect(() => {
     const track = trackContainer.value[captionId];
+
     if (track) {
       const forceUpdate = () => update.value++;
       track.addEventListener("cuechange", forceUpdate);
@@ -39,6 +39,6 @@ function ActiveTrack({ captionId }: { captionId: captionId }) {
   });
 
   return <div class="captions-text">
-    <For each={activeCues}>{(c: VTTCue) => <Cue key={c.id} cue={c} />}</For>
+    <For each={activeCues} getKey={c => c.id}>{(c: VTTCue) => <Cue key={c.id} cue={c} />}</For>
   </div>
 }

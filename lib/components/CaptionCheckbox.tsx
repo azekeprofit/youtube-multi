@@ -1,16 +1,12 @@
 import { useComputed, useSignalEffect } from "@preact/signals";
 import type { Signalish } from "preact";
-import { playerCaptions, videoUrlId } from "../hooks/useCaptions";
 import { setShowCap, showCaps, trackContainer } from "../model/store";
 import { type captionId } from "../model/youtube";
 
 
 export function CaptionCheckbox({ label, title, captionId }: { label: Signalish<string>, captionId: captionId, title?: Signalish<string> }) {
   const checked = useComputed(() => showCaps.value[captionId] != undefined);
-  console.dir(videoUrlId.peek())
-  console.dir(showCaps.peek())
-  console.dir(captionId)
-  console.dir(checked.peek())
+
   useSignalEffect(() => {
     const track = trackContainer.value[captionId];
     if (track) track.mode = checked.value ? "showing" : "hidden";
