@@ -10,7 +10,7 @@ import { SrtMenuItem } from "./SrtMenuItem";
 import { CcIcon } from "./ccIcon";
 import { ScrollablePanel } from "./scrollablePanel";
 
-export const pressed = signal(false);
+const pressed = signal(false);
 
 export const MultiLangButton = () => {
   const player = getVideoPlayer();

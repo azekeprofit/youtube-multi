@@ -35,4 +35,4 @@ You can then add directory "public" from that repository to your extensions in C
 
 ## Used libraries
 
-Extension uses [Preact](https://preactjs.com) for UI, and [zustand](https://zustand-demo.pmnd.rs) for state management.
+Extension uses [Preact](https://preactjs.com) for UI, and [Preact Signals](https://preactjs.com/guide/v10/signals) for state management.
