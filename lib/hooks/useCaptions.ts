@@ -1,6 +1,6 @@
 /// signal that returns captions in a youtube video
 
-import { computed, effect, signal } from "@preact/signals";
+import { computed, signal } from "@preact/signals";
 import { setShowCap, srtContainer } from "../model/store";
 import { getAllTracks, getCaptionIdFromVideoId, getVideoId, getVideoPlayer, ytPlayerState, type videoId } from "../model/youtube";
 
@@ -10,8 +10,7 @@ export const videoUrlId = signal<videoId>(undefined);
 /// re-calculates when video changes
 export const playerCaptions = computed(() => ({ id: videoUrlId.value, captions: getAllTracks(videoPlayer.value) }));
 
-effect(() => {
-  const v = videoPlayer.value;
+videoPlayer.subscribe(v => {
   if (v) {
     function stateChangeListener(state: ytPlayerState) {
       videoUrlId.value = getVideoId(v);
