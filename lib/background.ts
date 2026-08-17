@@ -1,5 +1,5 @@
+import type { potEvent } from "./model/store";
 import type { videoId } from "./model/youtube";
-import type { potEvent } from "./wrapper";
 
 function setPot(videoId: videoId | null, pot: string | null) {
   if (videoId && pot)

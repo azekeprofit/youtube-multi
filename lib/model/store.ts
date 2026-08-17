@@ -1,6 +1,4 @@
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
-import { getKeys } from "./getKeys";
+import { signal } from "@preact/signals";
 import { type captionId, type videoId } from "./youtube";
 
 export type captionStatus = Date | boolean | undefined;
@@ -11,42 +9,54 @@ function addDays(date: Date, days: number) {
   return result;
 }
 
-export const useShowCaps = create(
-  persist(() => ({} as Record<captionId, captionStatus>),
-    {
-      name: "youtube multi storage",
-      partialize: (s) => {
-        const previousDay = addDays(new Date(), -1);
-        return Object.fromEntries(Object.entries(s).map(([key, value]) =>
-          value === false ? [key, undefined] :
-            value === true ? [key, new Date()] :
-              [key, new Date(value) > previousDay ? new Date(value) : undefined]));
-      },
-    }
-  )
-);
+type showCapsType = Record<captionId, captionStatus>;
+
+interface storage {
+  state: showCapsType
+}
+const storageId = 'youtube multi storage';
+function getStorageShowCaps() {
+  return (JSON.parse(localStorage.getItem(storageId)) as storage)?.state ?? {};
+}
+
+export const showCaps = signal<showCapsType>(getStorageShowCaps());
+
+function setStorage(captionId: captionId, showCap: captionStatus) {
+  const previousDay = addDays(new Date(), -1);
+  const storage = getStorageShowCaps();
+  const newStorage: storage = {
+    state: Object.fromEntries(
+      [...Object.entries(storage).map(([key, value]) =>
+        value === false ? [key, undefined] :
+          value === true ? [key, new Date()] :
+            [key, new Date(value) > previousDay ? new Date(value) : undefined]
+      ), [captionId, showCap]]
+    )
+  };
+  localStorage.setItem(storageId, JSON.stringify(newStorage));
+}
 
 export function setShowCap(captionId: captionId, show: captionStatus) {
-  useShowCaps.setState({ [captionId]: show });
+  if (showCaps.value[captionId] !== show) {
+    showCaps.value = { ...showCaps.value, [captionId]: show };
+    setStorage(captionId, show);
+  }
 }
 
-export const usePots = create<Record<videoId, string>>(() => ({}));
+export const pots = signal<Record<videoId, string>>({});
+export type potEvent = { videoId: videoId, pot: string }
+export function addPot({ videoId, pot }: potEvent) {
+  if (!pots.value[videoId]) pots.value = { ...pots.value, [videoId]: pot };
+}
 
-export const useTracks = create<Record<captionId, TextTrack>>(() => ({}));
+export const trackContainer = signal<Record<captionId, TextTrack>>({});
 
 export function addTrackToCache(captionId: captionId, track: TextTrack) {
-  useTracks.setState({ [captionId]: track });
+  trackContainer.value = { ...trackContainer.value, [captionId]: track };
 }
 
-export const useSrt = create<Record<captionId, string>>(() => ({}));
-const useSrtKeysStringArray = () => useSrt(s => getKeys(s).join(','));
-export const useSrtKeys = () => useSrtKeysStringArray().split(',').filter(Boolean);
-export const useSrtKeysCount = () => useSrt(s => getKeys(s).length);
+export const srtContainer = signal<Record<captionId, string>>({});
 
 export function addSrtCaption(captionId: captionId, fileName: string) {
-  useSrt.setState({ [captionId]: fileName });
-}
-
-export function clearSrtCaptions() {
-  useSrt.setState({}, true);
+  srtContainer.value = { ...srtContainer.value, [captionId]: fileName };
 }

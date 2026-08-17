@@ -1,18 +1,24 @@
-import { useEffect } from "preact/hooks";
-import { setShowCap, type captionStatus } from "../model/store";
-import type { captionId } from "../model/youtube";
+import { useComputed, useSignalEffect } from "@preact/signals";
+import type { Signalish } from "preact";
+import { setShowCap, showCaps, trackContainer } from "../model/store";
+import { type captionId } from "../model/youtube";
 
 
-export function CaptionCheckbox({ track, label, title, captionId, showCap }: { label: string, captionId: captionId, title?: string, track: TextTrack, showCap: captionStatus }) {
-    useEffect(() => {
-        if (track) track.mode = showCap ? "showing" : "hidden";
-    }, [showCap, track])
+export function CaptionCheckbox({ label, title, captionId }: { label: Signalish<string>, captionId: captionId, title?: Signalish<string> }) {
+  const checked = useComputed(() => showCaps.value[captionId] != undefined);
 
-    //   return <span class={`youtube-multi-showcap${showCap?' show':''}`} onClick={(e) => setShowCap(captionId, !showCap)} title={title}>{label}</span>
+  useSignalEffect(() => {
+    const track = trackContainer.value[captionId];
+    if (track) {
+      track.mode = checked.value ? "showing" : "hidden";
+    }
+  })
 
-    return <label title={title}>
-        <input type="checkbox" checked={showCap != undefined}
-            onInput={(e) => setShowCap(captionId, e.currentTarget.checked ? new Date() : undefined)} />
-        {label}
-    </label>
+  //   return <span class={`youtube-multi-showcap${showCap?' show':''}`} onClick={(e) => setShowCap(captionId, !showCap)} title={title}>{label}</span>
+
+  return <label title={title}>
+    <input type="checkbox" checked={checked}
+      onInput={(e) => setShowCap(captionId, e.currentTarget.checked ? new Date() : undefined)} />
+    {label}
+  </label>
 }

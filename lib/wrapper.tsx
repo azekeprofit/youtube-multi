@@ -1,7 +1,8 @@
 import { render } from "preact";
 import { MultiLangButton } from "./components/multiLangButton";
-import { usePots } from "./model/store";
-import type { videoId } from "./model/youtube";
+import { videoPlayer, videoUrlId } from "./hooks/useCaptions";
+import { addPot, type potEvent } from "./model/store";
+import { getVideoId, getVideoPlayer } from "./model/youtube";
 
 const ytControlPanelId = 'ytControlPanel';
 
@@ -15,13 +16,9 @@ const stop = setInterval(() => {
 
   if (controlPanel) {
     clearInterval(stop);
+    videoUrlId.value = getVideoId(videoPlayer.value = getVideoPlayer());
     render(<MultiLangButton />, controlPanel);
   }
 }, 200)
 
-export type potEvent = { videoId: videoId, pot: string };
-
-document.addEventListener("youtube multi pot",
-  ({ detail: { videoId, pot } }: CustomEventInit<potEvent>) => {
-    if (!usePots.getState()?.[videoId]) usePots.setState({ [videoId]: pot })
-  })
+document.addEventListener("youtube multi pot", ({ detail }: CustomEventInit<potEvent>) => addPot(detail))

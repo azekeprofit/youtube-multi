@@ -1,19 +1,20 @@
-import { useShowCaps, useSrt, useSrtKeys, useTracks } from "../model/store";
+import { useComputed } from "@preact/signals";
+import { getKeys } from "../model/getKeys";
+import { srtContainer } from "../model/store";
 import { type captionId } from "../model/youtube";
 import { CaptionCheckbox } from "./CaptionCheckbox";
+import { For } from "@preact/signals/utils";
 
 const ellipseLimit = 4;
 
 function SrtCheckbox({ captionId }: { captionId: captionId }) {
-  const label = useSrt(s => s[captionId]);
-  const track = useTracks(s => s[captionId]);
-  const showCap = useShowCaps(s => s[captionId]);
-  const ellipsedLabel = label.length > ellipseLimit ? `${label.substring(0, ellipseLimit)}…` : label;
+  const label = useComputed(() => srtContainer.value[captionId] ?? '');
+  const ellipsedLabel = useComputed(() => label.value.length > ellipseLimit ? `${label.value.substring(0, ellipseLimit)}…` : label.value);
 
-  return <CaptionCheckbox track={track} label={ellipsedLabel} title={label} captionId={captionId} showCap={showCap} />
+  return <CaptionCheckbox label={ellipsedLabel} title={label} captionId={captionId} />
 }
 
 export function SrtCheckboxes() {
-  const srtKeys = useSrtKeys();
-  return srtKeys.map(capId => <SrtCheckbox key={capId} captionId={capId} />);
+  const srtKeys = useComputed(() => getKeys(srtContainer.value));
+  return <For each={srtKeys}>{capId => <SrtCheckbox key={capId} captionId={capId} />}</For>
 }

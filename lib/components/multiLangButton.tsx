@@ -1,53 +1,43 @@
-import { useEffect, useState } from "preact/hooks";
-import { useCaptions } from "../hooks/useCaptions";
-import { clearSrtCaptions, setShowCap, useSrtKeysCount } from "../model/store";
-import { getCaptionId, getVideoId, getVideoPlayer } from "../model/youtube";
-import { CaptionLines, SrtLines } from "./CaptionLines";
+import { signal, useComputed } from "@preact/signals";
+import { Show } from "@preact/signals/utils";
+import { createPortal } from "preact";
+import { playerCaptions } from "../hooks/useCaptions";
+import { getKeys } from "../model/getKeys";
+import { srtContainer } from "../model/store";
+import { getVideoPlayer } from "../model/youtube";
+import { CaptionLines } from "./CaptionLines";
 import { SrtMenuItem } from "./SrtMenuItem";
 import { CcIcon } from "./ccIcon";
 import { ScrollablePanel } from "./scrollablePanel";
-import { createPortal } from "preact";
+
+const pressed = signal(false);
 
 export const MultiLangButton = () => {
-  const videoId = getVideoId();
   const player = getVideoPlayer();
-  const capts = useCaptions();
-  const srtCapsCount = useSrtKeysCount();
-  const anyCaptions = (capts.length + srtCapsCount) > 0;
-
-  useEffect(() => {
-    if (capts.length == 1)
-      setShowCap(getCaptionId(capts[0]), true);
-    clearSrtCaptions();
-  }, [videoId])
-
-  const [pressed, setPressed] = useState(false);
+  const anyCaptions = useComputed(() => playerCaptions.value.captions.length + getKeys(srtContainer.value).length).value > 0;
 
   const ytSettingsMenu = document.querySelector(`.ytp-popup.ytp-settings-menu .ytp-panel .ytp-panel-menu`);
 
   function toggleSubtitles() {
     if (anyCaptions) {
-      setPressed(!pressed);
+      pressed.value = !pressed.value;
       player.toggleSubtitles();
-      if (!pressed) player.toggleSubtitlesOn();
+      if (!pressed.value) player.toggleSubtitlesOn();
     }
   }
 
   return <>
-    {anyCaptions && pressed && <ScrollablePanel />}
+    <Show when={pressed}>
+      {anyCaptions && <ScrollablePanel />}
+      {createPortal(<CaptionLines />, player)}
+    </Show>
     <button
       class="ytp-subtitles-button ytp-button"
-      aria-pressed={anyCaptions && pressed}
+      aria-pressed={anyCaptions && pressed.value}
       onClick={toggleSubtitles}
       title={anyCaptions ? "Subtitles/closed captions" : "Subtitles/closed captions unavailable"}>
       <CcIcon opacity={anyCaptions ? 1 : .3} />
     </button>
     {createPortal(<SrtMenuItem />, ytSettingsMenu)}
-    {createPortal(pressed &&
-      <div id='youtube-multi-caption-container' class="caption-window ytp-caption-window-bottom youtube-multi-bottom">
-        <CaptionLines />
-        <SrtLines />
-      </div>,
-      player)}
   </>
 }

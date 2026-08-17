@@ -1,35 +1,30 @@
-/// hook that returns captions in a youtube video
+/// signal that returns captions in a youtube video
 
-import { useEffect } from "preact/hooks";
-import { getVideoPlayer, ytPlayerState } from "../model/youtube";
-import { forceUpdate } from "./forceUpdate";
+import { computed, signal } from "@preact/signals";
+import { setShowCap, srtContainer } from "../model/store";
+import { getAllTracks, getCaptionIdFromVideoId, getVideoId, getVideoPlayer, ytPlayerState, type videoId } from "../model/youtube";
 
-/// re-renders on changing video
-export function useCaptions() {
-  const videoPlayer = getVideoPlayer();
-  const update = forceUpdate();
+export const videoPlayer = signal<ReturnType<typeof getVideoPlayer> | undefined>(undefined);
+export const videoUrlId = signal<videoId>(undefined);
 
+/// re-calculates when video changes
+export const playerCaptions = computed(() => ({ id: videoUrlId.value, captions: getAllTracks(videoPlayer.value) }));
 
-  const response = videoPlayer.getPlayerResponse();
-  const allTracks =
-    response?.captions?.playerCaptionsTracklistRenderer?.captionTracks ?? [];
-
-
-  useEffect(() => {
-    const stateChangeListener = (e: ytPlayerState) => {
-      if (e == ytPlayerState.playing || e == ytPlayerState.unstarted) {
-        update(0);
-        // console.log(e);
-        // console.log(response);
-      }
-    };
-    videoPlayer.addEventListener("onStateChange", stateChangeListener);
+videoPlayer.subscribe(v => {
+  if (v) {
+    function stateChangeListener(state: ytPlayerState) {
+      videoUrlId.value = getVideoId(v);
+    }
+    v.addEventListener("onStateChange", stateChangeListener);
     return () =>
-      videoPlayer.removeEventListener("onStateChange", stateChangeListener);
-  }, []);
+      v.removeEventListener("onStateChange", stateChangeListener);
+  }
+});
 
 
-  return allTracks.length == 1
-    ? allTracks
-    : allTracks.filter((t) => t.kind != "asr");
-}
+videoUrlId.subscribe((videoId) => {
+  const caps = playerCaptions.peek().captions;
+  if (caps.length == 1)
+    setShowCap(getCaptionIdFromVideoId(videoId, caps[0]), true);
+  srtContainer.value = {};
+})

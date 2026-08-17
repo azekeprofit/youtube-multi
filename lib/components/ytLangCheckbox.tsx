@@ -1,40 +1,49 @@
-import { useEffect } from "preact/hooks";
-import { useCaptions } from "../hooks/useCaptions";
+import { useComputed, useSignalEffect } from "@preact/signals";
+import { For, Show } from "@preact/signals/utils";
+import { playerCaptions, videoPlayer } from "../hooks/useCaptions";
 import { loadSrtLine } from "../model/srtSubtitle";
-import { usePots, useShowCaps, useTracks } from "../model/store";
-import { addTrack, extractName, getCaptionId, getVideoId, getVideoPlayer, type ytCaptionTrack } from "../model/youtube";
+import { pots, showCaps, trackContainer } from "../model/store";
+import { addCue, addTrack, extractName, getCaptionIdFromVideoId, type ytCaptionTrack } from "../model/youtube";
 import { CaptionCheckbox } from "./CaptionCheckbox";
 
 function YtLangCheckbox({ caption }: { caption: ytCaptionTrack }) {
   const { vssId, kind, baseUrl, name, languageCode } = caption;
-  const captionId = getCaptionId(caption);
+  const captionId = useComputed(() => getCaptionIdFromVideoId(playerCaptions.value.id, caption));
 
-  const track = useTracks(s => s[captionId]);
-  const showCap = useShowCaps(s => s[captionId]);
-  const pot = usePots(s => s[getVideoId()]);
-  useEffect(() => {
+  useSignalEffect(() => {
+    const track = trackContainer.value[captionId.value];
     if (!track) {
-      const newTrack = addTrack(captionId, vssId);
-      return () => newTrack.mode = 'disabled';
+      addTrack(captionId.value, vssId);
     }
-  }, [])
+  })
 
-  useEffect(() => {
-    if (!pot) getVideoPlayer().toggleSubtitlesOn();
+  useSignalEffect(() => {
+    const track = trackContainer.value[captionId.value];
+    const showCap = showCaps.value[captionId.value];
+    const pot = pots.value[playerCaptions.value.id];
+
+    if (!pot) videoPlayer.value.toggleSubtitlesOn();
     // loadSrtLine always adds at least one cue so by checking if cues are empty we prevent over-fetching
     if (showCap && track?.cues?.length === 0 && pot) {
+      // add stub cue
+      addCue(track, captionId.value, -1, -1, '', -1);
       const xhr = new XMLHttpRequest();
-      xhr.onload = () => loadSrtLine(track, captionId, xhr.responseText);
+      xhr.onload = () => loadSrtLine(track, captionId.value, xhr.responseText);
       xhr.open("GET", `${baseUrl}&c=WEB&potc=1&fmt=srt&pot=${pot}`);
       xhr.responseType = "text";
       xhr.send();
     }
-  }, [showCap, track, pot])
+  })
 
-  return <CaptionCheckbox showCap={showCap} track={track} title={extractName(name)} label={`${languageCode}${kind == 'asr' ? ' (auto)' : ''}`} captionId={captionId} />
+  const autoCaption = kind == 'asr';
+  const show = useComputed(() => autoCaption ? playerCaptions.value.captions.length == 1 : true);
+
+  return <Show when={show}>
+    <CaptionCheckbox title={extractName(name)} label={`${languageCode}${autoCaption ? ' (auto)' : ''}`} captionId={captionId.value} />
+  </Show>
 }
 
 export function YoutubeCaptionCheckboxes() {
-  const capts = useCaptions();
-  return capts.map(caption => <YtLangCheckbox key={caption.vssId} caption={caption} />)
+  const caps = useComputed(() => playerCaptions.value.captions);
+  return <For each={caps} getKey={c => c.vssId}>{caption => <YtLangCheckbox key={caption.vssId} caption={caption} />}</For>
 }

@@ -1,44 +1,44 @@
-import { useEffect } from "preact/hooks";
-import { forceUpdate } from "../hooks/forceUpdate";
-import { useCaptions } from "../hooks/useCaptions";
-import { useShowCaps, useSrtKeys, useTracks } from "../model/store";
-import { getCaptionId, type captionId } from "../model/youtube";
+import { useComputed, useSignal, useSignalEffect, type ReadonlySignal } from "@preact/signals";
+import { For } from "@preact/signals/utils";
+import { playerCaptions } from "../hooks/useCaptions";
+import { getKeys } from "../model/getKeys";
+import { showCaps, srtContainer, trackContainer } from "../model/store";
+import { getCaptionIdFromVideoId, type captionId } from "../model/youtube";
 import { Cue } from "./Cue";
 
 export function CaptionLines() {
-  const cpt = useCaptions().map(getCaptionId);
-  return <Lines lines={cpt} />
+  const ytLines = useComputed(() => playerCaptions.value.captions.map(c => getCaptionIdFromVideoId(playerCaptions.value.id, c)));
+  const srtLines = useComputed(() => getKeys(srtContainer.value));
+  return <div id='youtube-multi-caption-container' class="caption-window ytp-caption-window-bottom youtube-multi-bottom">
+    <Lines lines={ytLines} />
+    <Lines lines={srtLines} />
+  </div>
 }
 
-export function SrtLines() {
-  const srt = useSrtKeys();
-  return <Lines lines={srt} />
-}
-
-
-function Lines({ lines }: { lines: captionId[] }) {
-  return lines.map((cId) => <ActiveTrack key={cId} captionId={cId} />)
+function Lines({ lines }: { lines: ReadonlySignal<captionId[]> }) {
+  return <For each={lines}>{(cId: captionId) => <ActiveTrack key={cId} captionId={cId} />}</For>
 }
 
 function ActiveTrack({ captionId }: { captionId: captionId }) {
-  const track = useTracks((s) => s[captionId]);
-  const update = forceUpdate();
-  const show = useShowCaps((s) => s[captionId]);
+  const update = useSignal(0);
+  const activeCues = useComputed(() => {
+    update.value;
+    const track = trackContainer.value[captionId];
+    const show = showCaps.value[captionId];
+    return show ? Array.from(track?.activeCues ?? []) : [];
+  });
 
-  useEffect(() => {
-    if (show && track) {
-      track.addEventListener("cuechange", update);
-      return () => track.removeEventListener("cuechange", update);
+  useSignalEffect(() => {
+    const track = trackContainer.value[captionId];
+
+    if (track) {
+      const forceUpdate = () => update.value++;
+      track.addEventListener("cuechange", forceUpdate);
+      return () => track.removeEventListener("cuechange", forceUpdate);
     }
-  }, [captionId, track, show]);
+  });
 
-  return (
-    show && (
-      <div class="captions-text">
-        {Array.from(track?.activeCues ?? []).map((c: VTTCue) => (
-          <Cue key={c.id} cue={c} />
-        ))}
-      </div>
-    )
-  );
+  return <div class="captions-text">
+    <For each={activeCues} getKey={c => c.id}>{(c: VTTCue) => <Cue key={c.id} cue={c} />}</For>
+  </div>
 }
