@@ -1,13 +1,13 @@
 import { useComputed, useSignal, useSignalEffect, type ReadonlySignal } from "@preact/signals";
 import { For } from "@preact/signals/utils";
-import { playerCaptions } from "../hooks/useCaptions";
+import { playerCaptions, videoUrlId } from "../model/captions";
 import { getKeys } from "../model/getKeys";
 import { showCaps, srtContainer, trackContainer } from "../model/store";
 import { getCaptionIdFromVideoId, type captionId } from "../model/youtube";
 import { Cue } from "./Cue";
 
 export function CaptionLines() {
-  const ytLines = useComputed(() => playerCaptions.value.captions.map(c => getCaptionIdFromVideoId(playerCaptions.value.id, c)));
+  const ytLines = useComputed(() => playerCaptions.value.map(c => getCaptionIdFromVideoId(videoUrlId.peek(), c)));
   const srtLines = useComputed(() => getKeys(srtContainer.value));
   return <div id='youtube-multi-caption-container' class="caption-window ytp-caption-window-bottom youtube-multi-bottom">
     <Lines lines={ytLines} />

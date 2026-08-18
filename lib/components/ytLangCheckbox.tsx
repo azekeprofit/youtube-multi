@@ -1,6 +1,6 @@
 import { useComputed, useSignalEffect } from "@preact/signals";
 import { For, Show } from "@preact/signals/utils";
-import { playerCaptions, videoPlayer } from "../hooks/useCaptions";
+import { playerCaptions, videoPlayer, videoUrlId } from "../model/captions";
 import { loadSrtLine } from "../model/srtSubtitle";
 import { pots, showCaps, trackContainer } from "../model/store";
 import { addCue, addTrack, extractName, getCaptionIdFromVideoId, type ytCaptionTrack } from "../model/youtube";
@@ -8,7 +8,7 @@ import { CaptionCheckbox } from "./CaptionCheckbox";
 
 function YtLangCheckbox({ caption }: { caption: ytCaptionTrack }) {
   const { vssId, kind, baseUrl, name, languageCode } = caption;
-  const captionId = useComputed(() => getCaptionIdFromVideoId(playerCaptions.value.id, caption));
+  const captionId = useComputed(() => getCaptionIdFromVideoId(videoUrlId.value, caption));
 
   useSignalEffect(() => {
     const track = trackContainer.value[captionId.value];
@@ -20,7 +20,7 @@ function YtLangCheckbox({ caption }: { caption: ytCaptionTrack }) {
   useSignalEffect(() => {
     const track = trackContainer.value[captionId.value];
     const showCap = showCaps.value[captionId.value];
-    const pot = pots.value[playerCaptions.value.id];
+    const pot = pots.value[videoUrlId.value];
 
     if (!pot) videoPlayer.value.toggleSubtitlesOn();
     // loadSrtLine always adds at least one cue so by checking if cues are empty we prevent over-fetching
@@ -36,7 +36,7 @@ function YtLangCheckbox({ caption }: { caption: ytCaptionTrack }) {
   })
 
   const autoCaption = kind == 'asr';
-  const show = useComputed(() => autoCaption ? playerCaptions.value.captions.length == 1 : true);
+  const show = useComputed(() => autoCaption ? playerCaptions.value.length == 1 : true);
 
   return <Show when={show}>
     <CaptionCheckbox title={extractName(name)} label={`${languageCode}${autoCaption ? ' (auto)' : ''}`} captionId={captionId.value} />
@@ -44,6 +44,6 @@ function YtLangCheckbox({ caption }: { caption: ytCaptionTrack }) {
 }
 
 export function YoutubeCaptionCheckboxes() {
-  const caps = useComputed(() => playerCaptions.value.captions);
+  const caps = useComputed(() => playerCaptions.value);
   return <For each={caps} getKey={c => c.vssId}>{caption => <YtLangCheckbox key={caption.vssId} caption={caption} />}</For>
 }

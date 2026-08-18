@@ -1,6 +1,6 @@
 import { render } from "preact";
 import { MultiLangButton } from "./components/multiLangButton";
-import { videoPlayer, videoUrlId } from "./hooks/useCaptions";
+import { videoPlayer, videoUrlId } from "./model/captions";
 import { addPot, type potEvent } from "./model/store";
 import { getVideoId, getVideoPlayer } from "./model/youtube";
 
@@ -16,7 +16,7 @@ const stop = setInterval(() => {
 
   if (controlPanel) {
     clearInterval(stop);
-    videoUrlId.value = getVideoId(videoPlayer.value = getVideoPlayer());
+    videoPlayer.value = getVideoPlayer();
     render(<MultiLangButton />, controlPanel);
   }
 }, 200)

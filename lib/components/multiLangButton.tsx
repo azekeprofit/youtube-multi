@@ -1,7 +1,7 @@
 import { signal, useComputed } from "@preact/signals";
 import { Show } from "@preact/signals/utils";
 import { createPortal } from "preact";
-import { playerCaptions } from "../hooks/useCaptions";
+import { playerCaptions } from "../model/captions";
 import { getKeys } from "../model/getKeys";
 import { srtContainer } from "../model/store";
 import { getVideoPlayer } from "../model/youtube";
@@ -14,7 +14,7 @@ const pressed = signal(false);
 
 export const MultiLangButton = () => {
   const player = getVideoPlayer();
-  const anyCaptions = useComputed(() => playerCaptions.value.captions.length + getKeys(srtContainer.value).length).value > 0;
+  const anyCaptions = useComputed(() => playerCaptions.value.length + getKeys(srtContainer.value).length).value > 0;
 
   const ytSettingsMenu = document.querySelector(`.ytp-popup.ytp-settings-menu .ytp-panel .ytp-panel-menu`);
 
