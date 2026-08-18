@@ -44,6 +44,5 @@ function YtLangCheckbox({ caption }: { caption: ytCaptionTrack }) {
 }
 
 export function YoutubeCaptionCheckboxes() {
-  const caps = useComputed(() => playerCaptions.value);
-  return <For each={caps} getKey={c => c.vssId}>{caption => <YtLangCheckbox key={caption.vssId} caption={caption} />}</For>
+  return <For each={playerCaptions} getKey={c => c.baseUrl}>{caption => <YtLangCheckbox key={caption.baseUrl} caption={caption} />}</For>
 }
