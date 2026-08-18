@@ -18,7 +18,7 @@
   "content_scripts": [
     {
       "js": ["wrapper.js"],
-      "css": ["style.css"],
+      "css": ["wrapper.css"],
       "world": "MAIN",
       "run_at": "document_start",
       "matches": ["https://*.youtube.com/*"]
