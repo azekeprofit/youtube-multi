@@ -11,15 +11,17 @@ export const videoUrlId = signal<videoId>(undefined);
 export const playerCaptions = signal<ytCaptionTrack[]>([]);
 
 effect(() => {
-  const v = videoPlayer.value;
-  if (v) {
+  const player = videoPlayer.value;
+  if (player) {
     function stateChangeListener() { // state: ytPlayerState
-      videoUrlId.value = getVideoId(v);
+      const vId = getVideoId(player);
+      if (vId)
+        videoUrlId.value = vId;
     }
     stateChangeListener();
-    v.addEventListener("onStateChange", stateChangeListener);
+    player.addEventListener("onStateChange", stateChangeListener);
     return () =>
-      v.removeEventListener("onStateChange", stateChangeListener);
+      player.removeEventListener("onStateChange", stateChangeListener);
   }
 });
 

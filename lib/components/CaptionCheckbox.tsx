@@ -11,6 +11,7 @@ export function CaptionCheckbox({ label, title, captionId }: { label: Signalish<
     const track = trackContainer.value[captionId];
     if (track) {
       track.mode = checked.value ? "showing" : "hidden";
+      return () => track.mode = 'disabled';
     }
   })
 
