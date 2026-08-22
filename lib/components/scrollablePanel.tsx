@@ -38,12 +38,12 @@ export function ScrollablePanel() {
 
   return <div id="youtube-multi-checkboxes">
     <div class="unscroll">
-      <span class={`arrow left${showLeft.value ? ' show' : ''}`} {...mouseHold(-15)}>🠜</span>
+      <span class={`arrow left ${showLeft.value ? 'show' : ''}`} {...mouseHold(-15)}>🠜</span>
       <div class="scroll" ref={ref} onScroll={doScroll}>
         <YoutubeCaptionCheckboxes />
         <SrtCheckboxes />
       </div>
-      <span class={`arrow right ${showRight.value ? ' show' : ''}`} {...mouseHold(15)}>🠞</span>
+      <span class={`arrow right ${showRight.value ? 'show' : ''}`} {...mouseHold(15)}>🠞</span>
     </div>
   </div>
 }

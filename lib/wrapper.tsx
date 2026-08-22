@@ -1,8 +1,16 @@
+
+import { setDebugOptions } from "@preact/signals-debug";
 import { render } from "preact";
 import { MultiLangButton } from "./components/multiLangButton";
-import { videoPlayer, videoUrlId } from "./model/captions";
 import { addPot, type potEvent } from "./model/store";
-import { getVideoId, getVideoPlayer } from "./model/youtube";
+
+// Configure debug options for signals
+// setDebugOptions({
+// 	grouped: true, // Group related updates in console output
+// 	enabled: true, // Enable/disable debugging
+// 	spacing: 2, // Number of spaces for nested update indentation
+// });
+
 
 const ytControlPanelId = 'ytControlPanel';
 
@@ -16,7 +24,6 @@ const stop = setInterval(() => {
 
   if (controlPanel) {
     clearInterval(stop);
-    videoPlayer.value = getVideoPlayer();
     render(<MultiLangButton />, controlPanel);
   }
 }, 200)

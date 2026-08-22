@@ -1,7 +1,7 @@
 import { signal, useComputed } from "@preact/signals";
 import { Show } from "@preact/signals/utils";
 import { createPortal } from "preact";
-import { playerCaptions } from "../model/captions";
+import { playerCaptions, videoPlayer } from "../model/captions";
 import { srtKeys } from "../model/store";
 import { getVideoPlayer } from "../model/youtube";
 import { CaptionLines } from "./CaptionLines";
@@ -11,8 +11,9 @@ import { ScrollablePanel } from "./scrollablePanel";
 
 const pressed = signal(false);
 export const MultiLangButton = () => {
-  const player = getVideoPlayer();
+  const player = videoPlayer.value = getVideoPlayer();
   const anyCaptions = useComputed(() => (playerCaptions.value.length + srtKeys.value.length) > 0);
+  const pressedAndCaptions = useComputed(() => anyCaptions.value && pressed.value);
 
   const ytSettingsMenu = document.querySelector(`.ytp-popup.ytp-settings-menu .ytp-panel .ytp-panel-menu`);
 
@@ -25,13 +26,11 @@ export const MultiLangButton = () => {
   }
 
   return <>
-    <Show when={pressed}>
-      <Show when={anyCaptions}><ScrollablePanel /></Show>
-      {createPortal(<CaptionLines />, player)}
-    </Show>
+    <Show when={pressedAndCaptions}><ScrollablePanel /></Show>
+    <Show when={pressed}>{createPortal(<CaptionLines />, player)}</Show>
     <button
       class="ytp-subtitles-button ytp-button"
-      aria-pressed={anyCaptions.value && pressed.value}
+      aria-pressed={pressedAndCaptions}
       onClick={toggleSubtitles}
       title={anyCaptions.value ? "Subtitles/closed captions" : "Subtitles/closed captions unavailable"}>
       <CcIcon opacity={anyCaptions.value ? 1 : .3} />
