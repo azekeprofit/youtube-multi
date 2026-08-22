@@ -1,5 +1,6 @@
-import { signal } from "@preact/signals";
+import { computed, signal } from "@preact/signals";
 import { type captionId, type videoId } from "./youtube";
+import { getKeys } from "./getKeys";
 
 export type captionStatus = Date | boolean | undefined;
 
@@ -56,7 +57,7 @@ export function addTrackToCache(captionId: captionId, track: TextTrack) {
 }
 
 export const srtContainer = signal<Record<captionId, string>>({});
-
+export const srtKeys = computed(() => getKeys(srtContainer.value));
 export function addSrtCaption(captionId: captionId, fileName: string) {
   srtContainer.value = { ...srtContainer.value, [captionId]: fileName };
 }
