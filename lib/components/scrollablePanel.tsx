@@ -1,49 +1,44 @@
-import { useSignal, useSignalEffect } from "@preact/signals";
-import { useSignalRef } from "@preact/signals/utils";
-import { useCallback } from "preact/hooks";
+import { createEffect, createSignal } from "solid-js";
 import { srtContainer } from "../model/store";
 import { SrtCheckboxes } from "./srtCheckbox";
 import { YoutubeCaptionCheckboxes } from "./ytLangCheckbox";
 
 export function ScrollablePanel() {
-  const ref = useSignalRef<HTMLDivElement>(null);
-  const intervalRef = useSignalRef<Timer>(null);
-  const showLeft = useSignal(false);
-  const showRight = useSignal(false);
+  let scroll = null as HTMLDivElement;
+  let intervalRef = null as Timer;
+  const [showLeft, setLeft] = createSignal(false);
+  const [showRight, setRight] = createSignal(false);
 
-  const doScroll = useCallback(() => {
-    const scroll = ref.current;
+  const doScroll = () => {
     if (scroll) {
-      showLeft.value = scroll.scrollLeft != 0;
-      showRight.value = scroll.scrollLeft < (scroll.scrollWidth - scroll.clientWidth - 15);
+      setLeft(scroll.scrollLeft != 0);
+      setRight(scroll.scrollLeft < (scroll.scrollWidth - scroll.clientWidth - 15));
     }
-  }, [])
+  }
 
-  const mouseUp = useCallback(() => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current)
-      intervalRef.current = null;
+  const mouseUp = () => {
+    if (intervalRef) {
+      clearInterval(intervalRef)
+      intervalRef = null;
     }
-  }, [])
+  }
 
-  useSignalEffect(() => { srtContainer.value; doScroll() })
-
-  const mouseHold = useCallback((step: number) => ({
-    onMouseDown: () => {
-      if (!intervalRef.current) {
-        intervalRef.current = setInterval(() => ref?.current.scrollBy(step, 0), 100)
-      }
-    }, onMouseUp: mouseUp, onMouseLeave: mouseUp
-  }), [])
+  createEffect(() => srtContainer(), doScroll);
+  const step = 15;
+  const onMouseDown = () => {
+    if (!intervalRef) {
+      intervalRef = setInterval(() => scroll.scrollBy(step, 0), 100)
+    }
+  }
 
   return <div id="youtube-multi-checkboxes">
     <div class="unscroll">
-      <span class={`arrow left${showLeft.value ? ' show' : ''}`} {...mouseHold(-15)}>🠜</span>
-      <div class="scroll" ref={ref} onScroll={doScroll}>
+      <span class={`arrow left${showLeft() ? ' show' : ''}`} onMouseDown={onMouseDown} onMouseUp={mouseUp} onMouseLeave={mouseUp}>🠜</span>
+      <div class="scroll" ref={e => scroll = e} onScroll={doScroll}>
         <YoutubeCaptionCheckboxes />
         <SrtCheckboxes />
       </div>
-      <span class={`arrow right ${showRight.value ? ' show' : ''}`} {...mouseHold(15)}>🠞</span>
+      <span class={`arrow right ${showRight() ? ' show' : ''}`} onMouseDown={onMouseDown} onMouseUp={mouseUp} onMouseLeave={mouseUp}>🠞</span>
     </div>
   </div>
 }

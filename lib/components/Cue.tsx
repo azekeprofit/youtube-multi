@@ -1,21 +1,14 @@
 import DomPurify from 'dompurify';
-import { useMemo } from "preact/hooks";
+import { createMemo } from 'solid-js';
 
-export function Cue({ cue: { text } }: { cue: VTTCue }) {
-  const parsed = useMemo(() =>
-    DomPurify.sanitize(text, { ALLOWED_TAGS: ['b', 'i', 'u', 'font'], RETURN_TRUSTED_TYPE: true })
-    , [text]);
+export function Cue(p: { cue: VTTCue }) {
+  const parsed = createMemo(() =>
+    DomPurify.sanitize(p.cue.text, { ALLOWED_TAGS: ['b', 'i', 'u', 'font'], RETURN_TRUSTED_TYPE: true })
+  );
 
-  return (
-    parsed && (
-      <div class="caption-visual-line">
-        <div class="bg">
-          <div class="ytp-caption-segment" dangerouslySetInnerHTML={{
-            __html: parsed as unknown as string // hacking the type since Preact innerHTML doesn't list TrustedHTML as possible type
-            // see: https://github.com/preactjs/preact/pull/4901#issuecomment-3438709024
-           }}>
-          </div>
-        </div>
-      </div>
-    ))
+  return <div class="caption-visual-line">
+    <div class="bg">
+      <div class="ytp-caption-segment" innerHTML={parsed()} />
+    </div>
+  </div>
 }

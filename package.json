@@ -6,14 +6,20 @@
     "@types/bun": "^1.3.14",
     "@types/dompurify": "^3.2.0",
     "@types/chrome": "^0.1.4",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "@solidjs/vite-plugin": "3.0.0-next.28"
   },
   "scripts": {
     "build": "bun run cfg/build.ts"
   },
   "dependencies": {
+    "@dschz/bun-plugin-solid": "^1.0.4",
     "@preact/signals": "^2.11.1",
+    "@solidjs/web": "2.0.0-rc.0",
+    "bun-plugin-tailwind": "^0.1.2",
     "dompurify": "^3.2.6",
-    "preact": "11.0.0-rc.0"
+    "preact": "11.0.0-rc.0",
+    "solid-js": "2.0.0-rc.0",
+    "vite": "^8.2.2"
   }
 }

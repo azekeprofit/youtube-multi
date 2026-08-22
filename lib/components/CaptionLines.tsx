@@ -1,44 +1,39 @@
-import { useComputed, useSignal, useSignalEffect, type ReadonlySignal } from "@preact/signals";
-import { For } from "@preact/signals/utils";
+import { createEffect, createMemo, createSignal, For, type SourceAccessor } from "solid-js";
 import { playerCaptions, videoUrlId } from "../model/captions";
-import { getKeys } from "../model/getKeys";
-import { showCaps, srtContainer, trackContainer } from "../model/store";
+import { showCaps, srtKeys, trackContainer } from "../model/store";
 import { getCaptionIdFromVideoId, type captionId } from "../model/youtube";
 import { Cue } from "./Cue";
 
 export function CaptionLines() {
-  const ytLines = useComputed(() => playerCaptions.value.map(c => getCaptionIdFromVideoId(videoUrlId.peek(), c)));
-  const srtLines = useComputed(() => getKeys(srtContainer.value));
+  const ytLines = createMemo(() => playerCaptions().map(c => getCaptionIdFromVideoId(videoUrlId(), c)));
   return <div id='youtube-multi-caption-container' class="caption-window ytp-caption-window-bottom youtube-multi-bottom">
     <Lines lines={ytLines} />
-    <Lines lines={srtLines} />
+    <Lines lines={srtKeys} />
   </div>
 }
 
-function Lines({ lines }: { lines: ReadonlySignal<captionId[]> }) {
-  return <For each={lines}>{(cId: captionId) => <ActiveTrack key={cId} captionId={cId} />}</For>
+function Lines(p: { lines: SourceAccessor<captionId[]> }) {
+  return <For each={p.lines()}>{(cId: captionId) => <ActiveTrack captionId={cId} />}</For>
 }
 
-function ActiveTrack({ captionId }: { captionId: captionId }) {
-  const update = useSignal(0);
-  const activeCues = useComputed(() => {
-    update.value;
-    const track = trackContainer.value[captionId];
-    const show = showCaps.value[captionId];
-    return show ? Array.from(track?.activeCues ?? []) : [];
+function ActiveTrack(p: { captionId: captionId }) {
+  const [update, refresh] = createSignal(0);
+  const track = createMemo(() => trackContainer()[p.captionId]);
+  const activeCues = createMemo(() => {
+    update();
+    const show = showCaps()[p.captionId];
+    return show ? Array.from(track()?.activeCues ?? []) : [];
   });
 
-  useSignalEffect(() => {
-    const track = trackContainer.value[captionId];
-
+  createEffect(() => [track(),update()] as const, ([track]) => {
     if (track) {
-      const forceUpdate = () => update.value++;
+      const forceUpdate = () => refresh(v => v + 1);
       track.addEventListener("cuechange", forceUpdate);
       return () => track.removeEventListener("cuechange", forceUpdate);
     }
   });
 
   return <div class="captions-text">
-    <For each={activeCues} getKey={c => c.id}>{(c: VTTCue) => <Cue key={c.id} cue={c} />}</For>
+    <For each={activeCues()} keyed={(c: VTTCue) => c.id}>{c => <Cue cue={c() as VTTCue} />}</For>
   </div>
 }

@@ -1,5 +1,6 @@
-import { signal } from "@preact/signals";
+import { getKeys } from "./getKeys";
 import { type captionId, type videoId } from "./youtube";
+import { createMemo, createSignal } from "solid-js";
 
 export type captionStatus = Date | boolean | undefined;
 
@@ -19,7 +20,7 @@ function getStorageShowCaps() {
   return (JSON.parse(localStorage.getItem(storageId)) as storage)?.state ?? {};
 }
 
-export const showCaps = signal<showCapsType>(getStorageShowCaps());
+export const [showCaps,setShowCap0] = createSignal<showCapsType>(getStorageShowCaps());
 
 function setStorage(captionId: captionId, showCap: captionStatus) {
   const previousDay = addDays(new Date(), -1);
@@ -37,26 +38,27 @@ function setStorage(captionId: captionId, showCap: captionStatus) {
 }
 
 export function setShowCap(captionId: captionId, show: captionStatus) {
-  if (showCaps.value[captionId] !== show) {
-    showCaps.value = { ...showCaps.value, [captionId]: show };
+  if (showCaps()[captionId] !== show) {
+    setShowCap0({ ...showCaps(), [captionId]: show });
     setStorage(captionId, show);
   }
 }
 
-export const pots = signal<Record<videoId, string>>({});
+export const [pots, setPots] = createSignal<Record<videoId, string>>({});
 export type potEvent = { videoId: videoId, pot: string }
 export function addPot({ videoId, pot }: potEvent) {
-  if (!pots.value[videoId]) pots.value = { ...pots.value, [videoId]: pot };
+  if (!pots()[videoId])
+    setPots({ ...pots(), [videoId]: pot });
 }
 
-export const trackContainer = signal<Record<captionId, TextTrack>>({});
+export const [trackContainer, setTrackContainer] = createSignal<Record<captionId, TextTrack>>({});
 
 export function addTrackToCache(captionId: captionId, track: TextTrack) {
-  trackContainer.value = { ...trackContainer.value, [captionId]: track };
+  setTrackContainer({ ...trackContainer(), [captionId]: track });
 }
 
-export const srtContainer = signal<Record<captionId, string>>({});
-
+export const [srtContainer, setSrt] = createSignal<Record<captionId, string>>({});
+export const srtKeys = createMemo(() => getKeys(srtContainer()));
 export function addSrtCaption(captionId: captionId, fileName: string) {
-  srtContainer.value = { ...srtContainer.value, [captionId]: fileName };
+  setSrt({ ...srtContainer(), [captionId]: fileName });
 }

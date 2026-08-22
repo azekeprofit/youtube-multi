@@ -5,13 +5,9 @@
     "target": "ESNext",
     "module": "ESNext",
     "moduleDetection": "force",
-    "jsx": "react-jsx",
-    "jsxImportSource": "preact",
+    "jsx": "preserve",
+    "jsxImportSource": "@solidjs/web",
     "allowJs": true,
-    "paths": {
-      "react": ["./node_modules/preact/compat"],
-      "react-dom": ["./node_modules/preact/compat/"]
-    },
 
     // Bundler mode
     "moduleResolution": "bundler",
