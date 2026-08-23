@@ -15,6 +15,7 @@ export interface ytCaptionTrack {
   languageCode: languageCode;
   name: ytName;
   kind: ytCaptionKind;
+  isTranslatable: boolean;
 }
 
 interface ytTranslationLanguage {

@@ -1,4 +1,6 @@
-export function CcIcon({ opacity }: { opacity: number }) {
+import type { Signalish } from "preact";
+
+export function CcIcon({ opacity }: { opacity: Signalish<number> }) {
     return <svg height="100%" version="1.1" viewBox="0 0 36 36" width="100%" fill-opacity={opacity}>
         <path
             style="fill:white"
