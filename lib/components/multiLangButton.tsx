@@ -18,7 +18,7 @@ export const MultiLangButton = () => {
   const ytSettingsMenu = document.querySelector(`.ytp-popup.ytp-settings-menu .ytp-panel .ytp-panel-menu`);
 
   function toggleSubtitles() {
-    if (anyCaptions) {
+    if (anyCaptions.value) {
       pressed.value = !pressed.value;
       player.toggleSubtitles();
       if (!pressed.value) player.toggleSubtitlesOn();
