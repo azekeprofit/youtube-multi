@@ -25,14 +25,25 @@ effect(() => {
 
 export type videoPlayerCaptions = { track: ytCaptionTrack, captionId: captionId };
 
+function myLanguage(langCode: string) {
+  const browserLang = navigator.language.split('-')[0];
+  return langCode == browserLang || langCode.startsWith(`${browserLang}-`)
+}
+
 /// re-calculates when video changes
 export const playerCaptions = signal<videoPlayerCaptions[]>([]);
 videoUrlId.subscribe((v) => {
   const caps = getAllTracks(videoPlayer.peek()).map(track =>
     ({ track, captionId: getCaptionIdFromVideoId(v, track) } as videoPlayerCaptions));
 
-  playerCaptions.value = caps.length == 1 ? caps : caps.filter(c => c.track.kind !== 'asr');
-  if (caps.length == 1)
-    setShowCap(caps[0].captionId, true);
+
+  const filteredCaps = caps.length == 1 ? caps : caps.filter(({ track }) =>
+    track.kind == 'asr' ?
+       myLanguage(track.languageCode) ?
+        !caps.some(({ track: { languageCode, kind } }) => kind !== 'asr' && myLanguage(languageCode)) : false
+      : true);
+  if (filteredCaps.length == 1)
+    setShowCap(filteredCaps[0].captionId, true);
+  playerCaptions.value = filteredCaps;
   srtContainer.value = {};
 })
