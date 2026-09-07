@@ -25,23 +25,18 @@ effect(() => {
 
 export type videoPlayerCaptions = { track: ytCaptionTrack, captionId: captionId };
 
-function myLanguage(langCode: string) {
-  const browserLang = navigator.language.split('-')[0];
-  return langCode == browserLang || langCode.startsWith(`${browserLang}-`)
-}
+const sameLanguage = (lang1: string, lang2: string) => lang1 == lang2 || lang1.split('-')[0] == lang2.split('-')[0];
 
 /// re-calculates when video changes
 export const playerCaptions = signal<videoPlayerCaptions[]>([]);
 videoUrlId.subscribe((v) => {
-  const caps = getAllTracks(videoPlayer.peek()).map(track =>
-    ({ track, captionId: getCaptionIdFromVideoId(v, track) } as videoPlayerCaptions));
-
-
-  const filteredCaps = caps.length == 1 ? caps : caps.filter(({ track }) =>
+  const tracks = getAllTracks(videoPlayer.peek());
+  const filteredTracks = tracks.length == 1 ? tracks : tracks.filter(track =>
     track.kind == 'asr' ?
-       myLanguage(track.languageCode) ?
-        !caps.some(({ track: { languageCode, kind } }) => kind !== 'asr' && myLanguage(languageCode)) : false
+      sameLanguage(navigator.language, track.languageCode) ?
+        !tracks.some(({ languageCode, kind }) => kind !== 'asr' && sameLanguage(track.languageCode, languageCode)) : false
       : true);
+  const filteredCaps = filteredTracks.map(track => ({ track, captionId: getCaptionIdFromVideoId(v, track) } as videoPlayerCaptions));
   if (filteredCaps.length == 1)
     setShowCap(filteredCaps[0].captionId, true);
   playerCaptions.value = filteredCaps;
