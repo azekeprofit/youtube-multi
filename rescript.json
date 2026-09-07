@@ -1,0 +1,25 @@
+{
+  "name": "youtube-multi",
+  "sources": [
+    {
+      "dir": "src",
+      "subdirs": true
+    }
+  ],
+  "package-specs": [
+    {
+      "module": "esmodule",
+      "in-source": true
+    }
+  ],
+  "suffix": ".jsx",
+  "jsx": {
+    "version": 4,
+    "module": "Preact",
+    "preserve": true
+  },
+  "dependencies": [
+    "@rescript/webapi"
+  ],
+  "compiler-flags": ["-open WebAPI.Global"]
+}
