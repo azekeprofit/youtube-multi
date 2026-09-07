@@ -1,49 +1,63 @@
-import { useSignal, useSignalEffect } from "@preact/signals";
+import { useComputed, useSignal, useSignalEffect, type ReadonlySignal } from "@preact/signals";
 import { useSignalRef } from "@preact/signals/utils";
 import { useCallback } from "preact/hooks";
 import { srtContainer } from "../model/store";
 import { SrtCheckboxes } from "./srtCheckbox";
 import { YoutubeCaptionCheckboxes } from "./ytLangCheckbox";
+import type { HTMLAttributes } from "preact";
 
 export function ScrollablePanel() {
-  const ref = useSignalRef<HTMLDivElement>(null);
+  const scrollDiv = useSignalRef<HTMLDivElement>(null);
   const intervalRef = useSignalRef<Timer>(null);
   const showLeft = useSignal(false);
   const showRight = useSignal(false);
 
   const doScroll = useCallback(() => {
-    const scroll = ref.current;
+    const scroll = scrollDiv.current;
     if (scroll) {
       showLeft.value = scroll.scrollLeft != 0;
       showRight.value = scroll.scrollLeft < (scroll.scrollWidth - scroll.clientWidth - 15);
     }
   }, [])
 
-  const mouseUp = useCallback(() => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current)
-      intervalRef.current = null;
+  const mouseHold = useCallback((step: number) => {
+    const mouseUp = () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current)
+        intervalRef.current = null;
+      }
+    }
+
+    return {
+      onMouseDown: () => {
+        if (!intervalRef.current) {
+          intervalRef.current = setInterval(() => {
+            scrollDiv.current.scrollBy(step, 0);
+            doScroll();
+          }, 100)
+        }
+      }, onMouseUp: mouseUp, onMouseLeave: mouseUp
     }
   }, [])
 
-  useSignalEffect(() => { srtContainer.value; doScroll() })
-
-  const mouseHold = useCallback((step: number) => ({
-    onMouseDown: () => {
-      if (!intervalRef.current) {
-        intervalRef.current = setInterval(() => ref?.current.scrollBy(step, 0), 100)
-      }
-    }, onMouseUp: mouseUp, onMouseLeave: mouseUp
-  }), [])
+  useSignalEffect(() => {
+    srtContainer.value; // subscribe to srtContainer changes, so arrow will apropriately appear when a new SRT-caption was added
+    setTimeout(doScroll, 100); // pause to give component some time to render checkboxes
+    doScroll(); // so i don't have to create another useEffect just for initial render
+  })
 
   return <div id="youtube-multi-checkboxes">
     <div class="unscroll">
-      <span class={`arrow left ${showLeft.value ? 'show' : ''}`} {...mouseHold(-15)}>🠜</span>
-      <div class="scroll" ref={ref} onScroll={doScroll}>
+      <Arrow text='🠜' show={showLeft} direction="left" attr={mouseHold(-15)} />
+      <div class="scroll" ref={scrollDiv}>
         <YoutubeCaptionCheckboxes />
         <SrtCheckboxes />
       </div>
-      <span class={`arrow right ${showRight.value ? 'show' : ''}`} {...mouseHold(15)}>🠞</span>
+      <Arrow text='🠞' show={showRight} direction="right" attr={mouseHold(15)} />
     </div>
   </div>
 }
+
+const Arrow = ({ show, text, direction, attr }:
+  { show: ReadonlySignal<boolean>, text: string, direction: 'left' | 'right', attr: HTMLAttributes<HTMLElement> }) =>
+  <span class={useComputed(() => `arrow ${direction} ${show.value ? 'show' : ''}`)} {...attr}>{text}</span>

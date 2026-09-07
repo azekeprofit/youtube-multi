@@ -14,5 +14,5 @@ function SrtCheckbox({ captionId }: { captionId: captionId }) {
 }
 
 export function SrtCheckboxes() {
-  return <For each={srtKeys}>{capId => <SrtCheckbox captionId={capId} />}</For>
+  return <For each={srtKeys}>{capId => <SrtCheckbox key={capId} captionId={capId} />}</For>
 }
