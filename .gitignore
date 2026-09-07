@@ -1,7 +1,6 @@
 # Based on https://raw.githubusercontent.com/github/gitignore/main/Node.gitignore
 
 # Logs
-
 logs
 _.log
 npm-debug.log_
@@ -177,3 +176,8 @@ public/wrapper.js
 public/background.js
 public/meta.json
 public/wrapper.css
+
+# Rescript
+lib/bs
+lib/ocaml
+*.jsx
