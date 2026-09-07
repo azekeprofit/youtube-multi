@@ -30,7 +30,8 @@ export const playerCaptions = signal<videoPlayerCaptions[]>([]);
 videoUrlId.subscribe((v) => {
   const caps = getAllTracks(videoPlayer.peek()).map(track =>
     ({ track, captionId: getCaptionIdFromVideoId(v, track) } as videoPlayerCaptions));
-  playerCaptions.value = caps;
+
+  playerCaptions.value = caps.length == 1 ? caps : caps.filter(c => c.track.kind !== 'asr');
   if (caps.length == 1)
     setShowCap(caps[0].captionId, true);
   srtContainer.value = {};

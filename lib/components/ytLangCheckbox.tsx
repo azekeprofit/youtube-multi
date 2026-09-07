@@ -1,5 +1,5 @@
-import { useComputed, useSignalEffect } from "@preact/signals";
-import { For, Show } from "@preact/signals/utils";
+import { useSignalEffect } from "@preact/signals";
+import { For } from "@preact/signals/utils";
 import { playerCaptions, videoPlayer, videoUrlId, type videoPlayerCaptions } from "../model/captions";
 import { loadSrtLine } from "../model/srtSubtitle";
 import { pots, showCaps, trackContainer } from "../model/store";
@@ -29,11 +29,8 @@ function YtLangCheckbox({ caption: { track: { vssId, kind, baseUrl, name, langua
   })
 
   const autoCaption = kind == 'asr';
-  const show = useComputed(() => autoCaption ? playerCaptions.value.length == 1 : true);
 
-  return <Show when={show}>
-    <CaptionCheckbox title={extractName(name)} label={`${languageCode}${autoCaption ? ' (auto)' : ''}`} captionId={captionId} />
-  </Show>
+  return <CaptionCheckbox title={extractName(name)} label={`${languageCode}${autoCaption ? ' (auto)' : ''}`} captionId={captionId} />
 }
 
 export function YoutubeCaptionCheckboxes() {
