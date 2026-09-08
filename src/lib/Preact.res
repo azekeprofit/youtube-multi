@@ -18,25 +18,6 @@ external jsxs: (component<'props>, 'props) => element = "jsxs"
 @module("preact/jsx-runtime")
 external jsxsKeyed: (component<'props>, 'props, ~key: string=?, @ignore unit) => element = "jsxs"
 
-/* These identity functions and static values below are optional, but lets
-
-
-
-
-
-
-
-
-you move things easily to the `element` type. The only required thing to
-
-
-
-
-
-
-
-
-define though is `array`, which the JSX transform will output. */
 external array: array<element> => element = "%identity"
 @val external null: element = "null"
 
@@ -50,37 +31,22 @@ type fragmentProps = {children?: element}
 
 @module("preact/jsx-runtime") external jsxFragment: component<fragmentProps> = "Fragment"
 
+type signal<'t> = {mutable value: 't, @meth subscribe: ('t => unit) => unit => unit}
+
 /* The Elements module is the equivalent to the ReactDOM module in Preact. This holds things relevant to _lowercase_ JSX elements. */
 module Elements = {
-  /* Here you can control what props lowercase JSX elements should have.
-
-
-
-
-
-
-
-
-  A base that the React JSX transform uses is provided via JsxDOM.domProps,
-
-
-
-
-
-
-
-
-  but you can make this anything. The editor tooling will support
-
-
-
-
-
-
-
-
+  /* Here you can control what props lowercase JSX elements should have.
+
+  A base that the React JSX transform uses is provided via JsxDOM.domProps,
+
+  but you can make this anything. The editor tooling will support
+
   autocompletion etc for your specific type. */
-  type props = JsxDOM.domProps
+  type props = {
+    ...JsxDOM.domProps,
+    @as("fill-opacity")
+    fillOpacitySignal?: signal<string>,
+  }
 
   @module("preact/jsx-runtime")
   external jsx: (string, props) => Jsx.element = "jsx"
@@ -105,8 +71,6 @@ external render: (element, WebAPI.DOMTypes.element) => unit = "render"
 
 @module("preact/hooks")
 external useMemo: (unit => 'val) => unit => 'val = "useMemo"
-
-type signal<'t> = {mutable value: 't, @meth subscribe: ('t => unit) => unit => unit}
 
 @module("@preact/signals")
 external signal: 'a => signal<'a> = "signal"

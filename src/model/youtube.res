@@ -73,10 +73,11 @@ let getVideoPlayer = () =>
 
 let getVideoTag = () => Preact.get("#movie_player video")
 
-let getVideoId = () => switch getVideoPlayer() {
-| Value(p)=>getPlayerResponse(p).videoDetails.videoId
-| _ =>``
-}
+let getVideoId = () =>
+  switch getVideoPlayer() {
+  | Value(p) => getPlayerResponse(p).videoDetails.videoId
+  | _ => ``
+  }
 
 type captionId = CaptionId(videoId, vssId)
 
