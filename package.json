@@ -11,11 +11,10 @@
     "rescript": "^12.3.1"
   },
   "scripts": {
-    "res": "bun run rescript build",
-    "res:watch": "bun run rescript watch",
-    "clean": "bun run rescript clean",
-    "format": "bun run rescript format",
-    "build": "bun run cfg/build.ts"
+    "watch": "rescript watch",
+    "clean": "rescript clean",
+    "format": "rescript format",
+    "build": "bun run rescript build; bun run cfg/build.ts"
   },
   "dependencies": {
     "@preact/signals": "^2.11.1",

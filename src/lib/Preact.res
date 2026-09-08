@@ -31,19 +31,31 @@ type fragmentProps = {children?: element}
 
 @module("preact/jsx-runtime") external jsxFragment: component<fragmentProps> = "Fragment"
 
-type signal<'t> = {mutable value: 't,
+type signal<'t> = {
+  mutable value: 't,
+  @meth subscribe: ('t => unit) => unit => unit,
+  @meth peek: unit => 't,
+}
+
+
+type signalRef<'t>={
+mutable current:'t,
 @meth subscribe: ('t => unit) => unit => unit,
-@meth peek: unit=>'t }
+@meth peek: unit => 't,
+}
 
 /* The Elements module is the equivalent to the ReactDOM module in Preact. This holds things relevant to _lowercase_ JSX elements. */
 module Elements = {
   /* Here you can control what props lowercase JSX elements should have.
+
   A base that the React JSX transform uses is provided via JsxDOM.domProps,
+
   but you can make this anything. The editor tooling will support
+
   autocompletion etc for your specific type. */
   type props = {
     ...JsxDOM.domProps,
-    class?:string,
+    class?: string,
     @as("aria-has-popup")
     ariaHasPopup?: string,
     @as("fill-opacity")
@@ -82,7 +94,22 @@ module Elements = {
 external render: (element, WebAPI.DOMTypes.element) => unit = "render"
 
 @module("preact/hooks")
-external useMemo: (unit => 'val) => unit => 'val = "useMemo"
+external useMemo: (unit => 'val, array<_>) => 'val = "useMemo"
+
+@module("preact/hooks")
+external useCallback: ('arg => 'res, array<_>) => 'arg => 'res = "useCallback"
+
+@module("preact/signals")
+external useSignalEffect: (unit => unit) => unit = "useSignalEffect"
+
+@module("preact/signals")
+external useSignalEffectWithCleanup: (unit => unit => unit) => unit = "useSignalEffect"
+
+@module("@preact/signals")
+external useSignal: 'a => signal<'a> = "useSignal"
+
+@module("@preact/signals")
+external useSignalRef:'a=>signalRef<'a>="useSignalRef"
 
 @module("@preact/signals")
 external signal: 'a => signal<'a> = "signal"
@@ -99,9 +126,6 @@ external effectWithCleanup: (unit => unit => unit) => unit = "effect"
 @module("@preact/signals")
 external useComputed: (unit => 't) => signal<'t> = "useComputed"
 
-
 external signalText: signal<string> => element = "%identity"
-
-
 
 let get: string => 't = selector => document->WebAPI.Document.querySelector(selector)
