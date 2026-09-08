@@ -1,14 +1,14 @@
-type ytName ={
+type ytName = {
   simpleText: string,
 }
 
-type ytCaptionKind = @as("asr") Asr | None
+type ytCaptionKind = | @as("asr") Asr | None
 
 type languageCode = LanguageCode(string)
 type vssId = string
 type videoId = string
 
-type ytCaptionTrack ={
+type ytCaptionTrack = {
   baseUrl: string,
   vssId: vssId,
   languageCode: languageCode,
@@ -17,17 +17,17 @@ type ytCaptionTrack ={
   isTranslatable: bool,
 }
 
-type ytTranslationLanguage= {
+type ytTranslationLanguage = {
   languageCode: languageCode,
   languageName: ytName,
 }
 
-type ytTrackListRenderer= {
+type ytTrackListRenderer = {
   captionTracks: array<ytCaptionTrack>,
   translationLanguages: array<ytTranslationLanguage>,
 }
 
-type ytVideoDetails ={
+type ytVideoDetails = {
   author: string,
   channelId: string,
   lengthSeconds: int,
@@ -36,16 +36,16 @@ type ytVideoDetails ={
   title: string,
 }
 
-type ytCaptions ={
+type ytCaptions = {
   playerCaptionsTracklistRenderer: ytTrackListRenderer,
 }
 
-type ytPlayerResponse ={
+type ytPlayerResponse = {
   captions: ytCaptions,
   videoDetails: ytVideoDetails,
 }
 
-type ytPlayerState=
+type ytPlayerState =
   | @as(-1) Unstarted
   | @as(0) Ended
   | @as(1) Playing
@@ -53,26 +53,32 @@ type ytPlayerState=
   | @as(3) Buffering
   | @as(5) VideoCued
 
-type stateChangeListener = (ytPlayerState) => unit;
+type stateChangeListener = ytPlayerState => unit
+type eventType = | @as(`onStateChange`) OnStateChange
+type ytPlayer = YoutubePlayer(WebAPI.DOMTypes.element)
+@send external getPlayerResponse: ytPlayer => ytPlayerResponse = "getPlayerResponse"
+@send
+external addEventListener: (ytPlayer, eventType, stateChangeListener) => unit = "addEventListener"
+@send
+external removeEventListener: (ytPlayer, eventType, stateChangeListener) => unit =
+  "removeEventListener"
+@send external toggleSubtitles: unit => unit = "toggleSubtitles"
+@send external toggleSubtitlesOn: unit => unit = "toggleSubtitlesOn"
 
-type eventListener = (string /* `onStateChange` */ , stateChangeListener) => unit;
+let getVideoPlayer = () =>
+  switch Preact.get("#movie_player") {
+  | Value(p) => Nullable.make(YoutubePlayer(p))
+  | _ => Nullable.null
+  }
 
-type ytPlayer = {
-  @meth getPlayerResponse: () => ytPlayerResponse,
-  @meth addEventListener: eventListener,
-  @meth removeEventListener: eventListener,
-  @meth toggleSubtitles: () => unit,
-  @meth toggleSubtitlesOn: () => unit,
+let getVideoTag = () => Preact.get("#movie_player video")
+
+let getVideoId = () => switch getVideoPlayer() {
+| Value(p)=>getPlayerResponse(p).videoDetails.videoId
+| _ =>``
 }
 
-let getVideoPlayer=()=>Dom.get("#movie_player") :> Option.t<ytPlayer>
-
-let getVideoTag=()=> Dom.get("#movie_player video") :> Option.t<WebAPI.HTMLVideoElement.t>
-
-let getVideoId=player=>player.getPlayerResponse().videoDetails.videoId
-
-
-type captionId = CaptionId(videoId,vssId);
+type captionId = CaptionId(videoId, vssId)
 
 // export function addTrack(captionId: captionId, vssId: vssId) {
 //   const track = getVideoTag().addTextTrack("captions", vssId, vssId);
@@ -93,10 +99,11 @@ type captionId = CaptionId(videoId,vssId);
 //   track.addCue(cue);
 // }
 
-let getAllTracks=(player)=> switch player {
-| Value(p)=>{
-  let response = p.getPlayerResponse();
-  response.captions.playerCaptionsTracklistRenderer.captionTracks // ?? [];
-}
-| _ =>[]
-}
+let getAllTracks = () =>
+  switch getVideoPlayer() {
+  | Value(p) => {
+      let response = getPlayerResponse(p)
+      response.captions.playerCaptionsTracklistRenderer.captionTracks // ?? [];
+    }
+  | _ => []
+  }

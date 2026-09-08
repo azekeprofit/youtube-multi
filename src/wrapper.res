@@ -9,9 +9,9 @@ intervalId :=
   WebAPI.Window.setInterval2(
     window,
     ~handler=() =>
-      switch Dom.get(`button.ytp-subtitles-button.ytp-button`) {
+      switch Preact.get(`button.ytp-subtitles-button.ytp-button`) {
       | Value(multiLangButton) =>
-        switch Dom.get(`#${ytControlPanelId}`) {
+        switch Preact.get(`#${ytControlPanelId}`) {
         | Value(_) => clear()
         | _ =>
           switch multiLangButton.parentNode {

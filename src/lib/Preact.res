@@ -21,7 +21,19 @@ external jsxsKeyed: (component<'props>, 'props, ~key: string=?, @ignore unit) =>
 /* These identity functions and static values below are optional, but lets
 
 
+
+
+
+
+
+
 you move things easily to the `element` type. The only required thing to
+
+
+
+
+
+
 
 
 define though is `array`, which the JSX transform will output. */
@@ -43,10 +55,28 @@ module Elements = {
   /* Here you can control what props lowercase JSX elements should have.
 
 
+
+
+
+
+
+
   A base that the React JSX transform uses is provided via JsxDOM.domProps,
 
 
+
+
+
+
+
+
   but you can make this anything. The editor tooling will support
+
+
+
+
+
+
 
 
   autocompletion etc for your specific type. */
@@ -89,3 +119,5 @@ external effect: (unit => unit) => unit = "effect"
 
 @module("@preact/signals")
 external effectWithCleanup: (unit => unit => unit) => unit = "effect"
+
+let get: string => 't = selector => document->WebAPI.Document.querySelector(selector)

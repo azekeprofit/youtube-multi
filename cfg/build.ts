@@ -1,8 +1,6 @@
 import { $, build } from "bun";
 
 export async function bundle(prod) {
-  const { exitCode } = await $`bun res`.nothrow();
-  if (exitCode != 0) return;
   build({
     entrypoints: ["src/wrapper.jsx"], // , "lib/background.jsx"
     outdir: "public",

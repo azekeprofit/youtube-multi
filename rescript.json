@@ -18,6 +18,9 @@
     "module": "Preact",
     "preserve": true
   },
+  "js-post-build":{
+    "cmd":"bun run ./cfg/build.ts"
+  },
   "dependencies": [
     "@rescript/webapi"
   ],

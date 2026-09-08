@@ -11,6 +11,7 @@ let make = () => {
       }}
     >
       {Preact.string(pressed.value ? `true` : `false`)}
+      {Preact.string(`999999`)}
     </p>
   </div>
 }

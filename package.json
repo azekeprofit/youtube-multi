@@ -2,6 +2,7 @@
   "name": "youtube-multi",
   "module": "lib/wrapper.tsx",
   "type": "module",
+  "packageManager": "bun",
   "devDependencies": {
     "@types/dompurify": "^3.2.0",
     "@types/chrome": "^0.1.4",
@@ -11,6 +12,7 @@
   },
   "scripts": {
     "res": "bun run rescript build",
+    "res:watch": "bun run rescript watch",
     "clean": "bun run rescript clean",
     "format": "bun run rescript format",
     "build": "bun run cfg/build.ts"
