@@ -10,7 +10,7 @@ let make = () => {
         pressed.value = !pressed.value
       }}
     >
-      {Preact.string(pressed.value ? `true` : `false`)}
+      {Preact.useComputed(()=>pressed.value ? `true` : `false`)->Preact.signalText}
       {Preact.string(`999999`)}
     </p>
   </div>

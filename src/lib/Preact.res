@@ -31,19 +31,21 @@ type fragmentProps = {children?: element}
 
 @module("preact/jsx-runtime") external jsxFragment: component<fragmentProps> = "Fragment"
 
-type signal<'t> = {mutable value: 't, @meth subscribe: ('t => unit) => unit => unit}
+type signal<'t> = {mutable value: 't,
+@meth subscribe: ('t => unit) => unit => unit,
+@meth peek: unit=>'t }
 
 /* The Elements module is the equivalent to the ReactDOM module in Preact. This holds things relevant to _lowercase_ JSX elements. */
 module Elements = {
   /* Here you can control what props lowercase JSX elements should have.
-
   A base that the React JSX transform uses is provided via JsxDOM.domProps,
-
   but you can make this anything. The editor tooling will support
-
   autocompletion etc for your specific type. */
   type props = {
     ...JsxDOM.domProps,
+    class?:string,
+    @as("aria-has-popup")
+    ariaHasPopup?: string,
     @as("fill-opacity")
     fillOpacitySignal?: signal<string>,
   }
@@ -53,6 +55,16 @@ module Elements = {
 
   @module("preact/jsx-runtime")
   external div: (string, props) => Jsx.element = "jsx"
+
+  // type inputEventTarget={files:array<WebAPI.BaseFile.File>}
+  // type inputEventArgument={currentTarget:inputEventTarget}
+  // type inputProps = {
+  //   ...props,
+  //   onInput:inputEventArgument=>unit,
+  // }
+
+  // @module("preact/jsx-runtime")
+  // external input: (string, inputProps) => Jsx.element = "jsx"
 
   @module("preact/jsx-runtime")
   external jsxKeyed: (string, props, ~key: string=?, @ignore unit) => Jsx.element = "jsx"
@@ -83,5 +95,13 @@ external effect: (unit => unit) => unit = "effect"
 
 @module("@preact/signals")
 external effectWithCleanup: (unit => unit => unit) => unit = "effect"
+
+@module("@preact/signals")
+external useComputed: (unit => 't) => signal<'t> = "useComputed"
+
+
+external signalText: signal<string> => element = "%identity"
+
+
 
 let get: string => 't = selector => document->WebAPI.Document.querySelector(selector)
