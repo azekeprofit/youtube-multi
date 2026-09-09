@@ -1,15 +1,15 @@
 @jsx.component
 let make = () => {
   Console.log(`rerender`)
-  let pressed = Preact.useSignal(false)
-  let text = Preact.useComputed(() => pressed.value ? `true` : `false`)
+  let pressed = Signal.useSignal(false)
+  let text = Signal.useComputed(() => pressed.value ? `true` : `false`)
   <div>
     <p
       onClick={_ => {
         pressed.value = !pressed.value
       }}
     >
-      {text->Preact.signalText}
+      {text->Signal.signalText}
       {Preact.string(`777`)}
     </p>
   </div>

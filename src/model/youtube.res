@@ -8,7 +8,7 @@ type languageCode = LanguageCode(string)
 
 type ytCaptionTrack = {
   baseUrl: string,
-  vssId: Store.vssId,
+  vssId: Captions.vssId,
   languageCode: languageCode,
   name: ytName,
   kind: ytCaptionKind,
@@ -30,7 +30,7 @@ type ytVideoDetails = {
   channelId: string,
   lengthSeconds: int,
   shortDescription: string,
-  videoId: Store.videoId,
+  videoId: Captions.videoId,
   title: string,
 }
 
@@ -53,7 +53,7 @@ type ytPlayerState =
 
 type stateChangeListener = ytPlayerState => unit
 type eventType = | @as(`onStateChange`) OnStateChange
-type ytPlayer = YoutubePlayer(WebAPI.DOMTypes.element)
+@unboxed type ytPlayer = YoutubePlayer(WebAPI.DOMTypes.element)
 @send external getPlayerResponse: ytPlayer => ytPlayerResponse = "getPlayerResponse"
 @send
 external addEventListener: (ytPlayer, eventType, stateChangeListener) => unit = "addEventListener"
@@ -65,8 +65,8 @@ external removeEventListener: (ytPlayer, eventType, stateChangeListener) => unit
 
 let getVideoPlayer = () =>
   switch Preact.get("#movie_player") {
-  | Value(p) => Nullable.make(YoutubePlayer(p))
-  | _ => Nullable.null
+  | Value(p) => Some(YoutubePlayer(p))
+  | _ => None
   }
 
 let getVideoTag = () => Preact.get("#movie_player video")
@@ -75,14 +75,14 @@ external asMediaElement: WebAPI.DOMTypes.element => WebAPI.DOMTypes.htmlVideoEle
 
 let getVideoId = () =>
   switch getVideoPlayer() {
-  | Value(p) => getPlayerResponse(p).videoDetails.videoId
+  | Some(p) => Some(getPlayerResponse(p).videoDetails.videoId)
   | _ => None
   }
 
 let addTrack = (
   videoTag: WebAPI.DOMTypes.element,
-  captionId: Store.captionId,
-  vssId: Store.vssId,
+  captionId: Captions.captionId,
+  vssId: Captions.vssId,
 ) => {
   let player = videoTag->asMediaElement
   let track =

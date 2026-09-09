@@ -1,16 +1,21 @@
+type vssId = string
+@unboxed type videoId = VideoId(string)
+@unboxed type captionId = CaptionId(string)
+let getCaptionId = (CaptionId(videoId), vssId: vssId) => `${videoId}.${vssId}`
+
 module VTTCue = {
   @new external make: (float, float, string) => WebAPI.WebVTTTypes.textTrackCue = "VTTCue"
 }
 
 let addCue = (
   track: WebAPI.WebVTTTypes.textTrack,
-  capId: Store.captionId,
+  CaptionId(capId),
   start: float,
   end: float,
   html: string,
   index: int,
 ) => {
   let cue = VTTCue.make(start, end, html)
-  cue.id = `${capId->Store.captionIdToString}.${index->Int.toString}`
+  cue.id = `${capId}.${index->Int.toString}`
   track->WebAPI.TextTrack.addCue(cue)
 }
