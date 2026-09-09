@@ -3,21 +3,40 @@ let loadSrtLine = (
   capId: Store.captionId,
   srtLines: string,
 ) => {
-  let t = 1
-  //   const lineRegex =
-  //     /(\d+)\r?\n(\d\d):(\d\d):(\d\d)\,(\d\d\d) --> (\d\d):(\d\d):(\d\d)\,(\d\d\d)\r?\n/;
-  //   const arr = srtLines.split(lineRegex);
-  //   let i=0;
-  //   const popStr = ()=>arr[i++];
-  //   const pop = () => parseFloat(popStr());
-  //   pop();
-  //   const popTime = () =>
-  //     pop() * 60 * 60 + pop() * 60 + (pop() - 0) + pop() / 1000;
-  //   while (true) {
-  //     const index = pop();
-  //     if (isNaN(index)) break;
-  //     addCue(track, capId, popTime(), popTime(), popStr(), index);
-  //   }
+  let lineRegex = /(\d+)\r?\n(\d\d):(\d\d):(\d\d)\,(\d\d\d) --> (\d\d):(\d\d):(\d\d)\,(\d\d\d)\r?\n/
+  let arr = srtLines->String.splitByRegExp(lineRegex)
+  let i = ref(1)
+  let step = () => {
+    i := i.contents + 1
+    i.contents
+  }
+  let popStr = () =>
+    switch arr[step()] {
+    | Some(Some(s)) => s
+    | _ => ``
+    }
+  let pop = () => Float.fromString(popStr())
+  let popTime = () =>
+    switch (pop(), pop(), pop(), pop()) {
+    | (Some(hour), Some(minute), Some(second), Some(ms)) =>
+      Some(hour * 60.0 * 60.0 + minute * 60.0 + second + ms / 1000.0)
+    | _ => None
+    }
+  while (
+    switch Int.fromString(popStr()) {
+    | Some(index) =>
+      switch (popTime(), popTime()) {
+      | (Some(start), Some(end)) => {
+          track->Captions.addCue(capId, start, end, popStr(), index)
+          true
+        }
+      | _ => false
+      }
+    | _ => false
+    }
+  ) {
+    let t = 1
+  }
 }
 
 let createTrack = (fileName: string, lines: string) =>

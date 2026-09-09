@@ -91,18 +91,5 @@ let addTrack = (
   track
 }
 
-// export function addCue(
-//   track: TextTrack,
-//   capId: captionId,
-//   start: number,
-//   end: number,
-//   html: string,
-//   index: number
-// ) {
-//   const cue = new VTTCue(start, end, html);
-//   cue.id = `${capId}.${index.toString()}`;
-//   track.addCue(cue);
-// }
-
 let getAllTracks = (p: ytPlayer) =>
   getPlayerResponse(p).captions.playerCaptionsTracklistRenderer.captionTracks // ?? [];
