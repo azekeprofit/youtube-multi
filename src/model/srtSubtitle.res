@@ -1,20 +1,21 @@
-
-
-let createTrack=(fileName: string, lines: string)=>{
-let capId=Youtube.SrtCaptionId(fileName)
-
-//   const track = addTrack(capId, fileName);
-//   loadSrtLine(track, capId, lines);
-//   setShowCap(capId, true);
-//   addSrtCaption(capId, fileName);
+let createTrack = (fileName: string, lines: string) => {
+  switch Youtube.getVideoTag() {
+  | Value(videoTag) => {
+      let capId = Store.SrtCaptionId(fileName)
+      let track = Youtube.addTrack(videoTag, capId, fileName)
+      //   loadSrtLine(track, capId, lines);
+      //   setShowCap(capId, true);
+      //   addSrtCaption(capId, fileName);
+    }
+  | _ => ()
+  }
 }
 
 let loadSrtCaptions = (srtFilesObj: WebAPI.FileTypes.file) => {
   let fileReader = FileReader.make()
-  fileReader.onload = e => createTrack(srtFilesObj.name, e.target.result);
+  fileReader.onload = e => createTrack(srtFilesObj.name, e.target.result)
   fileReader->FileReader.readAsText(srtFilesObj, ~encoding="UTF-8")
 }
-
 
 // export function loadSrtLine(track: TextTrack, capId: captionId, srtLines: string) {
 //   const lineRegex =

@@ -1,4 +1,3 @@
-// import { loadSrtCaptions } from "../model/srtSubtitle";
 @jsx.component
 let make = () =>
   <span class="ytp-menuitem" ariaHasPopup="true" role="menuitem" tabIndex={0}>

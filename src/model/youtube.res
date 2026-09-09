@@ -5,12 +5,10 @@ type ytName = {
 type ytCaptionKind = | @as("asr") Asr | None
 
 type languageCode = LanguageCode(string)
-type vssId = string
-type videoId = string
 
 type ytCaptionTrack = {
   baseUrl: string,
-  vssId: vssId,
+  vssId: Store.vssId,
   languageCode: languageCode,
   name: ytName,
   kind: ytCaptionKind,
@@ -32,7 +30,7 @@ type ytVideoDetails = {
   channelId: string,
   lengthSeconds: int,
   shortDescription: string,
-  videoId: videoId,
+  videoId: Store.videoId,
   title: string,
 }
 
@@ -62,8 +60,8 @@ external addEventListener: (ytPlayer, eventType, stateChangeListener) => unit = 
 @send
 external removeEventListener: (ytPlayer, eventType, stateChangeListener) => unit =
   "removeEventListener"
-@send external toggleSubtitles: unit => unit = "toggleSubtitles"
-@send external toggleSubtitlesOn: unit => unit = "toggleSubtitlesOn"
+@send external toggleSubtitles: ytPlayer => unit = "toggleSubtitles"
+@send external toggleSubtitlesOn: ytPlayer => unit = "toggleSubtitlesOn"
 
 let getVideoPlayer = () =>
   switch Preact.get("#movie_player") {
@@ -73,19 +71,24 @@ let getVideoPlayer = () =>
 
 let getVideoTag = () => Preact.get("#movie_player video")
 
+external asMediaElement: WebAPI.DOMTypes.element => WebAPI.DOMTypes.htmlVideoElement = "%identity"
+
 let getVideoId = () =>
   switch getVideoPlayer() {
   | Value(p) => getPlayerResponse(p).videoDetails.videoId
   | _ => ``
   }
 
-type captionId = CaptionId(videoId, vssId) | SrtCaptionId(string)
-
-// export function addTrack(captionId: captionId, vssId: vssId) {
-//   const track = getVideoTag().addTextTrack("captions", vssId, vssId);
-//   addTrackToCache(captionId, track);
-//   return track;
-// }
+let addTrack = (
+  videoTag: WebAPI.DOMTypes.element,
+  captionId: Store.captionId,
+  vssId: Store.vssId,
+) => {
+  let player = videoTag->asMediaElement
+  let track =
+    player->WebAPI.HTMLVideoElement.addTextTrack(~kind=Captions, ~label=vssId, ~language=vssId)
+  Store.addTrackToCache(captionId, track)
+}
 
 // export function addCue(
 //   track: TextTrack,
@@ -100,11 +103,5 @@ type captionId = CaptionId(videoId, vssId) | SrtCaptionId(string)
 //   track.addCue(cue);
 // }
 
-let getAllTracks = () =>
-  switch getVideoPlayer() {
-  | Value(p) => {
-      let response = getPlayerResponse(p)
-      response.captions.playerCaptionsTracklistRenderer.captionTracks // ?? [];
-    }
-  | _ => []
-  }
+let getAllTracks = (p: ytPlayer) =>
+  getPlayerResponse(p).captions.playerCaptionsTracklistRenderer.captionTracks // ?? [];
