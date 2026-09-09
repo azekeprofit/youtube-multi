@@ -76,7 +76,7 @@ external asMediaElement: WebAPI.DOMTypes.element => WebAPI.DOMTypes.htmlVideoEle
 let getVideoId = () =>
   switch getVideoPlayer() {
   | Value(p) => getPlayerResponse(p).videoDetails.videoId
-  | _ => ``
+  | _ => None
   }
 
 let addTrack = (
@@ -88,6 +88,7 @@ let addTrack = (
   let track =
     player->WebAPI.HTMLVideoElement.addTextTrack(~kind=Captions, ~label=vssId, ~language=vssId)
   Store.addTrackToCache(captionId, track)
+  track
 }
 
 // export function addCue(
