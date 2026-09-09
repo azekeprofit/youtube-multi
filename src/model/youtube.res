@@ -79,7 +79,7 @@ let getVideoId = () =>
   | _ => ``
   }
 
-type captionId = CaptionId(videoId, vssId)
+type captionId = CaptionId(videoId, vssId) | SrtCaptionId(string)
 
 // export function addTrack(captionId: captionId, vssId: vssId) {
 //   const track = getVideoTag().addTextTrack("captions", vssId, vssId);

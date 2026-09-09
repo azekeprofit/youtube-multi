@@ -1,10 +1,8 @@
-
-
 @jsx.component
 let make = () => {
   Console.log(`rerender`)
   let pressed = Preact.useSignal(false)
-  let text=Preact.useComputed(() => pressed.value ? `true` : `false`)
+  let text = Preact.useComputed(() => pressed.value ? `true` : `false`)
   <div>
     <p
       onClick={_ => {

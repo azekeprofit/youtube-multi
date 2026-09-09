@@ -37,22 +37,24 @@ type signal<'t> = {
   @meth peek: unit => 't,
 }
 
-
-type signalRef<'t>={
-mutable current:'t,
-@meth subscribe: ('t => unit) => unit => unit,
-@meth peek: unit => 't,
+type signalRef<'t> = {
+  mutable current: 't,
+  @meth subscribe: ('t => unit) => unit => unit,
+  @meth peek: unit => 't,
 }
 
 /* The Elements module is the equivalent to the ReactDOM module in Preact. This holds things relevant to _lowercase_ JSX elements. */
 module Elements = {
-  /* Here you can control what props lowercase JSX elements should have.
-
-  A base that the React JSX transform uses is provided via JsxDOM.domProps,
-
-  but you can make this anything. The editor tooling will support
-
+  /* Here you can control what props lowercase JSX elements should have.
+
+  A base that the React JSX transform uses is provided via JsxDOM.domProps,
+
+  but you can make this anything. The editor tooling will support
+
   autocompletion etc for your specific type. */
+
+  type inputEventProps = {currentTarget: {files: array<WebAPI.FileTypes.file>}}
+
   type props = {
     ...JsxDOM.domProps,
     class?: string,
@@ -60,6 +62,8 @@ module Elements = {
     ariaHasPopup?: string,
     @as("fill-opacity")
     fillOpacitySignal?: signal<string>,
+    @as(`onInput`)
+    onFileInput?: inputEventProps => unit,
   }
 
   @module("preact/jsx-runtime")
@@ -67,16 +71,6 @@ module Elements = {
 
   @module("preact/jsx-runtime")
   external div: (string, props) => Jsx.element = "jsx"
-
-  // type inputEventTarget={files:array<WebAPI.BaseFile.File>}
-  // type inputEventArgument={currentTarget:inputEventTarget}
-  // type inputProps = {
-  //   ...props,
-  //   onInput:inputEventArgument=>unit,
-  // }
-
-  // @module("preact/jsx-runtime")
-  // external input: (string, inputProps) => Jsx.element = "jsx"
 
   @module("preact/jsx-runtime")
   external jsxKeyed: (string, props, ~key: string=?, @ignore unit) => Jsx.element = "jsx"
@@ -109,7 +103,7 @@ external useSignalEffectWithCleanup: (unit => unit => unit) => unit = "useSignal
 external useSignal: 'a => signal<'a> = "useSignal"
 
 @module("@preact/signals")
-external useSignalRef:'a=>signalRef<'a>="useSignalRef"
+external useSignalRef: 'a => signalRef<'a> = "useSignalRef"
 
 @module("@preact/signals")
 external signal: 'a => signal<'a> = "signal"

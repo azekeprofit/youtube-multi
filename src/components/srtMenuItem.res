@@ -9,7 +9,11 @@ let make = () =>
         <input
           type_="file"
           accept=".srt"
-          // onInput={e => loadSrtCaptions(e.currentTarget.files[0])}
+          onFileInput={e =>
+            switch e.currentTarget.files[0] {
+            | Some(file) => SrtSubtitle.loadSrtCaptions(file)
+            | _ => ()
+            }}
         />
       </div>
     </div>
