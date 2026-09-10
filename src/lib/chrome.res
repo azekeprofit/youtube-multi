@@ -9,7 +9,7 @@ type webRequestType = {
 
 type executeScriptArgument = {
   target: {tabId: string},
-  func: (null<Captions.videoId>, null<string>) => unit,
+  func: (null<Types.videoId>, null<string>) => unit,
   args: array<null<string>>,
 }
 

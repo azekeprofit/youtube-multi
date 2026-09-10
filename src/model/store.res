@@ -6,10 +6,22 @@ let update = (store: Signal.t<Dict.t<'t>>, key: string, value: 't) => {
 
 let trackContainer = Signal.make(dict{})
 
-let addTrackToCache = (Captions.CaptionId(captionId), track: WebAPI.WebVTTTypes.textTrack) =>
+let addTrackToCache = (Types.CaptionId(captionId), track: WebAPI.WebVTTTypes.textTrack) =>
   trackContainer->update(captionId, track)
+external asMediaElement: WebAPI.DOMTypes.element => WebAPI.DOMTypes.htmlVideoElement = "%identity"
+let addTrack = (
+  videoTag: WebAPI.DOMTypes.element,
+  captionId: Types.captionId,
+  vssId: Types.vssId,
+) => {
+  let player = videoTag->asMediaElement
+  let track =
+    player->WebAPI.HTMLVideoElement.addTextTrack(~kind=Captions, ~label=vssId, ~language=vssId)
+  addTrackToCache(captionId, track)
+  track
+}
 
-@unboxed type captionStatus = Date(string) | Boolean(bool) | @as(`null`) None
+@unboxed type captionStatus = Date(string) | Boolean(bool) | @as(null) None
 
 type storage = {state?: Dict.t<captionStatus>}
 let storageId = "youtube multi storage"
@@ -27,7 +39,7 @@ let getStorageShowCaps = () =>
 
 let showCaps = Signal.make(getStorageShowCaps())
 
-let saveStorage = (captionId: Captions.captionId, showCap: captionStatus) => {
+let saveStorage = (Types.CaptionId(captionId), showCap: captionStatus) => {
   let previousDay = Date.make()
   previousDay->Date.setDate(Date.getDate(previousDay) - 1)
   let newState = getStorageShowCaps()->Dict.mapValues(value =>
@@ -37,15 +49,15 @@ let saveStorage = (captionId: Captions.captionId, showCap: captionStatus) => {
     | _ => None
     }
   )
-  newState->Dict.set(captionId->Captions.captionIdToString, showCap)
+  newState->Dict.set(captionId, showCap)
   window.localStorage->WebAPI.Storage.setItem(
     ~key=storageId,
     ~value=stringifyStorage({state: newState}),
   )
 }
 
-let setShowCap = (captionId: Captions.captionId, show: captionStatus) => {
-  let key = captionId->Captions.captionIdToString
+let setShowCap = (captionId: Types.captionId, show: captionStatus) => {
+  let Types.CaptionId(key) = captionId
   if showCaps.value->Dict.get(key) !== Some(show) {
     showCaps->update(key, show)
     saveStorage(captionId, show)
@@ -53,8 +65,8 @@ let setShowCap = (captionId: Captions.captionId, show: captionStatus) => {
 }
 
 let pots = Signal.make(dict{})
-type potEvent = PotEvent({videoId: Captions.videoId, pot: string})
-let addPot = (PotEvent({videoId: Captions.VideoId(v), pot})) => {
+type potEvent = PotEvent({videoId: Types.videoId, pot: string})
+let addPot = (PotEvent({videoId: Types.VideoId(v), pot})) => {
   if !(pots.value->Dict.has(v)) {
     pots->update(v, pot)
   }
@@ -62,5 +74,5 @@ let addPot = (PotEvent({videoId: Captions.VideoId(v), pot})) => {
 
 let srtContainer = Signal.make(dict{})
 let srtKeys = Signal.computed(() => srtContainer.value->Dict.keysToArray)
-let addSrtCaption = (Captions.CaptionId(captionId), fileName: string) =>
+let addSrtCaption = (Types.CaptionId(captionId), fileName: string) =>
   srtContainer->update(captionId, fileName)

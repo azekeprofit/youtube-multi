@@ -1,9 +1,9 @@
 type potEventDetails = {
-  videoId: Captions.videoId,
+  videoId: Types.videoId,
   pot: string,
 }
 
-let setPot = (v: null<Captions.videoId>, p: null<string>) =>
+let setPot = (v: null<Types.videoId>, p: null<string>) =>
   switch (v, p) {
   | (Value(videoId), Value(pot)) =>
     dispatchEvent(Chrome.CustomEvent.make("youtube multi pot", {detail: {videoId, pot}}))->ignore
