@@ -9,42 +9,40 @@ let trackContainer = Signal.make(dict{})
 let addTrackToCache = (Captions.CaptionId(captionId), track: WebAPI.WebVTTTypes.textTrack) =>
   trackContainer->update(captionId, track)
 
-@unboxed type captionStatus = Date(Date.t) | Boolean(bool) | None
+@unboxed type captionStatus = Date(string) | Boolean(bool) | None
 
-@new external copyDate:Date.t=>Date.t="Date"
+type storage = {state?: Dict.t<captionStatus>}
+let storageId = "youtube multi storage"
+external parseStorage: string => storage = "JSON.parse"
+external stringifyStorage: storage => string = "JSON.stringify"
+let getStorageShowCaps = () =>
+  switch window.localStorage->WebAPI.Storage.getItem(storageId) {
+  | Value(i) =>
+    switch (i->parseStorage).state {
+    | Some(s) => s
+    | None => dict{}
+    }
+  | Null => dict{}
+  }
 
-let addDays=(date: Date.t, days: int)=> {
-   let result = date->copyDate
-   result->Date.setDate(result->Date.getDate + days)
-   result;
- }
+let showCaps = Signal.make(getStorageShowCaps())
 
-// type showCapsType = Record<captionId, captionStatus>;
-
-// interface storage {
-//   state: showCapsType
-// }
-// const storageId = 'youtube multi storage';
-// function getStorageShowCaps() {
-//   return (JSON.parse(localStorage.getItem(storageId)) as storage)?.state ?? {};
-// }
-
-// export const showCaps = signal<showCapsType>(getStorageShowCaps());
-
-// function setStorage(captionId: captionId, showCap: captionStatus) {
-//   const previousDay = addDays(new Date(), -1);
-//   const storage = getStorageShowCaps();
-//   const newStorage: storage = {
-//     state: Object.fromEntries(
-//       [...Object.entries(storage).map(([key, value]) =>
-//         value === false ? [key, undefined] :
-//           value === true ? [key, new Date()] :
-//             [key, new Date(value) > previousDay ? new Date(value) : undefined]
-//       ), [captionId, showCap]]
-//     )
-//   };
-//   localStorage.setItem(storageId, JSON.stringify(newStorage));
-// }
+let saveStorage = (captionId: Captions.captionId, showCap: captionStatus) => {
+  let previousDay = Date.make()
+  previousDay->Date.setDate(Date.getDate(previousDay) - 1)
+  let newState = getStorageShowCaps()->Dict.mapValues(value =>
+    switch value {
+    | Boolean(b) => b ? Date(Date.make()->Date.toString) : None
+    | Date(dateString) => Date.fromString(dateString) > previousDay ? Date(dateString) : None
+    | _ => None
+    }
+  )
+  newState->Dict.set(captionId->Captions.captionIdToString, showCap)
+  window.localStorage->WebAPI.Storage.setItem(
+    ~key=storageId,
+    ~value=stringifyStorage({state: newState}),
+  )
+}
 
 // export function setShowCap(captionId: captionId, show: captionStatus) {
 //   if (showCaps.value[captionId] !== show) {
