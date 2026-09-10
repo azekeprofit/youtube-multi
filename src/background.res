@@ -1,6 +1,6 @@
-type potEventDetails={
-videoId: Captions.videoId,
-pot:string,
+type potEventDetails = {
+  videoId: Captions.videoId,
+  pot: string,
 }
 
 let setPot = (v: null<Captions.videoId>, p: null<string>) =>
@@ -13,7 +13,7 @@ let setPot = (v: null<Captions.videoId>, p: null<string>) =>
 Chrome.webRequest.onBeforeRequest.addListener(({tabId, url}) => {
   let params = WebAPI.URL.make(~url).searchParams
   Chrome.scripting.executeScript({
-    target: {tabId:tabId},
+    target: {tabId: tabId},
     func: setPot,
     args: [params->WebAPI.URLSearchParams.get("v"), params->WebAPI.URLSearchParams.get("pot")],
   })

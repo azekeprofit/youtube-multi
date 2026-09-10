@@ -1,7 +1,8 @@
 type vssId = string
 @unboxed type videoId = VideoId(string)
 @unboxed type captionId = CaptionId(string)
-let getCaptionId = (CaptionId(videoId), vssId: vssId) => `${videoId}.${vssId}`
+external captionIdToString: captionId => string = "%identity"
+let getCaptionId = (VideoId(videoId), vssId: vssId) => `${videoId}.${vssId}`
 
 module VTTCue = {
   @new external make: (float, float, string) => WebAPI.WebVTTTypes.textTrackCue = "VTTCue"

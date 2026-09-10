@@ -9,13 +9,15 @@ let trackContainer = Signal.make(dict{})
 let addTrackToCache = (Captions.CaptionId(captionId), track: WebAPI.WebVTTTypes.textTrack) =>
   trackContainer->update(captionId, track)
 
-// export type captionStatus = Date | boolean | undefined;
+@unboxed type captionStatus = Date(Date.t) | Boolean(bool) | None
 
-// function addDays(date: Date, days: number) {
-//   var result = new Date(date);
-//   result.setDate(result.getDate() + days);
-//   return result;
-// }
+@new external copyDate:Date.t=>Date.t="Date"
+
+let addDays=(date: Date.t, days: int)=> {
+   let result = date->copyDate
+   result->Date.setDate(result->Date.getDate + days)
+   result;
+ }
 
 // type showCapsType = Record<captionId, captionStatus>;
 

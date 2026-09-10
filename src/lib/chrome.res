@@ -1,11 +1,11 @@
 type onBeforeRequestArgument1 = {tabId: string, url: string}
 type onBeforeRequestArgument2 = {urls: array<string>}
-type webRequestType={
+type webRequestType = {
   onBeforeRequest: {
-    @meth addListener: (onBeforeRequestArgument1=>unit, onBeforeRequestArgument2) => unit,
+    @meth addListener: (onBeforeRequestArgument1 => unit, onBeforeRequestArgument2) => unit,
   },
 }
-@val external webRequest:webRequestType ="chrome.webRequest"
+@val external webRequest: webRequestType = "chrome.webRequest"
 
 type executeScriptArgument = {
   target: {tabId: string},
@@ -13,10 +13,10 @@ type executeScriptArgument = {
   args: array<null<string>>,
 }
 
-type scriptingType={
+type scriptingType = {
   @meth executeScript: executeScriptArgument => unit,
 }
-@val external scripting:scriptingType ="chrome.scripting"
+@val external scripting: scriptingType = "chrome.scripting"
 
 module CustomEvent = {
   type customEventDetail<'t> = {detail: 't}
