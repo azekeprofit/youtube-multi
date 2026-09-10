@@ -1,14 +1,13 @@
-let update = (dict: Dict.t<'t>, key: string, value: 't) => {
-  let newDict = dict->Dict.copy
+let update = (store: Signal.t<Dict.t<'t>>, key: string, value: 't) => {
+  let newDict = store.value->Dict.copy
   newDict->Dict.set(key, value)
-  newDict
+  store.value = newDict
 }
 
 let trackContainer = Signal.make(dict{})
 
-let addTrackToCache = (Captions.CaptionId(captionId), track: WebAPI.WebVTTTypes.textTrack) => {
-  trackContainer.value = trackContainer.value->update(captionId, track)
-}
+let addTrackToCache = (Captions.CaptionId(captionId), track: WebAPI.WebVTTTypes.textTrack) =>
+  trackContainer->update(captionId, track)
 
 // export type captionStatus = Date | boolean | undefined;
 
@@ -56,12 +55,11 @@ let pots = Signal.make(dict{})
 type potEvent = PotEvent({videoId: Captions.videoId, pot: string})
 let addPot = (PotEvent({videoId: Captions.VideoId(v), pot})) => {
   if !(pots.value->Dict.has(v)) {
-    pots.value = pots.value->update(v, pot)
+    pots->update(v, pot)
   }
 }
 
 let srtContainer = Signal.make(dict{})
 let srtKeys = Signal.computed(() => srtContainer.value->Dict.keysToArray)
-let addSrtCaption = (Captions.CaptionId(captionId), fileName: string) => {
-  srtContainer.value = srtContainer.value->update(captionId, fileName)
-}
+let addSrtCaption = (Captions.CaptionId(captionId), fileName: string) =>
+  srtContainer->update(captionId, fileName)

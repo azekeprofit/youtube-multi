@@ -46,7 +46,7 @@ let createTrack = (fileName: string, lines: string) =>
       let track = Youtube.addTrack(videoTag, capId, fileName)
       loadSrtLine(track, capId, lines)
       //   setShowCap(capId, true);
-      //   addSrtCaption(capId, fileName);
+      Store.addSrtCaption(capId, fileName)
     }
   | _ => ()
   }
