@@ -1,4 +1,3 @@
-
 type vssId = string
 @unboxed type videoId = VideoId(string) | NoId
 @unboxed type captionId = CaptionId(string)
@@ -34,7 +33,6 @@ type ytVideoDetails = {
   title: string,
 }
 
-
 type ytPlayerResponse = {
   captions: {
     playerCaptionsTracklistRenderer: {
@@ -53,12 +51,10 @@ type ytPlayerState =
   | @as(3) Buffering
   | @as(5) VideoCued
 
-  @unboxed type ytPlayer = YoutubePlayer(WebAPI.DOMTypes.element)
-  @unboxed type ytPlayerOptional = YoutubePlayer(WebAPI.DOMTypes.element) | NoPlayer
-  type eventType = | @as(`onStateChange`) OnStateChange
-  let getCaptionId = (VideoId(videoId), vssId: vssId) => `${videoId}.${vssId}`
-
-
+@unboxed type ytPlayer = YoutubePlayer(WebAPI.DOMTypes.element)
+@unboxed type ytPlayerOptional = YoutubePlayer(WebAPI.DOMTypes.element) | NoPlayer
+type eventType = | @as(`onStateChange`) OnStateChange
+let getCaptionId = (VideoId(videoId), vssId: vssId) => `${videoId}.${vssId}`
 
 type stateChangeListener = ytPlayerState => unit
 @send external getPlayerResponse: ytPlayer => ytPlayerResponse = "getPlayerResponse"

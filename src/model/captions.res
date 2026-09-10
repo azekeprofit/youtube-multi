@@ -21,11 +21,12 @@ let videoUrlId = Signal.make(Types.NoId)
 Signal.effect(() =>
   switch videoPlayer.value {
   | Types.YoutubePlayer(p) => {
-  let player:Types.ytPlayer=Types.YoutubePlayer(p)
-      let stateChangeListener = state =>
-        videoUrlId.value = Youtube.getVideoId(player)
+      let player: Types.ytPlayer = Types.YoutubePlayer(p)
+      let stateChangeListener = state => videoUrlId.value = Youtube.getVideoId(player)
       player->Types.addPlayerEventListener(Types.OnStateChange, stateChangeListener)
-      Signal.Cleanup(() => player->Types.removePlayerEventListener(Types.OnStateChange, stateChangeListener))
+      Signal.Cleanup(
+        () => player->Types.removePlayerEventListener(Types.OnStateChange, stateChangeListener),
+      )
     }
   | _ => None
   }
