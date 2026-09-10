@@ -9,7 +9,7 @@ let trackContainer = Signal.make(dict{})
 let addTrackToCache = (Captions.CaptionId(captionId), track: WebAPI.WebVTTTypes.textTrack) =>
   trackContainer->update(captionId, track)
 
-@unboxed type captionStatus = Date(string) | Boolean(bool) | None
+@unboxed type captionStatus = Date(string) | Boolean(bool) | @as(`null`) None
 
 type storage = {state?: Dict.t<captionStatus>}
 let storageId = "youtube multi storage"
@@ -44,12 +44,13 @@ let saveStorage = (captionId: Captions.captionId, showCap: captionStatus) => {
   )
 }
 
-// export function setShowCap(captionId: captionId, show: captionStatus) {
-//   if (showCaps.value[captionId] !== show) {
-//     showCaps.value = { ...showCaps.value, [captionId]: show };
-//     setStorage(captionId, show);
-//   }
-// }
+let setShowCap = (captionId: Captions.captionId, show: captionStatus) => {
+  let key = captionId->Captions.captionIdToString
+  if showCaps.value->Dict.get(key) !== Some(show) {
+    showCaps->update(key, show)
+    saveStorage(captionId, show)
+  }
+}
 
 let pots = Signal.make(dict{})
 type potEvent = PotEvent({videoId: Captions.videoId, pot: string})

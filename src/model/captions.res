@@ -1,7 +1,7 @@
 type vssId = string
 @unboxed type videoId = VideoId(string)
 @unboxed type captionId = CaptionId(string)
-external captionIdToString: captionId => string = "%identity"
+let captionIdToString = (CaptionId(c)) => c
 let getCaptionId = (VideoId(videoId), vssId: vssId) => `${videoId}.${vssId}`
 
 module VTTCue = {
