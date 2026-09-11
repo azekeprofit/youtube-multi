@@ -8,7 +8,7 @@ let addCue = (
 ) => {
   let cue = VTTCue.make(start, end, html)
   cue.id = `${capId}.${index->Int.toString}`
-  track->WebAPI.TextTrack.addCue(cue)
+  track->WebAPI.TextTrack.addCue(cue->VTTCue.asTrack)
 }
 
 let videoPlayer = Signal.make(Types.NoPlayer)

@@ -1,15 +1,78 @@
 let useComputed = Signal.useComputed
+let useSignal = Signal.useSignal
+
+@send
+external activeCuesToArray: WebAPI.WebVTTTypes.textTrackCueList => array<VTTCue.t> = "Array.from"
+
+let getCues = (Types.CaptionId(key)) =>
+  switch Store.trackContainer.value->Dict.get(key) {
+  | Some(track) =>
+    switch track.activeCues {
+    | Value(t) => t->activeCuesToArray
+    | _ => []
+    }
+  | _ => []
+  }
+
+module ActiveTrack = {
+  @jsx.component
+  let make = (~captionId) => {
+    let activeCues = useSignal(getCues(captionId))
+    let Types.CaptionId(key) = captionId
+    let show = useComputed(() =>
+      switch Store.showCaps.value->Dict.get(key) {
+      | Some(Boolean(b)) => b
+      | Some(Date(_)) => true
+      | _ => false
+      }
+    )
+
+    Signal.useSignalEffect(() =>
+      switch Store.trackContainer.value->Dict.get(key) {
+      | Some(track) => {
+          let forceUpdate = _ => activeCues.value = getCues(captionId)
+          track->WebAPI.TextTrack.addEventListener(
+            WebAPI.EventTypes.Custom("cuechange"),
+            forceUpdate,
+          )
+          Signal.Cleanup(
+            () =>
+              track->WebAPI.TextTrack.removeEventListener(
+                WebAPI.EventTypes.Custom("cuechange"),
+                forceUpdate,
+              ),
+          )
+        }
+      | _ => None
+      }
+    )
+
+    <Signal.show when_={show}>
+      <div class="captions-text" dataCaptionId={key}>
+        <Signal.for_ each={activeCues}> {(cue, _) => <Cue key={cue.id} cue />} </Signal.for_>
+      </div>
+    </Signal.show>
+  }
+}
+
+module Lines = {
+  @jsx.component
+  let make = (~lines) =>
+    <Signal.for_ each={lines}>
+      {(key, _) => <ActiveTrack key captionId={Types.CaptionId(key)} />}
+    </Signal.for_>
+}
 
 @jsx.component
 let make = () => {
   let ytLines = useComputed(() =>
-    Captions.playerCaptions.value->Array.map(({captionId}) => captionId)
+    Captions.playerCaptions.value->Array.map(({captionId: Types.CaptionId(id)}) => id)
   )
   <div
     id="youtube-multi-caption-container"
     class="caption-window ytp-caption-window-bottom youtube-multi-bottom"
   >
-    // <Lines lines={ytLines} />
-    // <Lines lines={srtKeys} />
+    <Lines lines={ytLines} />
+    <Lines lines={Store.srtKeys} />
   </div>
 }

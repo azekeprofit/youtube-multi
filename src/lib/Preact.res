@@ -50,6 +50,8 @@ module Elements = {
     fillOpacitySignal?: Signal.t<float>,
     @as(`onInput`)
     onFileInput?: inputEventProps => unit,
+    @as("data-caption-id")
+    dataCaptionId?: string,
   }
 
   @module("preact/jsx-runtime")

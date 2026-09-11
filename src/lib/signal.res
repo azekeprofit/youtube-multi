@@ -15,11 +15,8 @@ type ref<'t> = {
 
 @unboxed type cleanup = Cleanup(unit => unit) | None
 
-@module("preact/signals")
+@module("@preact/signals")
 external useSignalEffect: (unit => cleanup) => unit = "useSignalEffect"
-
-@module("preact/signals")
-external useSignalEffectWithCleanup: (unit => unit => unit) => unit = "useSignalEffect"
 
 @module("@preact/signals")
 external useSignal: 'a => t<'a> = "useSignal"
@@ -50,7 +47,7 @@ type forProps<'val> = {
   each: t<array<'val>>,
   fallback?: Jsx.element,
   getKeys?: 'val => string,
-  children: ('val, unit => int) => Jsx.element,
+  children: ('val, int) => Jsx.element,
 }
 @module("@preact/signals/utils")
 external for_: forProps<'val> => Jsx.element = "For"

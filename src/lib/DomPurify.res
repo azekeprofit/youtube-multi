@@ -1,9 +1,7 @@
 type options = {
   @as(`ALLOWED_TAGS`) allowedTags: array<string>,
-  @as(`RETURN_TRUSTED_TYPE`) returnTrusedType: bool, // true
+  @as(`RETURN_TRUSTED_TYPE`) returnTrustedType: bool, // true
 }
 
-type trustedHTML = {}
-
 @module("dompurify")
-external sanitize: (string, options) => trustedHTML = "sanitize"
+external sanitize: (string, options) => string = "sanitize"

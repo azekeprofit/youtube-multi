@@ -55,17 +55,8 @@ export const enum ytPlayerState {
   videoCued = 5
 }
 
-type stateChangeListener = (e: ytPlayerState) => void;
-
-type eventListener = (
-  event: "onStateChange",
-  listener: stateChangeListener
-) => void;
-
 export type ytPlayer = {
   getPlayerResponse: () => ytPlayerResponse;
-  addEventListener: eventListener;
-  removeEventListener: eventListener;
   toggleSubtitles: () => void;
   toggleSubtitlesOn: () => void;
 }
