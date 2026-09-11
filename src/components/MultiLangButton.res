@@ -1,5 +1,5 @@
 let useComputed = Signal.useComputed
-let createPortal=Preact.createPortal
+let createPortal = Preact.createPortal
 
 @jsx.component
 let make = () => {
