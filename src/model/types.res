@@ -64,3 +64,7 @@ type stateChangeListener = ytPlayerState => unit
 @send external getPlayerResponse: ytPlayer => ytPlayerResponse = "getPlayerResponse"
 @send external toggleSubtitles: ytPlayer => unit = "toggleSubtitles"
 @send external toggleSubtitlesOn: ytPlayer => unit = "toggleSubtitlesOn"
+let asNullableElement=player=>switch player {
+| YoutubePlayer(element)=>Null.make(element)
+| _=>Null.null
+}

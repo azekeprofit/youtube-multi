@@ -46,11 +46,10 @@ type showProps = {@as("when") when_: t<bool>, fallback?: Jsx.element, children?:
 external show: showProps => Jsx.element = "Show"
 let show = show
 
-
 type forProps<'val> = {
   each: t<array<'val>>,
   fallback?: Jsx.element,
-  getKeys?:'val=>string,
+  getKeys?: 'val => string,
   children: ('val, unit => int) => Jsx.element,
 }
 @module("@preact/signals/utils")
