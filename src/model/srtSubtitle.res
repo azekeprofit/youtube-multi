@@ -45,7 +45,7 @@ let createTrack = (fileName: string, lines: string) =>
       let capId = Types.CaptionId(`srtFile.${fileName}`)
       let track = Store.addTrack(videoTag, capId, fileName)
       loadSrtLine(track, capId, lines)
-      //   setShowCap(capId, true);
+      Store.setShowCap(capId, Boolean(true))
       Store.addSrtCaption(capId, fileName)
     }
   | _ => ()

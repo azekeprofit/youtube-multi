@@ -50,6 +50,8 @@ module Elements = {
     ariaPressedSignal?: Signal.t<bool>,
     @as("fill-opacity")
     fillOpacitySignal?: Signal.t<float>,
+    @as("checked")
+    checkedAsSignal?: Signal.t<bool>,
     @as(`onInput`)
     onFileInput?: inputEventProps => unit,
     @as("data-caption-id")

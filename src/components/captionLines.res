@@ -19,13 +19,7 @@ module ActiveTrack = {
   let make = (~captionId) => {
     let activeCues = useSignal(getCues(captionId))
     let Types.CaptionId(key) = captionId
-    let show = useComputed(() =>
-      switch Store.showCaps.value->Dict.get(key) {
-      | Some(Boolean(b)) => b
-      | Some(Date(_)) => true
-      | _ => false
-      }
-    )
+    let show = useComputed(() => captionId->Store.getShowCap)
 
     Signal.useSignalEffect(() =>
       switch Store.trackContainer.value->Dict.get(key) {

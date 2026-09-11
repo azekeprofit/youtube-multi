@@ -64,6 +64,15 @@ let setShowCap = (captionId: Types.captionId, show: captionStatus) => {
   }
 }
 
+let getShowCap = captionId => {
+  let Types.CaptionId(key) = captionId
+  switch showCaps.value->Dict.get(key) {
+  | Some(Boolean(b)) => b
+  | Some(Date(_)) => true
+  | _ => false
+  }
+}
+
 let srtContainer = Signal.make(dict{})
 let srtKeys = Signal.computed(() => srtContainer.value->Dict.keysToArray)
 let addSrtCaption = (Types.CaptionId(captionId), fileName: string) =>
