@@ -179,5 +179,6 @@ public/wrapper.css
 
 # Rescript
 lib/bs
+lib/watch.lock
 lib/ocaml
 *.jsx

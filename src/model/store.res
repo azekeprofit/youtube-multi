@@ -64,14 +64,6 @@ let setShowCap = (captionId: Types.captionId, show: captionStatus) => {
   }
 }
 
-let pots = Signal.make(dict{})
-type potEvent = PotEvent({videoId: Types.videoId, pot: string})
-let addPot = (PotEvent({videoId: Types.VideoId(v), pot})) => {
-  if !(pots.value->Dict.has(v)) {
-    pots->update(v, pot)
-  }
-}
-
 let srtContainer = Signal.make(dict{})
 let srtKeys = Signal.computed(() => srtContainer.value->Dict.keysToArray)
 let addSrtCaption = (Types.CaptionId(captionId), fileName: string) =>

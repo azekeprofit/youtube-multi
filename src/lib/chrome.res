@@ -9,7 +9,7 @@ type webRequestType = {
 
 type executeScriptArgument = {
   target: {tabId: string},
-  func: (null<Types.videoId>, null<string>) => unit,
+  func: (Types.videoId, null<string>) => unit,
   args: array<null<string>>,
 }
 
@@ -17,8 +17,3 @@ type scriptingType = {
   @meth executeScript: executeScriptArgument => unit,
 }
 @val external scripting: scriptingType = "chrome.scripting"
-
-module CustomEvent = {
-  type customEventDetail<'t> = {detail: 't}
-  @new external make: (string, customEventDetail<'t>) => WebAPI.EventTypes.event = "CustomEvent"
-}

@@ -3,8 +3,8 @@
 // Example:
 [
   {
-    "label": "build",
-    "command": "bun run cfg/build.ts",
+    "label": "watch",
+    "command": "bun run watch",
     "use_new_terminal": false,
     "allow_concurrent_runs": false,
     "reveal": "no_focus",
@@ -14,5 +14,43 @@
     "shell": "system",
     "show_summary": true,
     "show_command": false
-  }
+  },
+  {
+    "label": "build",
+    "command": "bun run build",
+    "use_new_terminal": false,
+    "allow_concurrent_runs": false,
+    "reveal": "no_focus",
+    "reveal_target": "dock",
+    "hide": "never",
+
+    "shell": "system",
+    "show_summary": true,
+    "show_command": false
+  },
+  {
+    "label": "format",
+    "command": "bun run format",
+    "use_new_terminal": false,
+    "allow_concurrent_runs": false,
+    "reveal": "no_focus",
+    "reveal_target": "dock",
+    "hide": "never",
+    "shell": "system",
+    "show_summary": true,
+    "show_command": false
+  },
+
+  {
+    "label": "clean",
+    "command": "bun run clean",
+    "use_new_terminal": false,
+    "allow_concurrent_runs": false,
+    "reveal": "no_focus",
+    "reveal_target": "dock",
+    "hide": "never",
+    "shell": "system",
+    "show_summary": true,
+    "show_command": false
+  },
 ]

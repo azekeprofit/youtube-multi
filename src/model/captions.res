@@ -22,7 +22,7 @@ Signal.effect(() =>
   switch videoPlayer.value {
   | Types.YoutubePlayer(p) => {
       let player: Types.ytPlayer = Types.YoutubePlayer(p)
-      let stateChangeListener = state => videoUrlId.value = Youtube.getVideoId(player)
+      let stateChangeListener = _ => videoUrlId.value = Youtube.getVideoId(player)
       player->Types.addPlayerEventListener(Types.OnStateChange, stateChangeListener)
       Signal.Cleanup(
         () => player->Types.removePlayerEventListener(Types.OnStateChange, stateChangeListener),
