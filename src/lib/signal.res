@@ -13,6 +13,8 @@ type ref<'t> = {
   ...signalMethods<'t>,
 }
 
+external callbackDomRef: ref<'t> => JsxDOM.domRef = "%identity"
+
 @unboxed type cleanup = Cleanup(unit => unit) | None
 
 @module("@preact/signals")
@@ -52,3 +54,7 @@ type forProps<'val> = {
 @module("@preact/signals/utils")
 external for_: forProps<'val> => Jsx.element = "For"
 let for_ = for_
+
+
+external track:'v=>unit="%identity"
+let track:t<'v>=>unit=signal=>signal.value->track

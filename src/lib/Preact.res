@@ -42,6 +42,8 @@ module Elements = {
   type props = {
     ...JsxDOM.domProps,
     class?: string,
+    @as("className")
+    classSignal?: Signal.t<string>,
     @as("aria-has-popup")
     ariaHasPopup?: string,
     @as("aria-pressed")
