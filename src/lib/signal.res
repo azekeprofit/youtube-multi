@@ -1,5 +1,5 @@
 type signalMethods<'t> = {
-  @meth subscribe: ('t => unit) => unit => unit,
+  @meth subscribe: ('t => unit) => unit,
   @meth peek: unit => 't,
 }
 

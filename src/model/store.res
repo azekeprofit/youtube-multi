@@ -9,14 +9,14 @@ let trackContainer = Signal.make(dict{})
 let addTrackToCache = (Types.CaptionId(captionId), track: WebAPI.WebVTTTypes.textTrack) =>
   trackContainer->update(captionId, track)
 external asMediaElement: WebAPI.DOMTypes.element => WebAPI.DOMTypes.htmlVideoElement = "%identity"
-let addTrack = (
-  videoTag: WebAPI.DOMTypes.element,
-  captionId: Types.captionId,
-  vssId: Types.vssId,
-) => {
+let addTrack = (videoTag, captionId, trackName) => {
   let player = videoTag->asMediaElement
   let track =
-    player->WebAPI.HTMLVideoElement.addTextTrack(~kind=Captions, ~label=vssId, ~language=vssId)
+    player->WebAPI.HTMLVideoElement.addTextTrack(
+      ~kind=Captions,
+      ~label=trackName,
+      ~language=trackName,
+    )
   addTrackToCache(captionId, track)
   track
 }

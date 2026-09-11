@@ -1,4 +1,4 @@
-type vssId = string
+@unboxed type vssId = VssId(string)
 @unboxed type videoId = VideoId(string) | @as(null) NoId
 @unboxed type captionId = CaptionId(string)
 
@@ -52,21 +52,15 @@ type ytPlayerState =
   | @as(5) VideoCued
 
 @unboxed type ytPlayer = YoutubePlayer(WebAPI.DOMTypes.element)
-@unboxed type ytPlayerOptional = YoutubePlayer(WebAPI.DOMTypes.element) | NoPlayer
-type eventType = | @as(`onStateChange`) OnStateChange
-let getCaptionId = (videoId, vssId: vssId) =>
+@unboxed type ytPlayerOptional = YoutubePlayer(WebAPI.DOMTypes.element) | @as(null) NoPlayer
+let getCaptionId = (videoId, VssId(vssId)) => CaptionId(
   switch videoId {
   | VideoId(v) => `${v}.${vssId}`
   | _ => ``
-  }
+  },
+)
 
 type stateChangeListener = ytPlayerState => unit
 @send external getPlayerResponse: ytPlayer => ytPlayerResponse = "getPlayerResponse"
-@send
-external addPlayerEventListener: (ytPlayer, eventType, stateChangeListener) => unit =
-  "addEventListener"
-@send
-external removePlayerEventListener: (ytPlayer, eventType, stateChangeListener) => unit =
-  "removeEventListener"
 @send external toggleSubtitles: ytPlayer => unit = "toggleSubtitles"
 @send external toggleSubtitlesOn: ytPlayer => unit = "toggleSubtitlesOn"
