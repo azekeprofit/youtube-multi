@@ -44,8 +44,10 @@ module Elements = {
     class?: string,
     @as("aria-has-popup")
     ariaHasPopup?: string,
+    @as("aria-pressed")
+    ariaPressedSignal?: Signal.t<bool>,
     @as("fill-opacity")
-    fillOpacitySignal?: Signal.t<string>,
+    fillOpacitySignal?: Signal.t<float>,
     @as(`onInput`)
     onFileInput?: inputEventProps => unit,
   }
@@ -70,6 +72,8 @@ module Elements = {
 
 @module("preact")
 external render: (element, WebAPI.DOMTypes.element) => unit = "render"
+@module("preact")
+external createPortal: (element, Null.t<WebAPI.DOMTypes.element>) => Jsx.element = "createPortal"
 
 @module("preact/hooks")
 external useMemo: (unit => 'val, array<_>) => 'val = "useMemo"

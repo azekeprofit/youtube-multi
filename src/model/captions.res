@@ -1,7 +1,3 @@
-module VTTCue = {
-  @new external make: (float, float, string) => WebAPI.WebVTTTypes.textTrackCue = "VTTCue"
-}
-
 let addCue = (
   track: WebAPI.WebVTTTypes.textTrack,
   Types.CaptionId(capId),

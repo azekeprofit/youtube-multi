@@ -40,3 +40,19 @@ external effect: (unit => cleanup) => unit = "effect"
 external useComputed: (unit => 't) => t<'t> = "useComputed"
 
 external signalText: t<string> => Jsx.element = "%identity"
+
+type showProps = {@as("when") when_: t<bool>, fallback?: Jsx.element, children?: Jsx.element}
+@module("@preact/signals/utils")
+external show: showProps => Jsx.element = "Show"
+let show = show
+
+
+type forProps<'val> = {
+  each: t<array<'val>>,
+  fallback?: Jsx.element,
+  getKeys?:'val=>string,
+  children: ('val, unit => int) => Jsx.element,
+}
+@module("@preact/signals/utils")
+external for_: forProps<'val> => Jsx.element = "For"
+let for_ = for_
