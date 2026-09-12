@@ -90,3 +90,5 @@ external useMemo: (unit => 'val, array<_>) => 'val = "useMemo"
 external useCallback: ('arg => 'res, array<_>) => 'arg => 'res = "useCallback"
 
 let get: string => 't = selector => document->WebAPI.Document.querySelector(selector)
+
+let props=(p:Elements.props)=>p

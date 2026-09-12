@@ -49,7 +49,7 @@ let make = () => {
       }
     }
 
-    let return: Preact.Elements.props = {
+    Preact.props({
       onMouseDown: _ =>
         if intervalRef.current != 0 {
           intervalRef.current = WebAPI.Window.setInterval2(
@@ -66,8 +66,7 @@ let make = () => {
         },
       onMouseUp: mouseUp,
       onMouseLeave: mouseUp,
-    }
-    return
+    })
   }, [])
 
   Signal.useSignalEffect(() => {

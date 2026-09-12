@@ -10,13 +10,12 @@ let make = (~label, ~captionId, ~title) => {
     | _ => None
     }
   )
-  let props: Preact.Elements.props = switch title {
-  | Signal.Signal(s) => {titleAsSignal: s}
-  | Signal.String(s) => {title: s}
-  | _ => {}
-  }
 
-  <label {...props}>
+  <label {...Preact.props(switch title {
+  | Signal.Signal(s) => {titleAsSignal: s}
+  | String(s) => {title: s}
+  | _ => {}
+  })}>
     <input
       type_="checkbox"
       checkedAsSignal
@@ -28,7 +27,7 @@ let make = (~label, ~captionId, ~title) => {
     />
     {switch label {
     | Signal.Signal(s) => s->Signal.signalText
-    | Signal.String(s: string) => s->Preact.string
+    | String(s) => s->Preact.string
     | _ => <> </>
     }}
   </label>
