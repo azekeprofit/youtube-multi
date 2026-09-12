@@ -82,7 +82,7 @@ let make = () => {
       <Arrow text="🠜" show={showLeft} direction={Left} attr={mouseHold(-15.0)} />
       <div class="scroll" ref={scrollDiv->Signal.callbackDomRef}>
         //   <YoutubeCaptionCheckboxes />
-        //   <SrtCheckboxes />
+        <SrtCheckboxes />
       </div>
       <Arrow text="🠞" show={showRight} direction={Right} attr={mouseHold(15.0)} />
     </div>

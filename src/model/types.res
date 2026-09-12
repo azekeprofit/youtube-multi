@@ -57,6 +57,8 @@ let getCaptionId = (videoId, VssId(vssId)) => CaptionId(
   | _ => ``
   },
 )
+let asKey = (CaptionId(key)) => key
+
 @unboxed type ytPlayer = YoutubePlayer(WebAPI.DOMTypes.element)
 @send external getPlayerResponse: ytPlayer => ytPlayerResponse = "getPlayerResponse"
 @send external toggleSubtitles: ytPlayer => unit = "toggleSubtitles"

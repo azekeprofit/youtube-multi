@@ -56,6 +56,8 @@ module Elements = {
     onInputEvent?: inputEventProps => unit,
     @as("checked")
     checkedAsSignal?: Signal.t<bool>,
+    @as("title")
+    titleAsSignal?: Signal.t<string>,
   }
 
   @module("preact/jsx-runtime")

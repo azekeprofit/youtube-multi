@@ -1,9 +1,8 @@
 @jsx.component
 let make = (~label, ~captionId, ~title) => {
   let checkedAsSignal = Signal.useComputed(() => captionId->Store.getShowCap)
-  let Types.CaptionId(key) = captionId
   Signal.useSignalEffect(() =>
-    switch Store.trackContainer.value->Dict.get(key) {
+    switch Store.trackContainer.value->Dict.get(captionId->Types.asKey) {
     | Some(track) => {
         track.mode = checkedAsSignal.value ? Showing : Hidden
         Cleanup(() => track.mode = Disabled)
@@ -11,8 +10,13 @@ let make = (~label, ~captionId, ~title) => {
     | _ => None
     }
   )
+  let props: Preact.Elements.props = switch title {
+  | Signal.Signal(s) => {titleAsSignal: s}
+  | Signal.String(s) => {title: s}
+  | _ => {}
+  }
 
-  <label title>
+  <label {...props}>
     <input
       type_="checkbox"
       checkedAsSignal
@@ -22,6 +26,10 @@ let make = (~label, ~captionId, ~title) => {
           e.currentTarget.checked ? Date(Date.make()->Date.toString) : None,
         )}
     />
-    {label->Preact.string}
+    {switch label {
+    | Signal.Signal(s) => s->Signal.signalText
+    | Signal.String(s: string) => s->Preact.string
+    | _ => <> </>
+    }}
   </label>
 }
