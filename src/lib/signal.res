@@ -48,7 +48,7 @@ let show = show
 type forProps<'val> = {
   each: t<array<'val>>,
   fallback?: Jsx.element,
-  getKeys?: 'val => string,
+  getKey?: 'val => string,
   children: ('val, int) => Jsx.element,
 }
 @module("@preact/signals/utils")

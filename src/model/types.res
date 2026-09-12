@@ -6,6 +6,8 @@ type ytName = {
   simpleText: string,
 }
 
+let extractName = ytName => ytName.simpleText
+
 type ytCaptionKind = | @as("asr") Asr | None
 
 type languageCode = LanguageCode(string)
