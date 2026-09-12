@@ -13,7 +13,15 @@ let make = (~label, ~captionId, ~title) => {
   )
 
   <label title>
-    <input type_="checkbox" checkedAsSignal onInputEvent={e => Store.setShowCap(captionId, e.currentTarget.checked ? Date(Date.make()->Date.toString):None)  } />
+    <input
+      type_="checkbox"
+      checkedAsSignal
+      onInputEvent={e =>
+        Store.setShowCap(
+          captionId,
+          e.currentTarget.checked ? Date(Date.make()->Date.toString) : None,
+        )}
+    />
     {label->Preact.string}
   </label>
 }

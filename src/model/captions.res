@@ -4,13 +4,14 @@ let addCue = (track, Types.CaptionId(capId), start, end, html, index) => {
   track->WebAPI.TextTrack.addCue(cue->VTTCue.asTrack)
 }
 
-let videoPlayer = Signal.make(Types.NoPlayer)
-let videoUrlId = Signal.make(Types.NoId)
+let videoPlayer = Signal.make(None)
+let videoUrlId = Signal.make(None)
 
 Signal.effect(() =>
   switch videoPlayer.value {
-  | YoutubePlayer(element) => {
-      let stateChangeListener = _ => videoUrlId.value = Youtube.getVideoId(YoutubePlayer(element))
+  | Some(player) => {
+      let stateChangeListener = _ => videoUrlId.value = Some(Youtube.getVideoId(player))
+      let element = player->Types.asElement
       element->WebAPI.Element.addEventListener(Custom("onStateChange"), stateChangeListener)
       Cleanup(
         () =>

@@ -49,7 +49,7 @@ let make = () => {
       }
     }
 
-    let return:Preact.Elements.props={
+    let return: Preact.Elements.props = {
       onMouseDown: _ =>
         if intervalRef.current != 0 {
           intervalRef.current = WebAPI.Window.setInterval2(

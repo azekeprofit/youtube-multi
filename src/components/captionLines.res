@@ -1,16 +1,11 @@
 let useComputed = Signal.useComputed
 let useSignal = Signal.useSignal
 
-@send
 external activeCuesToArray: WebAPI.WebVTTTypes.textTrackCueList => array<VTTCue.t> = "Array.from"
 
 let getCues = (Types.CaptionId(key)) =>
   switch Store.trackContainer.value->Dict.get(key) {
-  | Some(track) =>
-    switch track.activeCues {
-    | Value(t) => t->activeCuesToArray
-    | _ => []
-    }
+  | Some({activeCues: Value(t)}) => t->activeCuesToArray
   | _ => []
   }
 

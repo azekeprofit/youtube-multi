@@ -7,13 +7,13 @@ type webRequestType = {
 }
 @val external webRequest: webRequestType = "chrome.webRequest"
 
-type executeScriptArgument = {
+type executeScriptArgument<'arg> = {
   target: {tabId: string},
-  func: (Types.videoId, null<string>) => unit,
-  args: array<null<string>>,
+  func: 'arg => unit,
+  args: 'arg,
 }
 
-type scriptingType = {
-  @meth executeScript: executeScriptArgument => unit,
+type scriptingType<'arg> = {
+  @meth executeScript: executeScriptArgument<'arg> => unit,
 }
-@val external scripting: scriptingType = "chrome.scripting"
+@val external scripting: scriptingType<'arg> = "chrome.scripting"

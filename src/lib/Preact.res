@@ -37,7 +37,7 @@ module Elements = {
   // A base that the React JSX transform uses is provided via JsxDOM.domProps,
   // but you can make this anything. The editor tooling will supportautocompletion etc for your specific type.
 
-  type inputEventProps = {currentTarget: {files: array<WebAPI.FileTypes.file>, checked:bool}}
+  type inputEventProps = {currentTarget: {files: array<WebAPI.FileTypes.file>, checked: bool}}
 
   type props = {
     ...JsxDOM.domProps,
@@ -53,7 +53,7 @@ module Elements = {
     @as("data-caption-id")
     dataCaptionId?: string,
     @as(`onInput`)
-    onInputEvent?: inputEventProps=>unit,
+    onInputEvent?: inputEventProps => unit,
     @as("checked")
     checkedAsSignal?: Signal.t<bool>,
   }
@@ -79,7 +79,7 @@ module Elements = {
 @module("preact")
 external render: (element, WebAPI.DOMTypes.element) => unit = "render"
 @module("preact")
-external createPortal: (element, Null.t<WebAPI.DOMTypes.element>) => Jsx.element = "createPortal"
+external createPortal: (element, WebAPI.DOMTypes.element) => Jsx.element = "createPortal"
 
 @module("preact/hooks")
 external useMemo: (unit => 'val, array<_>) => 'val = "useMemo"

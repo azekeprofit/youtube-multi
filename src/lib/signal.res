@@ -55,5 +55,6 @@ type forProps<'val> = {
 external for_: forProps<'val> => Jsx.element = "For"
 let for_ = for_
 
+/// Prevent Rescript optimising away signal values as dead code, because we need signal.value evaluating even value itself isn't used
 external track: 'v => unit = "%identity"
 let track: t<'v> => unit = signal => signal.value->track

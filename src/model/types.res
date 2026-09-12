@@ -1,6 +1,6 @@
 @unboxed type vssId = VssId(string)
-@unboxed type videoId = VideoId(string) | @as(null) NoId
 @unboxed type captionId = CaptionId(string)
+@unboxed type videoId = VideoId(string)
 
 type ytName = {
   simpleText: string,
@@ -24,15 +24,6 @@ type ytTranslationLanguage = {
   languageName: ytName,
 }
 
-type ytVideoDetails = {
-  author: string,
-  channelId: string,
-  lengthSeconds: int,
-  shortDescription: string,
-  videoId: videoId,
-  title: string,
-}
-
 type ytPlayerResponse = {
   captions: {
     playerCaptionsTracklistRenderer: {
@@ -40,7 +31,14 @@ type ytPlayerResponse = {
       translationLanguages: array<ytTranslationLanguage>,
     },
   },
-  videoDetails: ytVideoDetails,
+  videoDetails: {
+    author: string,
+    channelId: string,
+    lengthSeconds: int,
+    shortDescription: string,
+    videoId: videoId,
+    title: string,
+  },
 }
 
 type ytPlayerState =
@@ -51,21 +49,16 @@ type ytPlayerState =
   | @as(3) Buffering
   | @as(5) VideoCued
 
-@unboxed type ytPlayer = YoutubePlayer(WebAPI.DOMTypes.element)
-@unboxed type ytPlayerOptional = YoutubePlayer(WebAPI.DOMTypes.element) | @as(null) NoPlayer
+type stateChangeListener = ytPlayerState => unit
+
 let getCaptionId = (videoId, VssId(vssId)) => CaptionId(
   switch videoId {
-  | VideoId(v) => `${v}.${vssId}`
+  | Some(VideoId(v)) => `${v}.${vssId}`
   | _ => ``
   },
 )
-
-type stateChangeListener = ytPlayerState => unit
+@unboxed type ytPlayer = YoutubePlayer(WebAPI.DOMTypes.element)
 @send external getPlayerResponse: ytPlayer => ytPlayerResponse = "getPlayerResponse"
 @send external toggleSubtitles: ytPlayer => unit = "toggleSubtitles"
 @send external toggleSubtitlesOn: ytPlayer => unit = "toggleSubtitlesOn"
-let asNullableElement = player =>
-  switch player {
-  | YoutubePlayer(element) => Null.make(element)
-  | _ => Null.null
-  }
+let asElement = (YoutubePlayer(element)) => element
