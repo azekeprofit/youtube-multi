@@ -37,7 +37,7 @@ module Elements = {
   // A base that the React JSX transform uses is provided via JsxDOM.domProps,
   // but you can make this anything. The editor tooling will supportautocompletion etc for your specific type.
 
-  type inputEventProps = {currentTarget: {files: array<WebAPI.FileTypes.file>}}
+  type inputEventProps = {currentTarget: {files: array<WebAPI.FileTypes.file>, checked:bool}}
 
   type props = {
     ...JsxDOM.domProps,
@@ -50,12 +50,12 @@ module Elements = {
     ariaPressedSignal?: Signal.t<bool>,
     @as("fill-opacity")
     fillOpacitySignal?: Signal.t<float>,
-    @as("checked")
-    checkedAsSignal?: Signal.t<bool>,
-    @as(`onInput`)
-    onFileInput?: inputEventProps => unit,
     @as("data-caption-id")
     dataCaptionId?: string,
+    @as(`onInput`)
+    onInputEvent?: inputEventProps=>unit,
+    @as("checked")
+    checkedAsSignal?: Signal.t<bool>,
   }
 
   @module("preact/jsx-runtime")

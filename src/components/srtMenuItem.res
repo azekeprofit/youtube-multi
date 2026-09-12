@@ -8,7 +8,7 @@ let make = () =>
         <input
           type_="file"
           accept=".srt"
-          onFileInput={e =>
+          onInputEvent={e =>
             switch e.currentTarget.files[0] {
             | Some(file) => SrtSubtitle.loadSrtCaptions(file)
             | _ => ()

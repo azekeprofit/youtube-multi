@@ -1,8 +1,4 @@
-let loadSrtLine = (
-  track: WebAPI.WebVTTTypes.textTrack,
-  capId: Types.captionId,
-  srtLines: string,
-) => {
+let loadSrtLine = (track, capId, srtLines) => {
   let lineRegex = /(\d+)\r?\n(\d\d):(\d\d):(\d\d)\,(\d\d\d) --> (\d\d):(\d\d):(\d\d)\,(\d\d\d)\r?\n/
   let arr = srtLines->String.splitByRegExp(lineRegex)
   let i = ref(1)
@@ -39,7 +35,7 @@ let loadSrtLine = (
   }
 }
 
-let createTrack = (fileName: string, lines: string) =>
+let createTrack = (fileName, lines) =>
   switch Youtube.getVideoTag() {
   | Value(videoTag) => {
       let capId = Types.CaptionId(`srtFile.${fileName}`)

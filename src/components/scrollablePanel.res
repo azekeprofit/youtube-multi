@@ -22,7 +22,6 @@ module Arrow = {
     </span>
 }
 
-open Preact.Elements
 @unboxed type scrollDivType = | @as(null) None | ScrollDiv(WebAPI.DOMTypes.htmlDivElement)
 @jsx.component
 let make = () => {
@@ -50,7 +49,7 @@ let make = () => {
       }
     }
 
-    {
+    let return:Preact.Elements.props={
       onMouseDown: _ =>
         if intervalRef.current != 0 {
           intervalRef.current = WebAPI.Window.setInterval2(
@@ -68,6 +67,7 @@ let make = () => {
       onMouseUp: mouseUp,
       onMouseLeave: mouseUp,
     }
+    return
   }, [])
 
   Signal.useSignalEffect(() => {

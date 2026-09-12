@@ -25,16 +25,9 @@ module ActiveTrack = {
       switch Store.trackContainer.value->Dict.get(key) {
       | Some(track) => {
           let forceUpdate = _ => activeCues.value = getCues(captionId)
-          track->WebAPI.TextTrack.addEventListener(
-            WebAPI.EventTypes.Custom("cuechange"),
-            forceUpdate,
-          )
-          Signal.Cleanup(
-            () =>
-              track->WebAPI.TextTrack.removeEventListener(
-                WebAPI.EventTypes.Custom("cuechange"),
-                forceUpdate,
-              ),
+          track->WebAPI.TextTrack.addEventListener(Custom("cuechange"), forceUpdate)
+          Cleanup(
+            () => track->WebAPI.TextTrack.removeEventListener(Custom("cuechange"), forceUpdate),
           )
         }
       | _ => None
@@ -53,14 +46,14 @@ module Lines = {
   @jsx.component
   let make = (~lines) =>
     <Signal.for_ each={lines}>
-      {(key, _) => <ActiveTrack key captionId={Types.CaptionId(key)} />}
+      {(key, _) => <ActiveTrack key captionId={CaptionId(key)} />}
     </Signal.for_>
 }
 
 @jsx.component
 let make = () => {
   let ytLines = useComputed(() =>
-    Captions.playerCaptions.value->Array.map(({captionId: Types.CaptionId(id)}) => id)
+    Captions.playerCaptions.value->Array.map(({captionId: CaptionId(id)}) => id)
   )
   <div
     id="youtube-multi-caption-container"

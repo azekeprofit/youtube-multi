@@ -15,11 +15,11 @@ let make = () => {
 
   let toggleSubtitles = _ =>
     switch (player, anyCaptions.value) {
-    | (Types.YoutubePlayer(p), true) => {
+    | (YoutubePlayer(p), true) => {
         pressed.value = !pressed.value
-        Types.YoutubePlayer(p)->Types.toggleSubtitles
+        YoutubePlayer(p)->Types.toggleSubtitles
         if !pressed.value {
-          Types.YoutubePlayer(p)->Types.toggleSubtitlesOn
+          YoutubePlayer(p)->Types.toggleSubtitlesOn
         }
       }
     | _ => ()
