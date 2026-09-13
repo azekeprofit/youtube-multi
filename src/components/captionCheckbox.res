@@ -11,28 +11,16 @@ let make = (~label, ~captionId, ~title) => {
     }
   )
 
-  <label
-    {...Preact.props(
-      switch title {
-      | Signal.Signal(s) => {titleAsSignal: s}
-      | String(s) => {title: s}
-      | _ => {}
-      },
-    )}
-  >
+  <label title>
     <input
       type_="checkbox"
-      checkedAsSignal
+      checked={checkedAsSignal->Signal.signalish}
       onInputEvent={e =>
         Store.setShowCap(
           captionId,
           e.currentTarget.checked ? Date(Date.make()->Date.toString) : None,
         )}
     />
-    {switch label {
-    | Signal.Signal(s) => s->Signal.signalText
-    | String(s) => s->Preact.string
-    | _ => <> </>
-    }}
+    {label->Preact.string}
   </label>
 }

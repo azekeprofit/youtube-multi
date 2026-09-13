@@ -59,4 +59,5 @@ let for_ = for_
 external track: 'v => unit = "%identity"
 let track: t<'v> => unit = signal => signal.value->track
 
-@unboxed type signalish = Signal(t<string>) | String(string)
+external signalish: t<'v> => 'v = "%identity"
+let useSignalish = f => useComputed(f)->signalish

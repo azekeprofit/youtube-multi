@@ -42,22 +42,12 @@ module Elements = {
   type props = {
     ...JsxDOM.domProps,
     class?: string,
-    @as("className")
-    classSignal?: Signal.t<string>,
     @as("aria-has-popup")
     ariaHasPopup?: string,
-    @as("aria-pressed")
-    ariaPressedSignal?: Signal.t<bool>,
-    @as("fill-opacity")
-    fillOpacitySignal?: Signal.t<float>,
     @as("data-caption-id")
     dataCaptionId?: string,
     @as(`onInput`)
     onInputEvent?: inputEventProps => unit,
-    @as("checked")
-    checkedAsSignal?: Signal.t<bool>,
-    @as("title")
-    titleAsSignal?: Signal.t<string>,
   }
 
   @module("preact/jsx-runtime")

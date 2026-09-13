@@ -1,6 +1,7 @@
 let useComputed = Signal.useComputed
 let useSignalRef = Signal.useSignalRef
 let useSignal = Signal.useSignal
+let useSignalish = Signal.useSignalish
 let useCallback = Preact.useCallback
 
 module Arrow = {
@@ -14,7 +15,7 @@ module Arrow = {
   let make = (~show: Signal.t<bool>, ~text, ~direction, ~attr) =>
     <span
       {...attr}
-      classSignal={useComputed(() =>
+      class={useSignalish(() =>
         `arrow ${direction->directionToString} ${show.value ? "show" : ""}`
       )}
     >
