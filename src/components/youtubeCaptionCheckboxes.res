@@ -7,7 +7,7 @@ module YtLangCheckbox = {
     Signal.useSignalEffect(() =>
       switch Youtube.getVideoTag() {
       | Value(tag) => {
-          let showCap = Store.showCaps.value->Dict.get(captionId->Types.asKey)
+          let showCap = Store.getShowCap(captionId)
           switch Captions.videoUrlId.value {
           | Some(VideoId(videoId)) =>
             switch (Pots.potsContainer.value->Dict.get(videoId), Captions.videoPlayer.value) {
@@ -18,17 +18,20 @@ module YtLangCheckbox = {
                 | Some(t) => t
                 | _ => Store.addTrack(tag, captionId, vssIdText)
                 }
-
+                switch track.cues {
                 // // loadSrtLine always adds at least one cue so by checking if cues are empty we prevent over-fetching
-                // if (showCap && track?.cues?.length === 0 && pot) {
-                //   // add stub cue
-                //   addCue(track, captionId, -1, -1, '', -1);
-                //   const xhr = new XMLHttpRequest();
-                //   xhr.onload = () => loadSrtLine(track, captionId, xhr.responseText);
-                //   xhr.open("GET", `${baseUrl}&c=WEB&potc=1&fmt=srt&pot=${pot}`);
-                //   xhr.responseType = "text";
-                //   xhr.send();
-                // }
+                | Value(cueList)
+                  if showCap && cueList->VTTCue.cueListToArray->Array.length == 0 => {
+                    // add stub cue
+                    Captions.addCue(track, captionId, -1.0, -1.0, "", -1)
+                    let xhr = XMLHttpRequest.make()
+                    xhr.onload = () => SrtSubtitle.loadSrtLine(track, captionId, xhr.responseText)
+                    xhr.open_(Get, `${baseUrl}&c=WEB&potc=1&fmt=srt&pot=${pot}`)
+                    xhr.responseType = Text
+                    xhr.send()
+                  }
+                | _ => ()
+                }
               }
             | _ => ()
             }
