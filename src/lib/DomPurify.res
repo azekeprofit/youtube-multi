@@ -3,4 +3,8 @@ type options = {
   @as(`RETURN_TRUSTED_TYPE`) returnTrustedType: bool, // true
 }
 
-@module("dompurify") external sanitize: (string, options) => string = "default.sanitize"
+type t = {
+  @meth sanitize: (string, options) => string,
+}
+
+@module("dompurify") external default: t = "default"

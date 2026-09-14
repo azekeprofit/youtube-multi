@@ -15,6 +15,7 @@ Signal.effect(() =>
         | Some(_) as v => videoUrlId.value = v
         | _ => ()
         }
+      stateChangeListener()
       let element = player->Types.asElement
       element->WebAPI.Element.addEventListener(Custom("onStateChange"), stateChangeListener)
       Cleanup(
