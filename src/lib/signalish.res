@@ -1,14 +1,8 @@
-type t<'v> = Signal(Signal.t<'v>) | Value('v)
+@unboxed type t<'v> = Signalish('v)
 
-let ish = ish =>
-  switch ish {
-  | Signal(s) => s.value
-  | Value(v) => v
-  }
+external fromSignal: Signal.t<'v> => t<'v> = "%identity"
+external fromValue: 'v => t<'v> = "%identity"
 
-external float: float => Jsx.element = "%identity"
-let float = s => s->ish->float
-external int: int => Jsx.element = "%identity"
-let float = s => s->ish->int
-external string: string => Jsx.element = "%identity"
-let string = s => s->ish->string
+external float: t<float> => Jsx.element = "%identity"
+external int: t<int> => Jsx.element = "%identity"
+external string: t<string> => Jsx.element = "%identity"

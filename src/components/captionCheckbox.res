@@ -14,7 +14,7 @@ let make = (~label, ~captionId, ~title) => {
   <label titleAsSignal={title}>
     <input
       type_="checkbox"
-      checkedAsSignal={Signal(checked)}
+      checkedAsSignal={Signalish.fromSignal(checked)}
       onInputEvent={e =>
         Store.setShowCap(
           captionId,
