@@ -7,11 +7,11 @@ module YtLangCheckbox = {
       vssId: VssId(vssIdText),
       baseUrl,
       name,
-    }: Types.ytCaptionTrack = track
+    }: Youtube.ytCaptionTrack = track
     Signal.useSignalEffect(() =>
       switch (Youtube.getVideoTag(), Captions.videoUrlId.value, Captions.videoPlayer.value) {
       | (Value(tag), Some(VideoId(videoId)), Some(player)) => {
-          player->Types.toggleSubtitlesOn
+          player->Youtube.toggleSubtitlesOn
 
           let track = switch Store.trackContainer.peek()->Dict.get(captionId->Types.asKey) {
           | Some(t) => t
@@ -42,7 +42,7 @@ module YtLangCheckbox = {
     let autoCaption = kind == Asr
 
     <CaptionCheckbox
-      title={Signalish.fromValue(name->Types.extractName)}
+      title={Signalish.fromValue(name->Youtube.extractName)}
       label={Signalish.fromValue(`${lngText}${autoCaption ? " (auto)" : ""}`)}
       captionId
     />

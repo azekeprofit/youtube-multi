@@ -23,10 +23,10 @@ intervalId :=
               controlPanel,
               ~child=multiLangButton->WebAPI.Element.asNode,
             ).id = ytControlPanelId
-            Captions.videoPlayer.value = Some(Types.YoutubePlayer(p))
+            Captions.videoPlayer.value = Some(Youtube.Player(p))
 
             Preact.render(
-              <MultiLangButton player={Types.YoutubePlayer(p)} ytSettingsMenu />,
+              <MultiLangButton player={Youtube.Player(p)} ytSettingsMenu />,
               controlPanel,
             )
             WebAPI.Window.clearInterval(window, intervalId.contents)

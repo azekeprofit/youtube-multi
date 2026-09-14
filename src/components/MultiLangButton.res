@@ -10,9 +10,9 @@ let make = (~player, ~ytSettingsMenu) => {
   let toggleSubtitles = _ =>
     if anyCaptions.value {
       pressed.value = !pressed.value
-      player->Types.toggleSubtitles
+      player->Youtube.toggleSubtitles
       if !pressed.value {
-        player->Types.toggleSubtitlesOn
+        player->Youtube.toggleSubtitlesOn
       }
     }
 
@@ -21,7 +21,7 @@ let make = (~player, ~ytSettingsMenu) => {
       <ScrollablePanel />
     </Signal.show>
     <Signal.show when_={pressed}>
-      {Preact.createPortal(<CaptionLines />, player->Types.asElement)}
+      {Preact.createPortal(<CaptionLines />, player->Youtube.asElement)}
     </Signal.show>
     <button
       class="ytp-subtitles-button ytp-button"

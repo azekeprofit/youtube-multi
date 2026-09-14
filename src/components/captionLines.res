@@ -8,7 +8,7 @@ module ActiveTrack = {
   @jsx.component
   let make = (~captionId) => {
     let activeCues = Signal.useSignal(getCues(captionId))
-    let Types.CaptionId(key) = captionId
+    let key = captionId->Types.asKey
     let show = Signal.useComputed(() => captionId->Store.getShowCap)
 
     Signal.useSignalEffect(() =>

@@ -16,7 +16,7 @@ Signal.effect(() =>
         | _ => ()
         }
       stateChangeListener()
-      let element = player->Types.asElement
+      let element = player->Youtube.asElement
       element->WebAPI.Element.addEventListener(Custom("onStateChange"), stateChangeListener)
       Cleanup(
         () =>
@@ -27,7 +27,7 @@ Signal.effect(() =>
   }
 )
 
-type videoPlayerCaptions = {track: Types.ytCaptionTrack, captionId: Types.captionId}
+type videoPlayerCaptions = {track: Youtube.ytCaptionTrack, captionId: Types.captionId}
 
 // const sameLanguage = (lang1: string, lang2: string) => lang1 == lang2 || lang1.split('-')[0] == lang2.split('-')[0];
 
