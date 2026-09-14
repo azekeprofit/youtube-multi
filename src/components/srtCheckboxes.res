@@ -12,9 +12,7 @@ module SrtCheckbox = {
         : label.value
     )
 
-    <CaptionCheckbox
-      label={Signal(ellipsedLabel)} title={Signal(label)} captionId
-    />
+    <CaptionCheckbox label={Signal(ellipsedLabel)} title={Signal(label)} captionId />
   }
 }
 

@@ -35,7 +35,9 @@ let make = () => {
         </Signal.show>
         <button
           class="ytp-subtitles-button ytp-button"
-          ariaPressedAsSignal={Signal(useComputed(() => pressedAndCaptions.value ? #"true" : #"false"))}
+          ariaPressedAsSignal={Signal(
+            useComputed(() => pressedAndCaptions.value ? #"true" : #"false"),
+          )}
           onClick={toggleSubtitles}
           title={anyCaptions.value
             ? "Subtitles/closed captions"

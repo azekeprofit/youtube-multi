@@ -55,9 +55,9 @@ module Elements = {
     @as(`className`)
     classAsSignal?: Signalish.t<string>,
     @as(`aria-pressed`)
-    ariaPressedAsSignal?:Signalish.t<[#"true" | #"false" | #mixed]>,
+    ariaPressedAsSignal?: Signalish.t<[#"true" | #"false" | #mixed]>,
     @as(`fill-opacity`)
-    fillOpacityAsSignal?:Signalish.t<string>,
+    fillOpacityAsSignal?: Signalish.t<string>,
   }
 
   @module("preact/jsx-runtime")

@@ -14,9 +14,9 @@ module Arrow = {
   let make = (~show: Signal.t<bool>, ~text, ~direction, ~attr) =>
     <span
       {...attr}
-      classAsSignal={Signal(useComputed(() =>
-        `arrow ${direction->directionToString} ${show.value ? "show" : ""}`
-      ))}
+      classAsSignal={Signal(
+        useComputed(() => `arrow ${direction->directionToString} ${show.value ? "show" : ""}`),
+      )}
     >
       {text->Preact.string}
     </span>

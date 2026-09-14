@@ -42,7 +42,9 @@ module YtLangCheckbox = {
     let autoCaption = kind == Asr
 
     <CaptionCheckbox
-      title={Value(name->Types.extractName)} label={Value(`${lngText}${autoCaption ? " (auto)" : ""}`)} captionId
+      title={Value(name->Types.extractName)}
+      label={Value(`${lngText}${autoCaption ? " (auto)" : ""}`)}
+      captionId
     />
   }
 }
