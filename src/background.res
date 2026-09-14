@@ -7,7 +7,7 @@ Chrome.webRequest.onBeforeRequest.addListener(({tabId, url}) => {
       switch (v, p) {
       | (Null.Value(videoId), Null.Value(pot)) =>
         dispatchEvent(
-          CustomEvent.make("youtube pot event", {detail: {videoId: Types.VideoId(videoId), pot}}),
+          CustomEvent.make("youtube pot event", {detail: {videoId: VideoId(videoId), pot}}),
         )->ignore
       | _ => ()
       },

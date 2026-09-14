@@ -1,6 +1,6 @@
-let addCue = (track, Types.CaptionId(capId), start, end, html, index) => {
+let addCue = (track, captionId, start, end, html, index) => {
   let cue = VTTCue.make(start, end, html)
-  cue.id = `${capId}.${index->Int.toString}`
+  cue.id = `${captionId->Types.asKey}.${index->Int.toString}`
   track->WebAPI.TextTrack.addCue(cue->VTTCue.asTrack)
 }
 
