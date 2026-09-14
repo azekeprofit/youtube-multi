@@ -10,7 +10,7 @@ let extractName = ytName => ytName.simpleText
 
 type ytCaptionKind = | @as("asr") Asr | None
 
-type languageCode = LanguageCode(string)
+@unboxed type languageCode = LanguageCode(string)
 
 type ytCaptionTrack = {
   baseUrl: string,
