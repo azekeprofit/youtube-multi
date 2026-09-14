@@ -4,12 +4,24 @@ let getVideoPlayer = () =>
   | _ => None
   }
 
-let getVideoId = player => Types.getPlayerResponse(player).videoDetails.videoId
+let getVideoId = player =>
+  switch Types.getPlayerResponse(player) {
+  | Value(p) =>
+    switch p.videoDetails {
+    | Some(details) => Some(details.videoId)
+    | _ => None
+    }
+  | _ => None
+  }
 
 let getVideoTag = () => Preact.get("#movie_player video")
 
 let getAllTracks = player =>
   switch player {
-  | Some(p) => Types.getPlayerResponse(p).captions.playerCaptionsTracklistRenderer.captionTracks
+  | Some(p) =>
+    switch Types.getPlayerResponse(p) {
+    | Value(pl) => pl.captions.playerCaptionsTracklistRenderer.captionTracks
+    | _ => []
+    }
   | _ => []
   }

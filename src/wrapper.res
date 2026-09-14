@@ -32,6 +32,6 @@ intervalId :=
     ~timeout=200,
   )
 
-document->WebAPI.Document.addEventListener(WebAPI.EventTypes.Custom("youtube multi pot"), detail =>
+document->WebAPI.Document.addEventListener(Custom("youtube multi pot"), detail =>
   Pots.addPot(detail)
 )

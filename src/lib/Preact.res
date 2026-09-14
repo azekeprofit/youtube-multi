@@ -48,6 +48,16 @@ module Elements = {
     dataCaptionId?: string,
     @as(`onInput`)
     onInputEvent?: inputEventProps => unit,
+    @as(`checked`)
+    checkedAsSignal?: Signalish.t<bool>,
+    @as(`title`)
+    titleAsSignal?: Signalish.t<string>,
+    @as(`className`)
+    classAsSignal?: Signalish.t<string>,
+    @as(`aria-pressed`)
+    ariaPressedAsSignal?:Signalish.t<[#"true" | #"false" | #mixed]>,
+    @as(`fill-opacity`)
+    fillOpacityAsSignal?:Signalish.t<string>,
   }
 
   @module("preact/jsx-runtime")

@@ -1,18 +1,24 @@
 module YtLangCheckbox = {
   @jsx.component
   let make = (~track, ~captionId) => {
-    let {kind, languageCode, vssId, baseUrl, name}: Types.ytCaptionTrack = track
-    let Types.LanguageCode(lngText) = languageCode
-    let Types.VssId(vssIdText) = vssId
+    let {
+      kind,
+      languageCode: LanguageCode(lngText),
+      vssId: VssId(vssIdText),
+      baseUrl,
+      name,
+    }: Types.ytCaptionTrack = track
     Signal.useSignalEffect(() =>
       switch (Youtube.getVideoTag(), Captions.videoUrlId.value, Captions.videoPlayer.value) {
       | (Value(tag), Some(VideoId(videoId)), Some(player)) => {
           player->Types.toggleSubtitlesOn
-          let showCap = Store.getShowCap(captionId)
+
           let track = switch Store.trackContainer.peek()->Dict.get(captionId->Types.asKey) {
           | Some(t) => t
           | _ => Store.addTrack(tag, captionId, vssIdText)
           }
+
+          let showCap = Store.getShowCap(captionId)
           switch (track.cues, Pots.potsContainer.value->Dict.get(videoId)) {
           // // loadSrtLine always adds at least one cue so by checking if cues are empty we prevent over-fetching
           | (Value(cueList), Some(pot)) if showCap && cueList->VTTCue.cueListLength == 0 => {
@@ -36,7 +42,7 @@ module YtLangCheckbox = {
     let autoCaption = kind == Asr
 
     <CaptionCheckbox
-      title={name->Types.extractName} label={`${lngText}${autoCaption ? " (auto)" : ""}`} captionId
+      title={Value(name->Types.extractName)} label={Value(`${lngText}${autoCaption ? " (auto)" : ""}`)} captionId
     />
   }
 }

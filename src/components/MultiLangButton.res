@@ -35,13 +35,13 @@ let make = () => {
         </Signal.show>
         <button
           class="ytp-subtitles-button ytp-button"
-          ariaPressed={Signal.useSignalish(() => pressedAndCaptions.value ? #"true" : #"false")}
+          ariaPressedAsSignal={Signal(useComputed(() => pressedAndCaptions.value ? #"true" : #"false"))}
           onClick={toggleSubtitles}
           title={anyCaptions.value
             ? "Subtitles/closed captions"
             : "Subtitles/closed captions unavailable"}
         >
-          <CcIcon opacity={Signal.useSignalish(() => anyCaptions.value ? "1.0" : "0.3")} />
+          <CcIcon opacity={Signal(useComputed(() => anyCaptions.value ? "1.0" : "0.3"))} />
         </button>
         {createPortal(<SrtMenuItem />, ytSettingsMenu)}
       </>

@@ -1,6 +1,6 @@
 @jsx.component
 let make = (~opacity) =>
-  <svg height="100%" version="1.1" viewBox="0 0 36 36" width="100%" fillOpacity={opacity}>
+  <svg height="100%" version="1.1" viewBox="0 0 36 36" width="100%" fillOpacityAsSignal={opacity}>
     <path
       type_="file"
       style={{fill: `white`}}

@@ -57,6 +57,4 @@ let for_ = for_
 external track: 'v => unit = "%identity"
 let track: t<'v> => unit = signal => signal.value->track
 
-external signalish: t<'v> => 'v = "%identity"
-let useSignalish = f => useComputed(f)->signalish
 external callbackDomRef: ref<'t> => JsxDOM.domRef = "%identity"

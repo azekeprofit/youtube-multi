@@ -33,7 +33,7 @@ type ytPlayerResponse = {
       translationLanguages: array<ytTranslationLanguage>,
     },
   },
-  videoDetails: {
+  videoDetails?: {
     author: string,
     channelId: string,
     lengthSeconds: int,
@@ -62,7 +62,7 @@ let getCaptionId = (videoId, VssId(vssId)) => CaptionId(
 let asKey = (CaptionId(key)) => key
 
 @unboxed type ytPlayer = YoutubePlayer(WebAPI.DOMTypes.element)
-@send external getPlayerResponse: ytPlayer => ytPlayerResponse = "getPlayerResponse"
+@send external getPlayerResponse: ytPlayer => Null.t<ytPlayerResponse> = "getPlayerResponse"
 @send external toggleSubtitles: ytPlayer => unit = "toggleSubtitles"
 @send external toggleSubtitlesOn: ytPlayer => unit = "toggleSubtitlesOn"
 let asElement = (YoutubePlayer(element)) => element
