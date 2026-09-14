@@ -1,9 +1,3 @@
-let getVideoPlayer = () =>
-  switch Preact.get("#movie_player") {
-  | Value(p) => Some(Types.YoutubePlayer(p))
-  | _ => None
-  }
-
 let getVideoId = player =>
   switch Types.getPlayerResponse(player) {
   | Value(p) =>

@@ -1,8 +1,3 @@
-let useComputed = Signal.useComputed
-let useSignalRef = Signal.useSignalRef
-let useSignal = Signal.useSignal
-let useCallback = Preact.useCallback
-
 module Arrow = {
   type direction = Left | Right
   let directionToString = d =>
@@ -15,7 +10,9 @@ module Arrow = {
     <span
       {...attr}
       classAsSignal={Signalish.fromSignal(
-        useComputed(() => `arrow ${direction->directionToString} ${show.value ? "show" : ""}`),
+        Signal.useComputed(() =>
+          `arrow ${direction->directionToString} ${show.value ? "show" : ""}`
+        ),
       )}
     >
       {text->Preact.string}
@@ -25,12 +22,12 @@ module Arrow = {
 @unboxed type scrollDivType = | @as(null) None | ScrollDiv(WebAPI.DOMTypes.htmlDivElement)
 @jsx.component
 let make = () => {
-  let scrollDiv = useSignalRef(None)
-  let intervalRef = useSignalRef(0)
-  let showLeft = useSignal(false)
-  let showRight = useSignal(false)
+  let scrollDiv = Signal.useSignalRef(None)
+  let intervalRef = Signal.useSignalRef(0)
+  let showLeft = Signal.useSignal(false)
+  let showRight = Signal.useSignal(false)
 
-  let doScroll = useCallback(() =>
+  let doScroll = Preact.useCallback(() =>
     switch scrollDiv.current {
     | ScrollDiv(scroll) => {
         showLeft.value = scroll.scrollLeft != 0.0
@@ -41,7 +38,7 @@ let make = () => {
     }
   , [])
 
-  let mouseHold = useCallback(step => {
+  let mouseHold = Preact.useCallback(step => {
     let mouseUp = _ => {
       if intervalRef.current != 0 {
         WebAPI.Window.clearInterval(window, intervalRef.current)

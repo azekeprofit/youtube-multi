@@ -5,7 +5,7 @@ export async function bundle(prod) {
     entrypoints: ["src/wrapper.jsx"], // , "lib/background.jsx"
     outdir: "public",
     splitting: false,
-    minify: true,
+    minify: false,
     format: 'iife',
     jsx: { importSource: 'preact' },
     metafile: { json: "meta.json" },

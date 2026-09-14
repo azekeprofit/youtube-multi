@@ -1,6 +1,3 @@
-let useComputed = Signal.useComputed
-let useSignal = Signal.useSignal
-
 let getCues = (Types.CaptionId(key)) =>
   switch Store.trackContainer.value->Dict.get(key) {
   | Some({activeCues: Value(t)}) => t->VTTCue.cueListToArray
@@ -10,9 +7,9 @@ let getCues = (Types.CaptionId(key)) =>
 module ActiveTrack = {
   @jsx.component
   let make = (~captionId) => {
-    let activeCues = useSignal(getCues(captionId))
+    let activeCues = Signal.useSignal(getCues(captionId))
     let Types.CaptionId(key) = captionId
-    let show = useComputed(() => captionId->Store.getShowCap)
+    let show = Signal.useComputed(() => captionId->Store.getShowCap)
 
     Signal.useSignalEffect(() =>
       switch Store.trackContainer.value->Dict.get(key) {
@@ -45,7 +42,7 @@ module Lines = {
 
 @jsx.component
 let make = () => {
-  let ytLines = useComputed(() =>
+  let ytLines = Signal.useComputed(() =>
     Captions.playerCaptions.value->Array.map(({captionId: CaptionId(id)}) => id)
   )
   <div

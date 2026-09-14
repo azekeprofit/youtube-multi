@@ -10,7 +10,11 @@ let videoUrlId = Signal.make(None)
 Signal.effect(() =>
   switch videoPlayer.value {
   | Some(player) => {
-      let stateChangeListener = _ => videoUrlId.value = Youtube.getVideoId(player)
+      let stateChangeListener = _ =>
+        switch Youtube.getVideoId(player) {
+        | Some(_) as v => videoUrlId.value = v
+        | _ => ()
+        }
       let element = player->Types.asElement
       element->WebAPI.Element.addEventListener(Custom("onStateChange"), stateChangeListener)
       Cleanup(

@@ -4,16 +4,17 @@ let ytControlPanelId = `ytControlPanel`
 
 let intervalId = ref(0)
 
-let clear = () => WebAPI.Window.clearInterval(window, intervalId.contents)
 intervalId :=
   WebAPI.Window.setInterval2(
     window,
     ~handler=() =>
       switch (
         Preact.get(`button.ytp-subtitles-button.ytp-button`),
+        Preact.get("#movie_player"),
+        Preact.get(`.ytp-popup.ytp-settings-menu .ytp-panel .ytp-panel-menu`),
         Preact.get(`#${ytControlPanelId}`),
       ) {
-      | (Value(multiLangButton), Null) =>
+      | (Value(multiLangButton), Value(p), Value(ytSettingsMenu), Null) =>
         switch multiLangButton.parentNode {
         | Value(parent) => {
             let controlPanel = WebAPI.Document.createElement(document, `span`)
@@ -22,8 +23,13 @@ intervalId :=
               controlPanel,
               ~child=multiLangButton->WebAPI.Element.asNode,
             ).id = ytControlPanelId
-            Preact.render(<MultiLangButton />, controlPanel)
-            clear()
+            Captions.videoPlayer.value = Some(Types.YoutubePlayer(p))
+
+            Preact.render(
+              <MultiLangButton player={Types.YoutubePlayer(p)} ytSettingsMenu />,
+              controlPanel,
+            )
+            WebAPI.Window.clearInterval(window, intervalId.contents)
           }
         | _ => ()
         }
@@ -32,6 +38,6 @@ intervalId :=
     ~timeout=200,
   )
 
-document->WebAPI.Document.addEventListener(Custom("youtube multi pot"), detail =>
-  Pots.addPot(detail)
+document->WebAPI.Document.addEventListener(Custom("youtube multi pot"), payload =>
+  Pots.addPot(payload)
 )

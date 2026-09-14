@@ -3,8 +3,9 @@ let loadSrtLine = (track, capId, srtLines) => {
   let arr = srtLines->String.splitByRegExp(lineRegex)
   let i = ref(1)
   let step = () => {
+    let r = i.contents
     i := i.contents + 1
-    i.contents
+    r
   }
   let popStr = () =>
     switch arr[step()] {

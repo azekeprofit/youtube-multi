@@ -21,7 +21,7 @@ external useSignalEffect: (unit => cleanup) => unit = "useSignalEffect"
 @module("@preact/signals")
 external useSignal: 'a => t<'a> = "useSignal"
 
-@module("@preact/signals")
+@module("@preact/signals/utils")
 external useSignalRef: 'a => ref<'a> = "useSignalRef"
 
 @module("@preact/signals")
