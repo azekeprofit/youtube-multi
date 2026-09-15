@@ -57,4 +57,5 @@ let for_ = for_
 external track: 'v => unit = "%identity"
 let track: t<'v> => unit = signal => signal.value->track
 
-external callbackDomRef: ref<'t> => JsxDOM.domRef = "%identity"
+external domRef: ref<'t> => JsxDOM.domRef = "%identity"
+external callbackRef: ('t => cleanup) => JsxDOM.domRef = "%identity"

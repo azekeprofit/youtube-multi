@@ -32,7 +32,7 @@ let loadSrtLine = (track, capId, srtLines) => {
     | _ => false
     }
   ) {
-   1 -> ignore
+    1->ignore
   }
 }
 

@@ -55,7 +55,6 @@ type stateChangeListener = ytPlayerState => unit
 @send external toggleSubtitlesOn: ytPlayer => unit = "toggleSubtitlesOn"
 let asElement = (Player(element)) => element
 
-
 let getVideoId = player =>
   switch getPlayerResponse(player) {
   | Value(p) =>

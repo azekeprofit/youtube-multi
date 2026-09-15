@@ -76,7 +76,7 @@ let make = () => {
   <div id="youtube-multi-checkboxes">
     <div class="unscroll">
       <Arrow text="🠜" show={showLeft} direction={Left} attr={mouseHold(-15.0)} />
-      <div class="scroll" ref={scrollDiv->Signal.callbackDomRef}>
+      <div class="scroll" ref={scrollDiv->Signal.domRef}>
         <YoutubeCaptionCheckboxes />
         <SrtCheckboxes />
       </div>
