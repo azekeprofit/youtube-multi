@@ -8,15 +8,19 @@ intervalId :=
   WebAPI.Window.setInterval2(
     window,
     ~handler=() =>
-      switch (Preact.get(`button.ytp-subtitles-button.ytp-button`), Preact.get("#movie_player")) {
-      | (Value(multiLangButton), Value(p)) =>
+      switch (
+        Preact.get(`button.ytp-subtitles-button.ytp-button`),
+        Preact.get("#movie_player"),
+        Preact.get(`.ytp-popup.ytp-settings-menu .ytp-panel .ytp-panel-menu`),
+      ) {
+      | (Value(multiLangButton), Value(p), Value(ytSettingsMenu)) =>
         switch multiLangButton.parentNode {
         | Value(parent) => {
             let player = Youtube.Player(p)
             Captions.videoPlayer.value = Some(player)
 
             Preact.render(
-              <MultiLangButton player />,
+              <MultiLangButton player ytSettingsMenu />,
               switch Preact.get(`#${ytControlPanelId}`) {
               | Value(controlPanel) => controlPanel
               | Null => {

@@ -2,7 +2,6 @@
 @unboxed type captionId = CaptionId(string)
 @unboxed type videoId = VideoId(string)
 
-
 let getCaptionId = (videoId, VssId(vssId)) => CaptionId(
   switch videoId {
   | Some(VideoId(v)) => `${v}.${vssId}`
@@ -10,8 +9,6 @@ let getCaptionId = (videoId, VssId(vssId)) => CaptionId(
   },
 )
 let asKey = (CaptionId(key)) => key
-
-
 
 // cleanups for effects
 @unboxed type cleanup = Cleanup(unit => unit) | @as(undefined) None

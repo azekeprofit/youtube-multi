@@ -85,12 +85,10 @@ external render: (element, WebAPI.DOMTypes.element) => unit = "render"
 @module("preact")
 external createPortal: (element, WebAPI.DOMTypes.element) => Jsx.element = "createPortal"
 
-
 @module("@preact/hooks")
 external useEffect: (unit => Types.cleanup) => unit = "useEffect"
 @module("preact/hooks")
 external useMemo: (unit => 'val, array<_>) => 'val = "useMemo"
-
 
 type ref<'t> = {
   mutable current: 't,
@@ -100,7 +98,6 @@ type ref<'t> = {
 external useRef: 'val => ref<'val> = "useRef"
 external domRef: ref<'t> => JsxDOM.domRef = "%identity"
 external callbackRef: ('t => Types.cleanup) => JsxDOM.domRef = "%identity"
-
 
 @module("preact/hooks")
 external useCallback: ('arg => 'res, array<_>) => 'arg => 'res = "useCallback"

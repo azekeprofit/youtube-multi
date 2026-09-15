@@ -1,10 +1,6 @@
 module Arrow = {
-  type direction = Left | Right
-  let directionToString = d =>
-    switch d {
-    | Left => "left"
-    | Right => "right"
-    }
+  type direction = [#left | #right]
+  external directionToString: direction => string = "%identity"
   @jsx.component
   let make = (~show: Signal.t<bool>, ~text, ~direction, ~attr) =>
     <span
@@ -75,12 +71,12 @@ let make = () => {
 
   <div id="youtube-multi-checkboxes">
     <div class="unscroll">
-      <Arrow text="🠜" show={showLeft} direction={Left} attr={mouseHold(-15.0)} />
+      <Arrow text="🠜" show={showLeft} direction={#left} attr={mouseHold(-15.0)} />
       <div class="scroll" ref={scrollDiv->Preact.domRef}>
         <YoutubeCaptionCheckboxes />
         <SrtCheckboxes />
       </div>
-      <Arrow text="🠞" show={showRight} direction={Right} attr={mouseHold(15.0)} />
+      <Arrow text="🠞" show={showRight} direction={#right} attr={mouseHold(15.0)} />
     </div>
   </div>
 }
