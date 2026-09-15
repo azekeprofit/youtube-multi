@@ -22,8 +22,8 @@ module Arrow = {
 @unboxed type scrollDivType = | @as(null) None | ScrollDiv(WebAPI.DOMTypes.htmlDivElement)
 @jsx.component
 let make = () => {
-  let scrollDiv = Signal.useSignalRef(None)
-  let intervalRef = Signal.useSignalRef(0)
+  let scrollDiv = Preact.useRef(None)
+  let intervalRef = Preact.useRef(0)
   let showLeft = Signal.useSignal(false)
   let showRight = Signal.useSignal(false)
 
@@ -46,7 +46,7 @@ let make = () => {
       }
     }
 
-    Preact.props({
+    Preact.Elements.props({
       onMouseDown: _ =>
         if intervalRef.current == 0 {
           intervalRef.current = WebAPI.Window.setInterval2(
@@ -76,7 +76,7 @@ let make = () => {
   <div id="youtube-multi-checkboxes">
     <div class="unscroll">
       <Arrow text="🠜" show={showLeft} direction={Left} attr={mouseHold(-15.0)} />
-      <div class="scroll" ref={scrollDiv->Signal.domRef}>
+      <div class="scroll" ref={scrollDiv->Preact.domRef}>
         <YoutubeCaptionCheckboxes />
         <SrtCheckboxes />
       </div>

@@ -60,6 +60,8 @@ module Elements = {
     fillOpacityAsSignal?: Signalish.t<string>,
   }
 
+  let props = (p: props) => p
+
   @module("preact/jsx-runtime")
   external jsx: (string, props) => Jsx.element = "jsx"
 
@@ -83,12 +85,24 @@ external render: (element, WebAPI.DOMTypes.element) => unit = "render"
 @module("preact")
 external createPortal: (element, WebAPI.DOMTypes.element) => Jsx.element = "createPortal"
 
+
+@module("@preact/hooks")
+external useEffect: (unit => Types.cleanup) => unit = "useEffect"
 @module("preact/hooks")
 external useMemo: (unit => 'val, array<_>) => 'val = "useMemo"
+
+
+type ref<'t> = {
+  mutable current: 't,
+}
+
+@module("preact/hooks")
+external useRef: 'val => ref<'val> = "useRef"
+external domRef: ref<'t> => JsxDOM.domRef = "%identity"
+external callbackRef: ('t => Types.cleanup) => JsxDOM.domRef = "%identity"
+
 
 @module("preact/hooks")
 external useCallback: ('arg => 'res, array<_>) => 'arg => 'res = "useCallback"
 
 let get: string => 't = selector => document->WebAPI.Document.querySelector(selector)
-
-let props = (p: Elements.props) => p

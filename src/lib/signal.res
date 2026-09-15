@@ -13,10 +13,8 @@ type ref<'t> = {
   ...signalMethods<'t>,
 }
 
-@unboxed type cleanup = Cleanup(unit => unit) | @as(undefined) None
-
 @module("@preact/signals")
-external useSignalEffect: (unit => cleanup) => unit = "useSignalEffect"
+external useSignalEffect: (unit => Types.cleanup) => unit = "useSignalEffect"
 
 @module("@preact/signals")
 external useSignal: 'a => t<'a> = "useSignal"
@@ -31,7 +29,7 @@ external make: 'a => t<'a> = "signal"
 external computed: (unit => 'a) => t<'a> = "computed"
 
 @module("@preact/signals")
-external effect: (unit => cleanup) => unit = "effect"
+external effect: (unit => Types.cleanup) => unit = "effect"
 
 @module("@preact/signals")
 external useComputed: (unit => 't) => t<'t> = "useComputed"
@@ -56,6 +54,3 @@ let for_ = for_
 /// Prevent Rescript optimising away signal values as dead code, because we need signal.value evaluating even value itself isn't used
 external track: 'v => unit = "%identity"
 let track: t<'v> => unit = signal => signal.value->track
-
-external domRef: ref<'t> => JsxDOM.domRef = "%identity"
-external callbackRef: ('t => cleanup) => JsxDOM.domRef = "%identity"
