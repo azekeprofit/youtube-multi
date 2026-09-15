@@ -57,7 +57,8 @@ let saveStorage = (captionId, showCap) => {
 }
 
 let setShowCap = (captionId, show: captionStatus) => {
-  if showCaps.value->Dict.get(captionId->Types.asKey) !== Some(show) {
+  let key = captionId->Types.asKey
+  if showCaps.value->Dict.get(key) !== Some(show) {
     showCaps->update(key, show)
     saveStorage(captionId, show)
   }
