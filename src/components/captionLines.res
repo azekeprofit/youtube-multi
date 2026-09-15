@@ -1,5 +1,5 @@
-let getCues = (Types.CaptionId(key)) =>
-  switch Store.trackContainer.value->Dict.get(key) {
+let getCues = captionId =>
+  switch Store.trackContainer.value->Dict.get(captionId->Types.asKey) {
   | Some({activeCues: Value(t)}) => t->VTTCue.cueListToArray
   | _ => []
   }
@@ -43,7 +43,7 @@ module Lines = {
 @jsx.component
 let make = () => {
   let ytLines = Signal.useComputed(() =>
-    Captions.playerCaptions.value->Array.map(({captionId: CaptionId(id)}) => id)
+    Captions.playerCaptions.value->Array.map(({captionId}) => captionId->Types.asKey)
   )
   <div
     id="youtube-multi-caption-container"
