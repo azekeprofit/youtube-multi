@@ -27,28 +27,41 @@ Signal.effect(() =>
   }
 )
 
-type videoPlayerCaptions = {track: Youtube.ytCaptionTrack, captionId: Types.captionId}
+let getLang = (Youtube.LanguageCode(l)) =>
+  switch String.split(l, "-")[0] {
+  | Some(lang) => lang
+  | _ => ""
+  }
+let sameLanguage = (lang1, lang2) => lang1 == lang2 || lang1->getLang == lang2->getLang
 
-// const sameLanguage = (lang1: string, lang2: string) => lang1 == lang2 || lang1.split('-')[0] == lang2.split('-')[0];
+type videoPlayerCaptions = {track: Youtube.ytCaptionTrack, captionId: Types.captionId}
 
 /// re-calculates when video changes
 let playerCaptions = Signal.make([])
 videoUrlId.subscribe(vId => {
   let tracks = Youtube.getAllTracks(videoPlayer.peek())
+
+  let filteredTracks = switch tracks {
+  | [_] => tracks
+  | _ =>
+    tracks->Array.filter(t =>
+      t.kind == Asr
+        ? sameLanguage(LanguageCode(navigator.language), t.languageCode)
+            ? tracks->Array.some(
+                ({languageCode, kind}) => kind != Asr && sameLanguage(t.languageCode, languageCode),
+              )
+            : false
+        : true
+    )
+  }
+
   let filteredCaps =
-    tracks->Array.map(track => {track, captionId: Types.getCaptionId(vId, track.vssId)})
+    filteredTracks->Array.map(track => {track, captionId: Types.getCaptionId(vId, track.vssId)})
+
+  switch filteredCaps {
+  | [{captionId}] => Store.setShowCap(captionId, Boolean(true))
+  | _ => ()
+  }
   playerCaptions.value = filteredCaps
   Store.srtContainer.value = dict{}
 })
-
-//   const filteredTracks = tracks.length == 1 ? tracks : tracks.filter(track =>
-//     track.kind == 'asr' ?
-//       sameLanguage(navigator.language, track.languageCode) ?
-//         !tracks.some(({ languageCode, kind }) => kind !== 'asr' && sameLanguage(track.languageCode, languageCode)) : false
-//       : true);
-//   const filteredCaps = filteredTracks.map(track => ({ track, captionId: getCaptionIdFromVideoId(v, track) } as videoPlayerCaptions));
-//   if (filteredCaps.length == 1)
-//     setShowCap(filteredCaps[0].captionId, true);
-//   playerCaptions.value = filteredCaps;
-//   srtContainer.value = {};
-// })
