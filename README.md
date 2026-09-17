@@ -28,11 +28,11 @@ bun install
 and build unpacked extension:
 
 ```bash
-bun run cfg/build.ts
+bun run cfg/build.js
 ```
 
 You can then add directory "public" from that repository to your extensions in Chrome's Developer mode.
 
 ## Used libraries
 
-Extension uses [Preact](https://preactjs.com) for UI, and [Preact Signals](https://preactjs.com/guide/v10/signals) for state management.
+Extension is written in [Rescript](https://rescript-lang.org), uses [Preact](https://preactjs.com) for UI, and [Preact Signals](https://preactjs.com/guide/v10/signals) for state management.

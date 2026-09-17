@@ -14,7 +14,7 @@
     "watch": "rescript watch",
     "clean": "rescript clean",
     "format": "rescript format",
-    "build": "bun run rescript build; bun run cfg/build.ts"
+    "build": "bun run rescript build; bun run cfg/build.js"
   },
   "dependencies": {
     "@preact/signals": "^2.11.1",

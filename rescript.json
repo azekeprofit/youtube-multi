@@ -19,7 +19,7 @@
     "preserve": true
   },
   "js-post-build":{
-    "cmd":"bun run ./cfg/build.ts"
+    "cmd":"bun run ./cfg/build.js"
   },
   "dependencies": [
     "@rescript/webapi"
