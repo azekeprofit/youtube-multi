@@ -2,7 +2,7 @@ import { $, build } from "bun";
 
 export async function bundle(prod) {
   build({
-    entrypoints: ["src/wrapper.jsx"], // , "lib/background.jsx"
+    entrypoints: ["src/wrapper.jsx", "src/background.jsx"],
     outdir: "public",
     splitting: false,
     minify: true,

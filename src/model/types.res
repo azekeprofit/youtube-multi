@@ -12,3 +12,5 @@ let asKey = (CaptionId(key)) => key
 
 // cleanups for effects
 @unboxed type cleanup = Cleanup(unit => unit) | @as(undefined) None
+
+@inline let youtubePotEvent = "youtube multi pot"

@@ -10,7 +10,7 @@ type webRequestType = {
 type executeScriptArgument<'arg> = {
   target: {tabId: string},
   func: 'arg => unit,
-  args: 'arg,
+  args: array<'arg>, // using an array here because args describes several parameters, but in func handler we will be only using first argument
 }
 
 type scriptingType<'arg> = {
