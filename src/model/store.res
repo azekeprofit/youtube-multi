@@ -28,14 +28,11 @@ let storageId = "youtube multi storage"
 external parseStorage: string => storage = "JSON.parse"
 external stringifyStorage: storage => string = "JSON.stringify"
 let getStorageShowCaps = () =>
-  switch window.localStorage->WebAPI.Storage.getItem(storageId) {
-  | Value(i) =>
-    switch (i->parseStorage).state {
-    | Some(s) => s
-    | None => dict{}
-    }
-  | Null => dict{}
-  }
+  {
+    let? Some(i) = window.localStorage->WebAPI.Storage.getItem(storageId)->Null.toOption
+    let? Some(s) = (i->parseStorage).state
+    Some(s)
+  }->Option.getOr(dict{})
 
 let showCaps = Signal.make(getStorageShowCaps())
 

@@ -55,24 +55,17 @@ type stateChangeListener = ytPlayerState => unit
 @send external toggleSubtitlesOn: ytPlayer => unit = "toggleSubtitlesOn"
 let asElement = (Player(element)) => element
 
-let getVideoId = player =>
-  switch getPlayerResponse(player) {
-  | Value(p) =>
-    switch p.videoDetails {
-    | Some(details) => Some(details.videoId)
-    | _ => None
-    }
-  | _ => None
-  }
+let getVideoId = player => {
+  let? Some(p) = getPlayerResponse(player)->Null.toOption
+  let? Some(details) = p.videoDetails
+  Some(details.videoId)
+}
 
 let getVideoTag = () => Preact.get("#movie_player video")
 
-let getAllTracks = player =>
-  switch player {
-  | Some(p) =>
-    switch getPlayerResponse(p) {
-    | Value(pl) => pl.captions.playerCaptionsTracklistRenderer.captionTracks
-    | _ => []
-    }
-  | _ => []
-  }
+let getAllTracks = (player: option<ytPlayer>) =>
+  {
+    let? Some(p) = player
+    let? Some(pl) = getPlayerResponse(p)->Null.toOption
+    Some(pl.captions.playerCaptionsTracklistRenderer.captionTracks)
+  }->Option.getOr([])
