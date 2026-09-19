@@ -8,36 +8,34 @@ module YtLangCheckbox = {
       baseUrl,
       name,
     }: Youtube.ytCaptionTrack = track
-    Signal.useSignalEffect(() =>
-      switch (Youtube.getVideoTag(), Captions.videoUrlId.value, Captions.videoPlayer.value) {
-      | (Value(tag), Some(VideoId(videoId)), Some(player)) => {
-          player->Youtube.toggleSubtitlesOn
+    Signal.useSignalEffect(_ => {
+      let? Some(VideoId(videoId)) = Captions.videoUrlId.value
+      let? Some(player) = Captions.videoPlayer.value
+      let? Some(tag) = Youtube.getVideoTag()->Null.toOption
+      player->Youtube.toggleSubtitlesOn
 
-          let track = switch Store.trackContainer.peek()->Dict.get(captionId->Types.asKey) {
-          | Some(t) => t
-          | _ => Store.addTrack(tag, captionId, vssIdText)
-          }
-
-          let showCap = Store.getShowCap(captionId)
-          switch (track.cues, Pots.potsContainer.value->Dict.get(videoId)) {
-          // // loadSrtLine always adds at least one cue so by checking if cues are empty we prevent over-fetching
-          | (Value(cueList), Some(pot)) if showCap && cueList->VTTCue.cueListLength == 0 => {
-              // add stub cue
-              Captions.addCue(track, captionId, -1.0, -1.0, "", -1)
-              let xhr = XMLHttpRequest.make()
-              xhr.onload = () => SrtSubtitle.loadSrtLine(track, captionId, xhr.responseText)
-              xhr.open_(Get, `${baseUrl}&c=WEB&potc=1&fmt=srt&pot=${pot}`)
-              xhr.responseType = Text
-              xhr.send()
-
-              None
-            }
-          | _ => None
-          }
-        }
-      | _ => None
+      let track = switch Store.trackContainer.peek()->Dict.get(captionId->Types.asKey) {
+      | Some(t) => t
+      | _ => Store.addTrack(tag, captionId, vssIdText)
       }
-    )
+
+      let showCap = Store.getShowCap(captionId)
+      let? Some(pot) = Pots.potsContainer.value->Dict.get(videoId)
+      let? Some(cueList) = track.cues->Null.toOption
+
+      // // loadSrtLine always adds at least one cue so by checking if cues are empty we prevent over-fetching
+      if showCap && cueList->VTTCue.cueListLength == 0 {
+        // add stub cue
+        Captions.addCue(track, captionId, -1.0, -1.0, "", -1)
+        let xhr = XMLHttpRequest.make()
+        xhr.onload = () => SrtSubtitle.loadSrtLine(track, captionId, xhr.responseText)
+        xhr.open_(Get, `${baseUrl}&c=WEB&potc=1&fmt=srt&pot=${pot}`)
+        xhr.responseType = Text
+        xhr.send()
+      }
+
+      None
+    })
 
     let autoCaption = kind == Asr
 
