@@ -1,15 +1,11 @@
 @jsx.component
 let make = (~label, ~captionId, ~title) => {
   let checked = Signal.useComputed(() => captionId->Store.getShowCap)
-  Signal.useSignalEffect(() =>
-    switch Store.trackContainer.value->Dict.get(captionId->Types.asKey) {
-    | Some(track) => {
-        track.mode = checked.value ? Showing : Hidden
-        Cleanup(() => track.mode = Disabled)
-      }
-    | _ => None
-    }
-  )
+  Signal.useSignalEffect(() => {
+    let? Some(track) = Store.trackContainer.value->Dict.get(captionId->Types.asKey)
+    track.mode = checked.value ? Showing : Hidden
+    Some(() => track.mode = Disabled)
+  })
 
   <label titleAsSignal={title}>
     <input

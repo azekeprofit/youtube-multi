@@ -11,6 +11,6 @@ let getCaptionId = (videoId, VssId(vssId)) => CaptionId(
 let asKey = (CaptionId(key)) => key
 
 // cleanups for effects
-@unboxed type cleanup = Cleanup(unit => unit) | @as(undefined) None
+type cleanup = option<unit => unit>
 
 @inline let youtubePotEvent = "youtube multi pot"

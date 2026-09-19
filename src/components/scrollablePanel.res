@@ -15,17 +15,16 @@ module Arrow = {
     </span>
 }
 
-@unboxed type scrollDivType = | @as(null) None | ScrollDiv(WebAPI.DOMTypes.htmlDivElement)
 @jsx.component
 let make = () => {
-  let scrollDiv = Preact.useRef(None)
+  let scrollDiv = Preact.useRef((None :> option<WebAPI.DOMTypes.htmlDivElement>))
   let intervalRef = Preact.useRef(0)
   let showLeft = Signal.useSignal(false)
   let showRight = Signal.useSignal(false)
 
   let doScroll = Preact.useCallback(() =>
     switch scrollDiv.current {
-    | ScrollDiv(scroll) => {
+    | Some(scroll) => {
         showLeft.value = scroll.scrollLeft != 0.0
         showRight.value =
           scroll.scrollLeft < Float.fromInt(scroll.scrollWidth - scroll.clientWidth - 15)
@@ -49,7 +48,7 @@ let make = () => {
             window,
             ~handler=() => {
               switch scrollDiv.current {
-              | ScrollDiv(scroll) => scroll->WebAPI.HTMLDivElement.scrollBy2(~x=step, ~y=0.0)
+              | Some(scroll) => scroll->WebAPI.HTMLDivElement.scrollBy2(~x=step, ~y=0.0)
               | _ => ()
               }
               doScroll()

@@ -11,18 +11,12 @@ module ActiveTrack = {
     let key = captionId->Types.asKey
     let show = Signal.useComputed(() => captionId->Store.getShowCap)
 
-    Signal.useSignalEffect(() =>
-      switch Store.trackContainer.value->Dict.get(key) {
-      | Some(track) => {
-          let forceUpdate = _ => activeCues.value = getCues(captionId)
-          track->WebAPI.TextTrack.addEventListener(Custom("cuechange"), forceUpdate)
-          Cleanup(
-            () => track->WebAPI.TextTrack.removeEventListener(Custom("cuechange"), forceUpdate),
-          )
-        }
-      | _ => None
-      }
-    )
+    Signal.useSignalEffect(() => {
+      let? Some(track) = Store.trackContainer.value->Dict.get(key)
+      let forceUpdate = _ => activeCues.value = getCues(captionId)
+      track->WebAPI.TextTrack.addEventListener(Custom("cuechange"), forceUpdate)
+      Some(() => track->WebAPI.TextTrack.removeEventListener(Custom("cuechange"), forceUpdate))
+    })
 
     <Signal.show when_={show}>
       <div class="captions-text" dataCaptionId={key}>

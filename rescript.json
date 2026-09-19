@@ -21,6 +21,9 @@
   "js-post-build":{
     "cmd":"bun run ./cfg/build.js"
   },
+  "experimental-features": {
+    "LetUnwrap": true
+  },
   "dependencies": [
     "@rescript/webapi"
   ],

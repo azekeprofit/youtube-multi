@@ -7,25 +7,20 @@ let addCue = (track, captionId, start, end, html, index) => {
 let videoPlayer = Signal.make(None)
 let videoUrlId = Signal.make(None)
 
-Signal.effect(() =>
-  switch videoPlayer.value {
-  | Some(player) => {
-      let stateChangeListener = _ =>
-        switch Youtube.getVideoId(player) {
-        | Some(_) as v => videoUrlId.value = v
-        | _ => ()
-        }
-      stateChangeListener()
-      let element = player->Youtube.asElement
-      element->WebAPI.Element.addEventListener(Custom("onStateChange"), stateChangeListener)
-      Cleanup(
-        () =>
-          element->WebAPI.Element.removeEventListener(Custom("onStateChange"), stateChangeListener),
-      )
+Signal.effect(() => {
+  let? Some(player) = videoPlayer.value
+  let stateChangeListener = _ =>
+    switch Youtube.getVideoId(player) {
+    | Some(_) as v => videoUrlId.value = v
+    | _ => ()
     }
-  | _ => None
-  }
-)
+  stateChangeListener()
+  let element = player->Youtube.asElement
+  element->WebAPI.Element.addEventListener(Custom("onStateChange"), stateChangeListener)
+  Some(
+    () => element->WebAPI.Element.removeEventListener(Custom("onStateChange"), stateChangeListener),
+  )
+})
 
 let getLang = (Youtube.LanguageCode(l)) =>
   switch String.split(l, "-")[0] {

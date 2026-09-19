@@ -7,26 +7,29 @@ let pop = (iter, fun) =>
 let str = i => pop(i, s => Some(s))
 let float = i => pop(i, Float.fromString)
 let int = i => pop(i, n => Int.fromString(n))
-let time = i =>
-  switch (i->float, i->float, i->float, i->float) {
-  | (Some(hour), Some(minute), Some(second), Some(ms)) =>
-    Some(hour * 60.0 * 60.0 + minute * 60.0 + second + ms / 1000.0)
-  | _ => None
-  }
+let time = i => {
+  let? Some(hour) = float(i)
+  let? Some(minute) = float(i)
+  let? Some(second) = float(i)
+  let? Some(ms) = float(i)
+
+  Some(hour * 60.0 * 60.0 + minute * 60.0 + second + ms / 1000.0)
+}
 
 let loadSrtLine = (track, capId, srtLines) => {
   let lineRegex = /(\d+)\r?\n(\d\d):(\d\d):(\d\d)\,(\d\d\d) --> (\d\d):(\d\d):(\d\d)\,(\d\d\d)\r?\n/
   let i = srtLines->String.splitByRegExp(lineRegex)->Array.values->Iterator.drop(1)
 
-  while (
-    switch (i->int, i->time, i->time, i->str) {
-    | (Some(index), Some(start), Some(end), Some(text)) => {
-        track->Captions.addCue(capId, start, end, text, index)
-        true
-      }
-    | _ => false
-    }
-  ) {
+  let cue = i => {
+    let? Some(index) = int(i)
+    let? Some(start) = time(i)
+    let? Some(end) = time(i)
+    let? Some(text) = str(i)
+    Captions.addCue(track, capId, start, end, text, index)
+    Some(1)
+  }
+
+  while cue(i)->Option.isSome {
     1->ignore
   }
 }
