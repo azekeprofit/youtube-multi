@@ -27,7 +27,7 @@ type storage = {state?: Dict.t<captionStatus>}
 let storageId = "youtube multi storage"
 external parseStorage: string => storage = "JSON.parse"
 external stringifyStorage: storage => string = "JSON.stringify"
-let getStorageShowCaps = () =>
+let getStorageShowCaps = _ =>
   {
     let? Some(i) = window.localStorage->WebAPI.Storage.getItem(storageId)->Null.toOption
     let? Some(s) = (i->parseStorage).state
@@ -70,6 +70,6 @@ let getShowCap = captionId => {
 }
 
 let srtContainer = Signal.make(dict{})
-let srtKeys = Signal.computed(() => srtContainer.value->Dict.keysToArray)
+let srtKeys = Signal.computed(_ => srtContainer.value->Dict.keysToArray)
 let addSrtCaption = (captionId, fileName: string) =>
   srtContainer->update(captionId->Types.asKey, fileName)

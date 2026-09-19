@@ -7,7 +7,7 @@ let addCue = (track, captionId, start, end, html, index) => {
 let videoPlayer = Signal.make(None)
 let videoUrlId = Signal.make(None)
 
-Signal.effect(() => {
+Signal.effect(_ => {
   let? Some(player) = videoPlayer.value
   let stateChangeListener = _ =>
     switch Youtube.getVideoId(player) {
@@ -18,7 +18,7 @@ Signal.effect(() => {
   let element = player->Youtube.asElement
   element->WebAPI.Element.addEventListener(Custom("onStateChange"), stateChangeListener)
   Some(
-    () => element->WebAPI.Element.removeEventListener(Custom("onStateChange"), stateChangeListener),
+    _ => element->WebAPI.Element.removeEventListener(Custom("onStateChange"), stateChangeListener),
   )
 })
 
@@ -60,3 +60,7 @@ videoUrlId.subscribe(vId => {
   playerCaptions.value = filteredCaps
   Store.srtContainer.value = dict{}
 })
+
+let youtubeLineKeys = Signal.computed(_ =>
+  playerCaptions.value->Array.map(({captionId}) => captionId->Types.asKey)
+)

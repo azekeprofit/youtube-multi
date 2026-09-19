@@ -1,5 +1,5 @@
 @jsx.component
-let make = () =>
+let make = _ =>
   <span class="ytp-menuitem" ariaHasPopup="true" role="menuitem" tabIndex={0}>
     <div class="ytp-menuitem-icon"> {`CC`->Preact.string} </div>
     <div class="ytp-menuitem-label"> {`Load .srt`->Preact.string} </div>

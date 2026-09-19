@@ -7,7 +7,7 @@ let intervalId = ref(0)
 intervalId :=
   WebAPI.Window.setInterval2(
     window,
-    ~handler=() =>
+    ~handler=_ =>
       {
         let? Some(multiLangButton) = Preact.get(`button.ytp-subtitles-button.ytp-button`)
         let? Some(parent) = multiLangButton.parentNode->Null.toOption

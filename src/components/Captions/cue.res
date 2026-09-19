@@ -2,7 +2,7 @@
 let make = (~cue: VTTCue.t) => {
   let text = cue.text
   let parsed = Preact.useMemo(
-    () =>
+    _ =>
       DomPurify.default.sanitize(
         text,
         {allowedTags: ["b", "i", "u", "font"], returnTrustedType: true},

@@ -1,10 +1,10 @@
 let pressed = Signal.make(false)
 @jsx.component
 let make = (~player, ~ytSettingsMenu) => {
-  let anyCaptions = Signal.useComputed(() =>
+  let anyCaptions = Signal.useComputed(_ =>
     Captions.playerCaptions.value->Array.length + Store.srtKeys.value->Array.length > 0
   )
-  let pressedAndCaptions = Signal.useComputed(() => anyCaptions.value && pressed.value)
+  let pressedAndCaptions = Signal.useComputed(_ => anyCaptions.value && pressed.value)
 
   let toggleSubtitles = _ =>
     if anyCaptions.value {
@@ -25,7 +25,7 @@ let make = (~player, ~ytSettingsMenu) => {
     <button
       class="ytp-subtitles-button ytp-button"
       ariaPressedAsSignal={Signalish.fromSignal(
-        Signal.useComputed(() => pressedAndCaptions.value ? #"true" : #"false"),
+        Signal.useComputed(_ => pressedAndCaptions.value ? #"true" : #"false"),
       )}
       onClick={toggleSubtitles}
       title={anyCaptions.value
@@ -33,7 +33,7 @@ let make = (~player, ~ytSettingsMenu) => {
         : "Subtitles/closed captions unavailable"}
     >
       <CcIcon
-        opacity={Signalish.fromSignal(Signal.useComputed(() => anyCaptions.value ? "1.0" : "0.3"))}
+        opacity={Signalish.fromSignal(Signal.useComputed(_ => anyCaptions.value ? "1.0" : "0.3"))}
       />
     </button>
     {Preact.createPortal(<SrtMenuItem />, ytSettingsMenu)}

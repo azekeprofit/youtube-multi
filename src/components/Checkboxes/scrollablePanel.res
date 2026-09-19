@@ -1,28 +1,11 @@
-module Arrow = {
-  type direction = [#left | #right]
-  external directionToString: direction => string = "%identity"
-  @jsx.component
-  let make = (~show: Signal.t<bool>, ~text, ~direction, ~attr) =>
-    <span
-      {...attr}
-      classAsSignal={Signalish.fromSignal(
-        Signal.useComputed(() =>
-          `arrow ${direction->directionToString} ${show.value ? "show" : ""}`
-        ),
-      )}
-    >
-      {text->Preact.string}
-    </span>
-}
-
 @jsx.component
-let make = () => {
+let make = _ => {
   let scrollDiv = Preact.useRef((None :> option<WebAPI.DOMTypes.htmlDivElement>))
   let intervalRef = Preact.useRef(0)
   let showLeft = Signal.useSignal(false)
   let showRight = Signal.useSignal(false)
 
-  let doScroll = Preact.useCallback(() =>
+  let doScroll = Preact.useCallback(_ =>
     switch scrollDiv.current {
     | Some(scroll) => {
         showLeft.value = scroll.scrollLeft != 0.0
@@ -46,7 +29,7 @@ let make = () => {
         if intervalRef.current == 0 {
           intervalRef.current = WebAPI.Window.setInterval2(
             window,
-            ~handler=() => {
+            ~handler=_ => {
               switch scrollDiv.current {
               | Some(scroll) => scroll->WebAPI.HTMLDivElement.scrollBy2(~x=step, ~y=0.0)
               | _ => ()

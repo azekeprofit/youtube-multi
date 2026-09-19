@@ -61,7 +61,7 @@ let getVideoId = player => {
   Some(details.videoId)
 }
 
-let getVideoTag = () => Preact.get("#movie_player video")
+let getVideoTag = _ => Preact.get("#movie_player video")
 
 let getAllTracks = (player: option<ytPlayer>) =>
   {
