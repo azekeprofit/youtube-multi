@@ -35,16 +35,15 @@ let loadSrtLine = (track, capId, srtLines) => {
 }
 
 let createTrack = (fileName, lines) =>
-  switch Youtube.getVideoTag() {
-  | Some(videoTag) => {
-      let capId = Types.CaptionId(`srtFile.${fileName}`)
-      let track = Store.addTrack(videoTag, capId, fileName)
-      loadSrtLine(track, capId, lines)
-      Store.setShowCap(capId, Boolean(true))
-      Store.addSrtCaption(capId, fileName)
-    }
-  | _ => ()
-  }
+  {
+    let? Some(videoTag) = Youtube.getVideoTag()
+    let capId = Types.CaptionId(`srtFile.${fileName}`)
+    let track = Store.addTrack(videoTag, capId, fileName)
+    loadSrtLine(track, capId, lines)
+    Store.setShowCap(capId, Boolean(true))
+    Store.addSrtCaption(capId, fileName)
+    None
+  }->ignore
 
 let loadSrtCaptions = (srtFilesObj: WebAPI.FileTypes.file) => {
   let fileReader = FileReader.make()
