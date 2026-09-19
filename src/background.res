@@ -6,7 +6,7 @@ Chrome.webRequest.onBeforeRequest.addListener(({tabId, url}) => {
     target: {tabId: tabId},
     func: ({v, p}) =>
       switch (v, p) {
-      | (Null.Value(videoId), Null.Value(pot)) =>
+      | (Value(videoId), Value(pot)) =>
         document
         ->WebAPI.Document.dispatchEvent(
           CustomEvent.make(Types.youtubePotEvent, {detail: {videoId: VideoId(videoId), pot}}),

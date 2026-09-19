@@ -102,4 +102,4 @@ external callbackRef: ('t => Types.cleanup) => JsxDOM.domRef = "%identity"
 @module("preact/hooks")
 external useCallback: ('arg => 'res, array<_>) => 'arg => 'res = "useCallback"
 
-let get: string => 't = selector => document->WebAPI.Document.querySelector(selector)
+let get: string => 't = selector => document->WebAPI.Document.querySelector(selector)->Null.toOption

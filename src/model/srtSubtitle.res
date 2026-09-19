@@ -36,7 +36,7 @@ let loadSrtLine = (track, capId, srtLines) => {
 
 let createTrack = (fileName, lines) =>
   switch Youtube.getVideoTag() {
-  | Value(videoTag) => {
+  | Some(videoTag) => {
       let capId = Types.CaptionId(`srtFile.${fileName}`)
       let track = Store.addTrack(videoTag, capId, fileName)
       loadSrtLine(track, capId, lines)

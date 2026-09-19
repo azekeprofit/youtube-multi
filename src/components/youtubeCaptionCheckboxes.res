@@ -9,17 +9,17 @@ module YtLangCheckbox = {
       name,
     }: Youtube.ytCaptionTrack = track
     Signal.useSignalEffect(_ => {
-      let? Some(VideoId(videoId)) = Captions.videoUrlId.value
       let? Some(player) = Captions.videoPlayer.value
-      let? Some(tag) = Youtube.getVideoTag()->Null.toOption
       player->Youtube.toggleSubtitlesOn
 
+      let? Some(tag) = Youtube.getVideoTag()
       let track = switch Store.trackContainer.peek()->Dict.get(captionId->Types.asKey) {
       | Some(t) => t
       | _ => Store.addTrack(tag, captionId, vssIdText)
       }
 
       let showCap = Store.getShowCap(captionId)
+      let? Some(VideoId(videoId)) = Captions.videoUrlId.value
       let? Some(pot) = Pots.potsContainer.value->Dict.get(videoId)
       let? Some(cueList) = track.cues->Null.toOption
 

@@ -8,38 +8,36 @@ intervalId :=
   WebAPI.Window.setInterval2(
     window,
     ~handler=() =>
-      switch (
-        Preact.get(`button.ytp-subtitles-button.ytp-button`),
-        Preact.get("#movie_player"),
-        Preact.get(`.ytp-popup.ytp-settings-menu .ytp-panel .ytp-panel-menu`),
-      ) {
-      | (Value(multiLangButton), Value(p), Value(ytSettingsMenu)) =>
-        switch multiLangButton.parentNode {
-        | Value(parent) => {
-            let player = Youtube.Player(p)
-            Captions.videoPlayer.value = Some(player)
+      {
+        let? Some(multiLangButton) = Preact.get(`button.ytp-subtitles-button.ytp-button`)
+        let? Some(parent) = multiLangButton.parentNode->Null.toOption
 
-            Preact.render(
-              <MultiLangButton player ytSettingsMenu />,
-              switch Preact.get(`#${ytControlPanelId}`) {
-              | Value(controlPanel) => controlPanel
-              | Null => {
-                  let controlPanel = WebAPI.Document.createElement(document, `span`)
-                  WebAPI.Node.insertBefore(
-                    parent,
-                    controlPanel,
-                    ~child=multiLangButton->WebAPI.Element.asNode,
-                  ).id = ytControlPanelId
-                  controlPanel
-                }
-              },
-            )
-            WebAPI.Window.clearInterval(window, intervalId.contents)
-          }
-        | _ => ()
-        }
-      | _ => ()
-      },
+        let? Some(p) = Preact.get("#movie_player")
+        let player = Youtube.Player(p)
+        Captions.videoPlayer.value = Some(player)
+
+        let? Some(
+          ytSettingsMenu,
+        ) = Preact.get(`.ytp-popup.ytp-settings-menu .ytp-panel .ytp-panel-menu`)
+
+        Preact.render(
+          <MultiLangButton player ytSettingsMenu />,
+          switch Preact.get(`#${ytControlPanelId}`) {
+          | Some(controlPanel) => controlPanel
+          | None => {
+              let controlPanel = WebAPI.Document.createElement(document, `span`)
+              WebAPI.Node.insertBefore(
+                parent,
+                controlPanel,
+                ~child=multiLangButton->WebAPI.Element.asNode,
+              ).id = ytControlPanelId
+              controlPanel
+            }
+          },
+        )
+        WebAPI.Window.clearInterval(window, intervalId.contents)
+        None
+      }->ignore,
     ~timeout=200,
   )
 
