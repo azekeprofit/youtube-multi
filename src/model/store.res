@@ -1,0 +1,75 @@
+let update = (store: Signal.t<Dict.t<'t>>, key: string, value: 't) => {
+  let newDict = store.value->Dict.copy
+  newDict->Dict.set(key, value)
+  store.value = newDict
+}
+
+let trackContainer = Signal.make(dict{})
+
+let addTrackToCache = (captionId, track: WebAPI.WebVTTTypes.textTrack) =>
+  trackContainer->update(captionId->Types.asKey, track)
+external asMediaElement: WebAPI.DOMTypes.element => WebAPI.DOMTypes.htmlVideoElement = "%identity"
+let addTrack = (videoTag, captionId, trackName) => {
+  let player = videoTag->asMediaElement
+  let track =
+    player->WebAPI.HTMLVideoElement.addTextTrack(
+      ~kind=Captions,
+      ~label=trackName,
+      ~language=trackName,
+    )
+  addTrackToCache(captionId, track)
+  track
+}
+
+@unboxed type captionStatus = Date(string) | Boolean(bool) | @as(null) None
+
+type storage = {state?: Dict.t<captionStatus>}
+let storageId = "youtube multi storage"
+external parseStorage: string => storage = "JSON.parse"
+external stringifyStorage: storage => string = "JSON.stringify"
+let getStorageShowCaps = _ =>
+  {
+    let? Some(item) = window.localStorage->WebAPI.Storage.getItem(storageId)->Null.toOption
+    let? Some(state) = parseStorage(item).state
+    Some(state)
+  }->Option.getOr(dict{})
+
+let showCaps = Signal.make(getStorageShowCaps())
+
+let saveStorage = (captionId, showCap) => {
+  let previousDay = Date.make()
+  previousDay->Date.setDate(Date.getDate(previousDay) - 1)
+  let newState = getStorageShowCaps()->Dict.mapValues(value =>
+    switch value {
+    | Boolean(b) => b ? Date(Date.make()->Date.toString) : None
+    | Date(dateString) => Date.fromString(dateString) > previousDay ? Date(dateString) : None
+    | _ => None
+    }
+  )
+  newState->Dict.set(captionId->Types.asKey, showCap)
+  window.localStorage->WebAPI.Storage.setItem(
+    ~key=storageId,
+    ~value=stringifyStorage({state: newState}),
+  )
+}
+
+let setShowCap = (captionId, show: captionStatus) => {
+  let key = captionId->Types.asKey
+  if showCaps.value->Dict.get(key) !== Some(show) {
+    showCaps->update(key, show)
+    saveStorage(captionId, show)
+  }
+}
+
+let getShowCap = captionId => {
+  switch showCaps.value->Dict.get(captionId->Types.asKey) {
+  | Some(Boolean(b)) => b
+  | Some(Date(_)) => true
+  | _ => false
+  }
+}
+
+let srtContainer = Signal.make(dict{})
+let srtKeys = Signal.computed(_ => srtContainer.value->Dict.keysToArray)
+let addSrtCaption = (captionId, fileName: string) =>
+  srtContainer->update(captionId->Types.asKey, fileName)
