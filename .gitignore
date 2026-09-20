@@ -182,3 +182,6 @@ lib/bs
 lib/watch.lock
 lib/ocaml
 *.jsx
+
+# bun
+bun.lock

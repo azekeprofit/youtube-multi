@@ -4,8 +4,8 @@ external directionToString: direction => string = "%identity"
 let make = (~show: Signal.t<bool>, ~text, ~direction, ~attr) =>
   <span
     {...attr}
-    classAsSignal={Signalish.fromSignal(
-      Signal.useComputed(_ => `arrow ${direction->directionToString} ${show.value ? "show" : ""}`),
+    classAsSignal={Signalish.useComputed(_ =>
+      `arrow ${direction->directionToString} ${show.value ? "show" : ""}`
     )}
   >
     {text->Preact.string}

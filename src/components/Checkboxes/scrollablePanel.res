@@ -5,11 +5,18 @@ let make = _ => {
   let showLeft = Signal.useSignal(false)
   let showRight = Signal.useSignal(false)
 
-  let resetArrows = (scroll: WebAPI.DOMTypes.htmlDivElement) => {
-    showLeft.value = scroll.scrollLeft != 0.0
-    showRight.value =
-      scroll.scrollLeft < Float.fromInt(scroll.scrollWidth - scroll.clientWidth - 15)
-  }
+  let doScroll = step =>
+    {
+      let? Some(scroll) = scrollDiv.current
+      if step != 0.0 {
+        scroll->WebAPI.HTMLDivElement.scrollBy2(~x=step, ~y=0.0)
+      }
+      showLeft.value = scroll.scrollLeft != 0.0
+      showRight.value =
+        scroll.scrollLeft < Float.fromInt(scroll.scrollWidth - scroll.clientWidth - 15)
+
+      None
+    }->ignore
 
   let mouseUp = _ => {
     if intervalRef.current != 0 {
@@ -24,13 +31,7 @@ let make = _ => {
         if intervalRef.current == 0 {
           intervalRef.current = WebAPI.Window.setInterval2(
             window,
-            ~handler=_ =>
-              {
-                let? Some(scroll) = scrollDiv.current
-                scroll->WebAPI.HTMLDivElement.scrollBy2(~x=step, ~y=0.0)
-                resetArrows(scroll)
-                None
-              }->ignore,
+            ~handler=_ => doScroll(step),
             ~timeout=100,
           )
         },
@@ -39,10 +40,9 @@ let make = _ => {
     })
 
   Signal.useSignalEffect(() => {
-    let? Some(scroll) = scrollDiv.current
     Store.srtContainer->Signal.track // subscribe to srtContainer changes, so arrow will apropriately appear when a new SRT-caption was added
-    WebAPI.Window.setTimeout(window, ~handler=_ => resetArrows(scroll), ~timeout=100)->ignore // pause to give component some time to render checkboxes
-    resetArrows(scroll) // so i don't have to create another useEffect just for initial render
+    WebAPI.Window.setTimeout(window, ~handler=_ => doScroll(0.0), ~timeout=100)->ignore // pause to give component some time to render checkboxes
+    doScroll(0.0) // so i don't have to create another useEffect just for initial render
     None
   })
 

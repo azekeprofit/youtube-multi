@@ -23,7 +23,7 @@ type ytTranslationLanguage = {
 }
 
 type ytPlayerResponse = {
-  captions: {
+  captions?: {
     playerCaptionsTracklistRenderer: {
       captionTracks: array<ytCaptionTrack>,
       translationLanguages: array<ytTranslationLanguage>,
@@ -67,5 +67,6 @@ let getAllTracks = (player: option<ytPlayer>) =>
   {
     let? Some(p) = player
     let? Some(pl) = getPlayerResponse(p)->Null.toOption
-    Some(pl.captions.playerCaptionsTracklistRenderer.captionTracks)
+    let? Some(caps) = pl.captions
+    Some(caps.playerCaptionsTracklistRenderer.captionTracks)
   }->Option.getOr([])

@@ -19,7 +19,7 @@ let make = (~captionId) => {
 
   <Signal.show when_={show}>
     <div class="captions-text" dataCaptionId={key}>
-      <Signal.for_ each={activeCues} getKey={c=>c.id}> {(cue, _) => <Cue cue />} </Signal.for_>
+      <Signal.for_ each={activeCues} getKey={c => c.id}> {(cue, _) => <Cue cue />} </Signal.for_>
     </div>
   </Signal.show>
 }
