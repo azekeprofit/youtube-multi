@@ -29,9 +29,9 @@ external parseStorage: string => storage = "JSON.parse"
 external stringifyStorage: storage => string = "JSON.stringify"
 let getStorageShowCaps = _ =>
   {
-    let? Some(i) = window.localStorage->WebAPI.Storage.getItem(storageId)->Null.toOption
-    let? Some(s) = (i->parseStorage).state
-    Some(s)
+    let? Some(item) = window.localStorage->WebAPI.Storage.getItem(storageId)->Null.toOption
+    let? Some(state) = parseStorage(item).state
+    Some(state)
   }->Option.getOr(dict{})
 
 let showCaps = Signal.make(getStorageShowCaps())

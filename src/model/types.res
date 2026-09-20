@@ -14,3 +14,5 @@ let asKey = (CaptionId(key)) => key
 type cleanup = option<unit => unit>
 
 @inline let youtubePotEvent = "youtube multi pot"
+
+let identity = v => v

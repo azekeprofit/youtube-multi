@@ -31,10 +31,12 @@ external computed: (unit => 'a) => t<'a> = "computed"
 @module("@preact/signals")
 external effect: (unit => Types.cleanup) => unit = "effect"
 
+external float: t<float> => Jsx.element = "%identity"
+external int: t<int> => Jsx.element = "%identity"
+external string: t<string> => Jsx.element = "%identity"
+
 @module("@preact/signals")
 external useComputed: (unit => 't) => t<'t> = "useComputed"
-
-external signalText: t<string> => Jsx.element = "%identity"
 
 type showProps = {@as("when") when_: t<bool>, fallback?: Jsx.element, children?: Jsx.element}
 @module("@preact/signals/utils")
@@ -51,6 +53,7 @@ type forProps<'val> = {
 external for_: forProps<'val> => Jsx.element = "For"
 let for_ = for_
 
-/// Prevent Rescript optimising away signal values as dead code, because we need signal.value evaluating even value itself isn't used
+/// Prevent Rescript optimising away signal values as dead code, because we need signal.value evaluating
+//  for its tracking effect even if value itself isn't used
 external track: 'v => unit = "%identity"
 let track: t<'v> => unit = signal => signal.value->track

@@ -20,21 +20,28 @@ let make = (~player, ~ytSettingsMenu) => {
       <ScrollablePanel />
     </Signal.show>
     <Signal.show when_={pressed}>
-      {Preact.createPortal(<CaptionLines />, player->Youtube.asElement)}
+      {Preact.createPortal(
+        <div
+          id="youtube-multi-caption-container"
+          class="caption-window ytp-caption-window-bottom youtube-multi-bottom"
+        >
+          <Lines lines={Captions.youtubeLineKeys} />
+          <Lines lines={Store.srtKeys} />
+        </div>,
+        player->Youtube.asElement,
+      )}
     </Signal.show>
     <button
       class="ytp-subtitles-button ytp-button"
-      ariaPressedAsSignal={Signalish.fromSignal(
-        Signal.useComputed(_ => pressedAndCaptions.value ? #"true" : #"false"),
+      ariaPressedAsSignal={Signalish.useComputed(_ =>
+        pressedAndCaptions.value ? #"true" : #"false"
       )}
       onClick={toggleSubtitles}
-      title={anyCaptions.value
-        ? "Subtitles/closed captions"
-        : "Subtitles/closed captions unavailable"}
+      titleAsSignal={Signalish.useComputed(_ =>
+        anyCaptions.value ? "Subtitles/closed captions" : "Subtitles/closed captions unavailable"
+      )}
     >
-      <CcIcon
-        opacity={Signalish.fromSignal(Signal.useComputed(_ => anyCaptions.value ? "1.0" : "0.3"))}
-      />
+      <CcIcon opacity={Signalish.useComputed(_ => anyCaptions.value ? "1.0" : "0.3")} />
     </button>
     {Preact.createPortal(<SrtMenuItem />, ytSettingsMenu)}
   </>
