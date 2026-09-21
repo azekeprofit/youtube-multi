@@ -9,16 +9,14 @@ let trackContainer = Signal.make(dict{})
 let addTrackToCache = (captionId, track: WebAPI.WebVTTTypes.textTrack) =>
   trackContainer->update(captionId->Types.asKey, track)
 external asMediaElement: WebAPI.DOMTypes.element => WebAPI.DOMTypes.htmlVideoElement = "%identity"
-let addTrack = (videoTag, captionId, trackName) => {
-  let player = videoTag->asMediaElement
+let addTrack = (captionId, trackName) => {
+  let? Some(videoTag) = Youtube.getVideoTag()
   let track =
-    player->WebAPI.HTMLVideoElement.addTextTrack(
-      ~kind=Captions,
-      ~label=trackName,
-      ~language=trackName,
-    )
+    videoTag
+    ->asMediaElement
+    ->WebAPI.HTMLVideoElement.addTextTrack(~kind=Captions, ~label=trackName, ~language=trackName)
   addTrackToCache(captionId, track)
-  track
+  Some(track)
 }
 
 @unboxed type captionStatus = Date(string) | Boolean(bool) | @as(null) None

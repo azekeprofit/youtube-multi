@@ -11,10 +11,9 @@ let make = (~track, ~captionId) => {
     let? Some(player) = Captions.videoPlayer.value
     player->Youtube.toggleSubtitlesOn
 
-    let? Some(tag) = Youtube.getVideoTag()
-    let track = switch Store.trackContainer.peek()->Dict.get(captionId->Types.asKey) {
-    | Some(t) => t
-    | _ => Store.addTrack(tag, captionId, vssIdText)
+    let? Some(track) = switch Store.trackContainer.peek()->Dict.get(captionId->Types.asKey) {
+    | Some(t) => Some(t)
+    | _ => Store.addTrack(captionId, vssIdText)
     }
 
     let showCap = Store.getShowCap(captionId)

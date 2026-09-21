@@ -36,9 +36,8 @@ let loadSrtLine = (track, capId, srtLines) => {
 
 let createTrack = (fileName, lines) =>
   {
-    let? Some(videoTag) = Youtube.getVideoTag()
     let capId = Types.CaptionId(`srtFile.${fileName}`)
-    let track = Store.addTrack(videoTag, capId, fileName)
+    let? Some(track) = Store.addTrack(capId, fileName)
     loadSrtLine(track, capId, lines)
     Store.setShowCap(capId, Boolean(true))
     Store.addSrtCaption(capId, fileName)

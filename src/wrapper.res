@@ -10,7 +10,6 @@ intervalId :=
     ~handler=_ =>
       {
         let? Some(multiLangButton) = Preact.get(`button.ytp-subtitles-button.ytp-button`)
-        let? Some(parent) = multiLangButton.parentNode->Null.toOption
 
         let? Some(p) = Preact.get("#movie_player")
         let player = Youtube.Player(p)
@@ -26,11 +25,8 @@ intervalId :=
           | Some(controlPanel) => controlPanel
           | None => {
               let controlPanel = WebAPI.Document.createElement(document, `span`)
-              WebAPI.Node.insertBefore(
-                parent,
-                controlPanel,
-                ~child=multiLangButton->WebAPI.Element.asNode,
-              ).id = ytControlPanelId
+              multiLangButton->WebAPI.Element.before(controlPanel->WebAPI.Element.asNode)
+              controlPanel.id = ytControlPanelId
               controlPanel
             }
           },
